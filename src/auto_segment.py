@@ -446,9 +446,10 @@ def panel_sorter(other, this):
     if other[3]>this[3]: y_quad_range[1] = 1
     if other[1]>=this[3]: y_quad_range[0] = 1
     rel = 0
+    print x_quad_range, y_quad_range
     for xq in range(x_quad_range[0], x_quad_range[1]+1):
         for yq in range(y_quad_range[0], y_quad_range[1]+1):
-            rel += xq+yq
+            rel += quadrants[(yq,xq)]
     return rel
     
 
@@ -478,6 +479,21 @@ seg_algos = CommonSegmentor, QCSegmentor
 
 
 if __name__=="__main__":
+    
+    #~ panels = [
+#~ [602,481,900,956],
+#~ [5,956,602,1433],
+#~ [602,956,900,1433],
+#~ [302,4,900,481],
+#~ [5,4,302,481],
+#~ [302,481,602,956],
+#~ [5,481,302,956]]
+
+    #~ panels.sort(cmp = panel_sorter)
+    #~ from pprint import pprint
+    #~ pprint(panels)
+    
+    
     try:
         import debug_scripts
     except ImportError:

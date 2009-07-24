@@ -42,7 +42,10 @@ class MyWindow(Fl_Window):
 
 class App:
     def open_file(self, widget):
-        self.lastpath = fl_file_chooser("Open Comic File", "CBZ Files (*.cbz)\tCBR Files (*.cbr)\tJPEG Files (*.jpg)\tPNG Files (*.png)\tGIF Files (*.gif)\tAll Files (*)", None)
+        newpath = fl_file_chooser("Open Comic File", "CBZ Files (*.cbz)\tCBR Files (*.cbr)\tJPEG Files (*.jpg)\tPNG Files (*.png)\tGIF Files (*.gif)\tAll Files (*)", None)
+        if newpath == None:
+            return
+        self.lastpath = newpath
         self.pathbox.value(self.lastpath)
         self.comix = ComicBook(self.lastpath)
         self.btn_segment.activate()
@@ -50,7 +53,10 @@ class App:
         self.btn_play.activate()        
         
     def open_dir(self, widget):
-        self.lastpath = fl_dir_chooser("Open Comic Folder", None)
+        newpath = fl_dir_chooser("Open Comic Folder", None)
+        if newpath == None:
+            return
+        self.lastpath = newpath
         self.pathbox.value(self.lastpath)
         self.comix = ComicBook(self.lastpath)
         self.btn_segment.activate()
