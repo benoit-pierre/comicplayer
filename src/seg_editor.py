@@ -33,6 +33,8 @@ import Image
 from comic_book import ComicBook
 from auto_segment import segmentate, seg_algos
 
+import traceback
+
 def fill_rect(x0, y0, w, h):
     step = 5
     for x in range(x0, x0+w, step):
@@ -42,29 +44,26 @@ def fill_rect(x0, y0, w, h):
         leng = min(w, y0+h-y)-1
         fl_line(x0, y, x0+leng, y+leng)
 
-class MyCanvas(Fl_Widget):
-    def __init__(self, app, x, y, w, h):
-        Fl_Widget.__init__(self, x ,y, w, h)
-        self.app = app
+class BaseEditor:
+    def __init__(self, widget):
+        self.widget = widget
         self.pulling = None
         self.pullstart = None
-        self.cur = FL_CURSOR_DEFAULT
+        self.app = self.widget.app
+
+class GridEditor(BaseEditor):
+    def __init__(self, widget):
+        BaseEditor.__init__(self, widget)
     
     def draw(self):
-        w,h = self.w(), self.h()
-        iw,ih = self.im.size
-        app = self.app
-        x0,y0 = 10-self.x(), 10-self.y()
-        
-        x1 = min(iw, x0+w)
-        y1 = min(ih, y0+h)
-        ims = self.im.crop((x0, y0, x1, y1))
-        fl_draw_image_mono(ims.tostring(), 10, 10, ims.size[0], ims.size[1]) 
-        x0,y0 = -self.x(), -self.y()
+        print 'y'
+        x0,y0 = -self.widget.x(), -self.widget.y()
+        w,h = self.widget.w(), self.widget.h()
+        app = self.widget.app
         fl_color(255, 192, 192)
         hls = app.hlines
         vls = app.vlines
-        zq = self.zoom_q
+        zq = self.widget.zoom_q
         for y in hls:
             fl_line(-x0,y/zq-y0,w-x0,y/zq-y0)
         for x in vls:
@@ -73,18 +72,18 @@ class MyCanvas(Fl_Widget):
         for i,r in enumerate(app.rects):
             xr0, yr0, xr1, yr1 = r[0]/zq, r[1]/zq, r[2]/zq, r[3]/zq
             fl_rect(xr0-x0, yr0-y0, xr1-xr0+1, yr1-yr0+1)
-            if i == self.selected:
+            if i == self.widget.app.selected_panel:
                 fill_rect(xr0-x0, yr0-y0, xr1-xr0+1, yr1-yr0+1)
-    
-    @staticmethod
-    def get_snap(app, x, y):
+
+    def get_snap(self, x, y):
+        app = self.widget.app
         if app.mode=="p":
             ar = app.rects
             for i, r in enumerate(ar):
                 x0,y0,x1,y1 = r
                 if x0<=x<=x1 and y0<=y<=y1:
                     return i
-            return -1
+            return None
         if app.mode=="h":
             lines = app.hlines
             point = y
@@ -95,11 +94,11 @@ class MyCanvas(Fl_Widget):
         for i,l in enumerate(lines):
             if abs(point-l)<8:
                 return i
-        return -1
+        return None
 
     def start_drag(self, x, y):
         app = self.app
-        i = self.get_snap(app, x, y)
+        i = self.get_snap(x, y)
         if i>-1:
             self.pulling = i
             self.pullstart = (x,y)
@@ -122,7 +121,7 @@ class MyCanvas(Fl_Widget):
                     app.rects[self.pulling] = app.from_cell_to_cell(cell0, cell1)
                     app.remove_duplicate_rects()
             app.refresh_text()
-            self.damage(1)
+            self.widget.damage(1)
 
     def end_drag(self):
         app = self.app
@@ -130,9 +129,9 @@ class MyCanvas(Fl_Widget):
             app.refresh_text()
         self.pulling = None
         if app.mode!="p" and app.remerge_lines():
-            self.damage(1)
+            self.widget.damage(1)
 
-    def add(self, x, y):
+    def click(self, x, y):
         app = self.app
         if app.mode == "h":
             app.hlines.append(y)
@@ -148,11 +147,11 @@ class MyCanvas(Fl_Widget):
             self.pulling = len(app.rects)-1
             self.pullstart = (x,y)
         app.refresh_text()
-        self.damage(1)
+        self.widget.damage(1)
 
-    def remove(self, x, y):
+    def rclick(self, x, y):
         app = self.app
-        i = self.get_snap(app, x, y)
+        i = self.get_snap(x, y)
         if i>-1:
             if app.mode == "h":
                 v = app.hlines[i]
@@ -165,7 +164,41 @@ class MyCanvas(Fl_Widget):
             if app.mode == "p":
                 del app.rects[i]
             app.refresh_text()
-            self.damage(1)
+            self.widget.damage(1)
+
+
+class PanelEditor(BaseEditor):
+    def __init__(self, widget):
+        BaseEditor.__init__(self, widget)
+    
+
+class MyCanvas(Fl_Widget):
+    def __init__(self, app, x, y, w, h, editorClass):
+        Fl_Widget.__init__(self, x ,y, w, h)
+        self.app = app
+        self.cur = FL_CURSOR_DEFAULT
+        self.editor = editorClass(self)
+    
+    def draw(self):
+        print 'a'
+        w,h = self.w(), self.h()
+        iw,ih = self.im.size
+        app = self.app
+        x0,y0 = 10-self.x(), 10-self.y()
+        
+        x1 = min(iw, x0+w)
+        y1 = min(ih, y0+h)
+        ims = self.im.crop((x0, y0, x1, y1))
+        fl_draw_image_mono(ims.tostring(), 10, 10, ims.size[0], ims.size[1]) 
+        print 'x'
+        
+        try:
+            self.editor.draw()
+        except Exception, e:
+            traceback.print_exc()
+            raise
+        
+
 
     def set_cur(self, cur):
         if self.cur!=cur:
@@ -174,6 +207,7 @@ class MyCanvas(Fl_Widget):
 
        
     def handle(self, event):
+        print '1'
         zq = self.zoom_q
         x0,y0 = self.x(), self.y()
         y = (Fl.event_y()-y0)
@@ -189,35 +223,40 @@ class MyCanvas(Fl_Widget):
             
         app = self.app
         btn = Fl.event_button()
-        if event == FL_PUSH:
-            if btn==1:
-                if not self.start_drag(x, y):
-                    self.add(x, y)
-            if btn==3:
-                self.remove(x, y)
-            return 1
-        elif event == FL_DRAG:
-            if btn==1:
-                self.do_drag(x, y)
-            return 1
-        elif event == FL_RELEASE:
-            if btn==1:
-                if self.pulling!=None:
-                    self.end_drag()
-            return 1
-        elif event == FL_ENTER:
-            i = self.get_snap(app, x, y)
-            self.set_cur(FL_CURSOR_HAND if i>-1 else FL_CURSOR_CROSS)
-            return 1
-        elif event == FL_MOVE:
-            i = self.get_snap(app, x, y)
-            self.set_cur(FL_CURSOR_HAND if i>-1 else FL_CURSOR_CROSS)
-            return 1
-        elif event == FL_LEAVE:
-            self.set_cur(FL_CURSOR_DEFAULT)
-            return 1
-        else:
-            return Fl_Widget.handle(self, event)
+        print '2'
+        try:
+            if event == FL_PUSH:
+                if btn==1:
+                    if not self.editor.start_drag(x, y):
+                        self.editor.click(x, y)
+                if btn==3:
+                    self.editor.rclick(x, y)
+                return 1
+            elif event == FL_DRAG:
+                if btn==1:
+                    self.editor.do_drag(x, y)
+                return 1
+            elif event == FL_RELEASE:
+                if btn==1:
+                    if self.editor.pulling!=None:
+                        self.editor.end_drag()
+                return 1
+            elif event == FL_ENTER:
+                i = self.editor.get_snap(x, y)
+                self.set_cur(FL_CURSOR_HAND if i>-1 else FL_CURSOR_CROSS)
+                return 1
+            elif event == FL_MOVE:
+                i = self.editor.get_snap(x, y)
+                self.set_cur(FL_CURSOR_HAND if i>-1 else FL_CURSOR_CROSS)
+                return 1
+            elif event == FL_LEAVE:
+                self.set_cur(FL_CURSOR_DEFAULT)
+                return 1
+            else:
+                return Fl_Widget.handle(self, event)
+        except Exception, e:
+            traceback.print_exc()
+            raise
 
 class PanelList(Fl_Hold_Browser):
     def __init__(self, app, *vargs):
@@ -249,7 +288,7 @@ class PanelList(Fl_Hold_Browser):
                         self.dragged = to
             return res 
         except Exception, e:
-            print e
+            traceback.print_exc()
             return 0
         
 
@@ -300,7 +339,21 @@ class SegEditorApp:
             self.remove_duplicate_rects()
         return changed
 
-    def setmode(self, widget):
+    def set_edit_mode(self, widget):
+        self.emode = widget.mode
+        if widget.mode=='p':
+            self.help.value("Drag panel corners to resize them.")
+            self.rb_h.deactivate()
+            self.rb_v.deactivate()
+            self.rb_p.deactivate()
+        else:
+            self.rb_h.activate()
+            self.rb_v.activate()
+            self.rb_p.activate()
+            self.set_grid_mode(self.rb_h)
+        widget.setonly()
+
+    def set_grid_mode(self, widget):
         self.mode = widget.mode
         if widget.mode in ["h", "v"]:
             self.help.value("Left button click - create line.\nLeft button drag - move line.\nRight button click - delete line.")
@@ -448,7 +501,7 @@ class SegEditorApp:
         self.seg_window.hide()
 
     def text_select(self, w):
-        self.canvas.selected = w.value()-1
+        self.selected_panel = w.value()-1
         self.canvas.redraw()
 
     def __init__(self, comicbook, callback):
@@ -461,49 +514,65 @@ class SegEditorApp:
         self.window = Fl_Window(740, 520)
         self.window.size_range(740, 520)
         self.scroll = Fl_Scroll(10, 10, 500, 500)
-        self.canvas = MyCanvas(self,10, 10, 500, 500)
+        self.canvas = MyCanvas(self,10, 10, 500, 500, GridEditor)
         self.window.resizable(self.scroll)
         self.scroll.end()
         self.scroll.type(Fl_Scroll.BOTH)
 
         self.right = Fl_Group(520, 10, 210, 530)
-        self.right_top = Fl_Group(520, 10, 210, 160)
-        self.right_top.resizable(None)
         
-        self.btn_left = Fl_Button(520, 10, 30, 20)
-        self.btn_left.label("<<")
+        self.btn_left = Fl_Button(520, 10, 100, 20)
+        self.btn_left.label("<< Prev Page")
         self.btn_left.callback(self.flip_back)
-        self.btn_right = Fl_Button(555, 10, 30, 20)
-        self.btn_right.label(">>")
+        self.btn_right = Fl_Button(630, 10, 100, 20)
+        self.btn_right.label(">> Next Page")
         self.btn_right.callback(self.flip_fwd)
-        self.spin_page = Fl_Choice(590, 10, 140, 20)
+        self.spin_page = Fl_Choice(520, 30, 210, 20)
         self.spin_page.callback(self.select_page)
         for i in xrange(len(self.comix)):
             self.spin_page.add(self.comix.get_filename(i))
         self.spin_page.value(0)
+
+
+        self.edit_mode_btns = Fl_Group(520, 10, 210, 70)
+        self.edit_mode_btns.resizable(None)
+        self.emode_label = Fl_Box(520, 55, 80, 30, "MODE:")
+        self.emode_label.align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE)
+        self.rb_mg = Fl_Round_Button(590, 55, 60, 30, "GRID")
+        self.rb_mg.mode = "g"
+        self.rb_mg.type(FL_RADIO_BUTTON);
+        self.rb_mg.callback(self.set_edit_mode)
+        self.rb_mp = Fl_Round_Button(650, 55, 80, 30, "PANELS")
+        self.rb_mp.mode = "p"
+        self.rb_mp.type(FL_RADIO_BUTTON);
+        self.rb_mp.callback(self.set_edit_mode)
+        self.edit_mode_btns.end()
+
         
-        self.rb_h = Fl_Round_Button(520, 40, 210, 30, "horiz lines")
+        self.grid_mode_btns = Fl_Group(520, 80, 210, 65)
+        self.rb_h = Fl_Round_Button(520, 80, 210, 30, "edit horiz lines")
         self.rb_h.mode = "h"
         self.rb_h.type(FL_RADIO_BUTTON);
-        self.rb_h.callback(self.setmode)
-        self.rb_v = Fl_Round_Button(520, 60, 210, 30, "vert lines")
+        self.rb_h.callback(self.set_grid_mode)
+        self.rb_v = Fl_Round_Button(520, 100, 210, 30, "edit vert lines")
         self.rb_v.mode = "v"
         self.rb_v.type(FL_RADIO_BUTTON);
-        self.rb_v.callback(self.setmode)
-        self.rb_p = Fl_Round_Button(520, 80, 210, 30, "panels")
+        self.rb_v.callback(self.set_grid_mode)
+        self.rb_p = Fl_Round_Button(520, 120, 210, 30, "edit panels")
         self.rb_p.mode = "p"
-        self.rb_p.callback(self.setmode)
+        self.rb_p.callback(self.set_grid_mode)
         self.rb_p.type(FL_RADIO_BUTTON);
-        self.help = Fl_Multiline_Output (520, 105, 210, 60)
-        self.help.box(FL_DOWN_FRAME)
-        self.right_top.end()
+        self.grid_mode_btns.end()
         
-        self.text = PanelList(self, 520, 170, 205, 265)
+        self.help = Fl_Multiline_Output (520, 145, 210, 60)
+        self.help.box(FL_DOWN_FRAME)
+        
+        self.text = PanelList(self, 520, 210, 205, 225)
         self.right.resizable(self.text)
         self.text.callback(self.text_select)
-        self.setmode(self.rb_h)
         
-        
+        self.set_edit_mode(self.rb_mg)
+                
 
         self.zooms = [(4, '25%'), (3, '33%'), (2, '50%'), (1, '100%')]
 
@@ -526,7 +595,6 @@ class SegEditorApp:
         self.btn_auto.label("Auto")
         self.btn_auto.callback(self.auto_segment)
 
-
         
         self.btn_save = Fl_Button(520, 490, 210, 20)
         self.btn_save.label("DONE")
@@ -537,6 +605,7 @@ class SegEditorApp:
         Fl.visual(FL_RGB)
 
         self.load_segmentation()
+        self.selected_panel = None
 
         self.window.show(["Comic Watcher - segmentation editor"])
         self.saved = {}
