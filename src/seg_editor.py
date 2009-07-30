@@ -26,7 +26,6 @@
 #   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from fltk import *
-import sys
 
 import Image
 
@@ -97,7 +96,6 @@ class GridEditor(BaseEditor):
         return None
 
     def start_drag(self, x, y):
-        app = self.app
         i = self.get_snap(x, y)
         if i>-1:
             self.pulling = i
@@ -109,10 +107,10 @@ class GridEditor(BaseEditor):
         app = self.app
         if self.pulling!=None:
             if app.mode == "h":
-                app.update_rects(self.pulling, y, app.mode)
+                app.update_rects(self.pulling, y)
                 app.hlines[self.pulling] = y
             if app.mode == "v":
-                app.update_rects(self.pulling, x, app.mode)
+                app.update_rects(self.pulling, x)
                 app.vlines[self.pulling] = x
             if app.mode == "p":
                 cell0 = app.get_cell(self.pullstart)
@@ -178,12 +176,13 @@ class MyCanvas(Fl_Widget):
         self.app = app
         self.cur = FL_CURSOR_DEFAULT
         self.editor = editorClass(self)
+        self.im = None
+        self.zoom_q = 1
     
-    def draw(self):
+    def draw(self, *args):
         print 'a'
         w,h = self.w(), self.h()
         iw,ih = self.im.size
-        app = self.app
         x0,y0 = 10-self.x(), 10-self.y()
         
         x1 = min(iw, x0+w)
@@ -194,7 +193,7 @@ class MyCanvas(Fl_Widget):
         
         try:
             self.editor.draw()
-        except Exception, e:
+        except Exception:
             traceback.print_exc()
             raise
         
@@ -206,7 +205,8 @@ class MyCanvas(Fl_Widget):
             self.cur = cur
 
        
-    def handle(self, event):
+    def handle(self, *args):
+        event = args[0]
         print '1'
         zq = self.zoom_q
         x0,y0 = self.x(), self.y()
@@ -221,7 +221,6 @@ class MyCanvas(Fl_Widget):
         x *= zq
         y *= zq
             
-        app = self.app
         btn = Fl.event_button()
         print '2'
         try:
@@ -254,7 +253,7 @@ class MyCanvas(Fl_Widget):
                 return 1
             else:
                 return Fl_Widget.handle(self, event)
-        except Exception, e:
+        except Exception:
             traceback.print_exc()
             raise
 
@@ -264,7 +263,8 @@ class PanelList(Fl_Hold_Browser):
         self.app = app
         Fl_Hold_Browser.__init__(self, *vargs)
     
-    def handle(self, event):
+    def handle(self, *args):
+        event = args[0]
         try:
             btn = Fl.event_button()
             res = Fl_Hold_Browser.handle(self, event)
@@ -287,19 +287,13 @@ class PanelList(Fl_Hold_Browser):
                             self.value(to)
                         self.dragged = to
             return res 
-        except Exception, e:
+        except Exception:
             traceback.print_exc()
             return 0
         
 
 class SegEditorApp:
-    def open_file(self, widhet):
-        self.pathbox.value(fl_file_chooser("Open Comic File", "JPEG Files (*.jpg)\tPNG Files (*.png)\tGIF Files (*.gif)\tAll Files (*)", None))
-        
-    def open_dir(self, widget):
-        self.pathbox.value(fl_dir_chooser("Open Comic Folder", None))
-
-    def update_rects(self, i, x1, mode):
+    def update_rects(self, i, x1):
         if self.mode=="h":
             lines = self.hlines
             inds = 1,3
@@ -324,15 +318,13 @@ class SegEditorApp:
         changed = False
         if self.mode=="h":
             lines = self.hlines
-            inds = 1,3
         elif self.mode=="v":
             lines = self.vlines
-            inds = 0,2
         for i in range(len(lines)-1):
             for i2 in range(len(lines)-1, i, -1):
                 l = lines[i]; l2 = lines[i2]
                 if abs(l2-l)<8:
-                    self.update_rects(i2, l, self.mode)
+                    self.update_rects(i2, l)
                     del lines[i2]
                     changed = True
         if changed:
@@ -423,7 +415,6 @@ class SegEditorApp:
 
     def load_segmentation(self):
         page_id = self.page_id
-        name = self.comix.get_filename(page_id)
         fil = self.comix.get_file(page_id)
         self.image = Image.open(fil)
         if page_id in self.cur_data:
@@ -480,7 +471,6 @@ class SegEditorApp:
         self.seg_window.end()
         self.seg_window.set_modal()
         self.seg_window.show(["Automatic segmentation"])
-        opts = {}
                 
     def do_auto_seg(self, widget):
         opts = {}
