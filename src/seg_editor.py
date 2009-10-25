@@ -34,8 +34,7 @@ from auto_segment import segmentate, seg_algos
 
 import traceback
 
-def fill_rect(x0, y0, w, h):
-    step = 5
+def fill_rect(x0, y0, w, h, step = 5):
     for x in range(x0, x0+w, step):
         leng = min(h, x0+w-x)-1
         fl_line(x, y0, x+leng, y0+leng)
@@ -55,7 +54,6 @@ class GridEditor(BaseEditor):
         BaseEditor.__init__(self, widget)
     
     def draw(self):
-        print 'y'
         x0,y0 = -self.widget.x(), -self.widget.y()
         w,h = self.widget.w(), self.widget.h()
         app = self.widget.app
@@ -123,7 +121,7 @@ class GridEditor(BaseEditor):
 
     def end_drag(self):
         app = self.app
-        if self.pulling:
+        if self.pulling!=None:
             app.refresh_text()
         self.pulling = None
         if app.mode!="p" and app.remerge_lines():
@@ -164,10 +162,122 @@ class GridEditor(BaseEditor):
             app.refresh_text()
             self.widget.damage(1)
 
+def fl_rect2(x0, y0, x1, y1):
+    mx = min(x0,x1)
+    dx = abs(x0-x1)
+    my = min(y0,y1)
+    dy = abs(y0-y1)
+    fl_rect(mx,my,dx+1,dy+1)
+
+def corner_append(corners, x0, y0, x1, y1):
+    corners.append((min(x0,x1), min(y0,y1), max(x0,x1), max(y0,y1)))
+
+corner2axes = [(0,1), (0,3), (2,1), (2,3)]
+
+corner_size_px = 25
+
+def is_bottom_right(axis):
+    return axis>1.5
 
 class PanelEditor(BaseEditor):
     def __init__(self, widget):
         BaseEditor.__init__(self, widget)
+        self.corners = []
+
+    def big_enough(self, r):
+        zq = self.widget.zoom_q
+        limit = corner_size_px * zq * 2.1
+        return (r[2]-r[0]>limit, r[3]-r[1]>limit)
+
+
+    def draw(self):
+        x0,y0 = -self.widget.x(), -self.widget.y()
+        app = self.widget.app
+        zq = self.widget.zoom_q
+        self.corners = []
+        
+        corner_size = corner_size_px * zq
+        
+        for i,r in enumerate(app.rects):
+            xbig, ybig = self.big_enough(r)
+            sgn = lambda x: corner_size if x else -corner_size
+            xc0 = sgn(xbig)
+            xc1 = -sgn(xbig)
+            yc0 = sgn(ybig)
+            yc1 = -sgn(ybig)
+            corners = []
+            corner_append(corners, r[0], r[1], r[0]+xc0, r[1]+yc0)
+            corner_append(corners, r[0], r[3], r[0]+xc0, r[3]+yc1)
+            corner_append(corners, r[2], r[1], r[2]+xc1, r[1]+yc0)
+            corner_append(corners, r[2], r[3], r[2]+xc1, r[3]+yc1)
+            self.corners.append(corners)
+            fl_color(255, 192, 0)
+            for cx0,cy0,cx1,cy1 in corners:
+                fl_rect2(cx0/zq-x0,cy0/zq-y0,cx1/zq-x0,cy1/zq-y0)
+            fl_color(255, 0, 0)
+            fl_rect2(r[0]/zq-x0, r[1]/zq-y0, r[2]/zq-x0, r[3]/zq-y0)
+            
+            
+    def get_snap(self, x, y):
+        zq = self.widget.zoom_q
+        for i,corners in enumerate(self.corners):
+            for j,corner in enumerate(corners):
+                x0,y0,x1,y1 = corner
+                if x0<=x<=x1 and y0<=y<=y1:
+                    return i,j
+        return None
+            
+            
+
+    def start_drag(self, x, y):
+        i = self.get_snap(x, y)
+        app = self.app
+        if i!=None:
+            self.pulling = (i[0], i[1], self.big_enough(app.rects[i[0]]))
+            return True
+        return False
+        
+        
+    def do_drag(self, x, y):
+        app = self.app
+        if self.pulling != None:
+            zq = self.widget.zoom_q
+            corner_size = corner_size_px * zq
+            rect = app.rects[self.pulling[0]]
+            axes = corner2axes[self.pulling[1]]
+            coords = (x,y)
+            limits = self.widget.w(), self.widget.h()
+            bigs = self.pulling[2]
+            changed = False
+            for axis, coord, limit, big in zip(axes, coords, app.image.size, bigs):
+                dir = 1 if is_bottom_right(axis) else -1
+                if not big:
+                    dir = -dir
+                tgt = int(coord + (0.5*dir*corner_size))
+                if tgt<0:
+                    tgt = 0
+                if tgt>=limit:
+                    tgt = limit-1
+                other_axis = axis ^ 2
+                if (tgt-rect[other_axis])*dir>0:
+                    rect[axis] = tgt 
+                    changed = True
+            if changed:
+                self.widget.damage(1)
+                app.refresh_text()
+
+    def end_drag(self):
+        app = self.app
+        if self.pulling!=None:
+            app.refresh_text()
+        self.pulling = None
+
+    def click(self, x, y):
+        pass
+
+    def rclick(self, x, y):
+        pass
+
     
 
 class MyCanvas(Fl_Widget):
@@ -180,7 +290,6 @@ class MyCanvas(Fl_Widget):
         self.zoom_q = 1
     
     def draw(self, *args):
-        print 'a'
         w,h = self.w(), self.h()
         iw,ih = self.im.size
         x0,y0 = 10-self.x(), 10-self.y()
@@ -189,7 +298,6 @@ class MyCanvas(Fl_Widget):
         y1 = min(ih, y0+h)
         ims = self.im.crop((x0, y0, x1, y1))
         fl_draw_image_mono(ims.tostring(), 10, 10, ims.size[0], ims.size[1]) 
-        print 'x'
         
         try:
             self.editor.draw()
@@ -207,7 +315,6 @@ class MyCanvas(Fl_Widget):
        
     def handle(self, *args):
         event = args[0]
-        print '1'
         zq = self.zoom_q
         x0,y0 = self.x(), self.y()
         y = (Fl.event_y()-y0)
@@ -222,7 +329,6 @@ class MyCanvas(Fl_Widget):
         y *= zq
             
         btn = Fl.event_button()
-        print '2'
         try:
             if event == FL_PUSH:
                 if btn==1:
@@ -332,17 +438,22 @@ class SegEditorApp:
         return changed
 
     def set_edit_mode(self, widget):
+        if self.emode != widget.mode:
+            if widget.mode=='p':
+                self.help.value("Drag panel corners to resize them.")
+                self.rb_h.deactivate()
+                self.rb_v.deactivate()
+                self.rb_p.deactivate()
+                self.canvas.editor = PanelEditor(self.canvas)
+            else:
+                self.rb_h.activate()
+                self.rb_v.activate()
+                self.rb_p.activate()
+                self.set_grid_mode(self.rb_h)
+                self.canvas.editor = GridEditor(self.canvas)
+            self.canvas.damage(1)
+
         self.emode = widget.mode
-        if widget.mode=='p':
-            self.help.value("Drag panel corners to resize them.")
-            self.rb_h.deactivate()
-            self.rb_v.deactivate()
-            self.rb_p.deactivate()
-        else:
-            self.rb_h.activate()
-            self.rb_v.activate()
-            self.rb_p.activate()
-            self.set_grid_mode(self.rb_h)
         widget.setonly()
 
     def set_grid_mode(self, widget):
@@ -524,6 +635,7 @@ class SegEditorApp:
         self.spin_page.value(0)
 
 
+        self.emode = None
         self.edit_mode_btns = Fl_Group(520, 10, 210, 70)
         self.edit_mode_btns.resizable(None)
         self.emode_label = Fl_Box(520, 55, 80, 30, "MODE:")
