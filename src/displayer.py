@@ -137,7 +137,7 @@ class Renderer:
         cw, ch = src.get_width(), src.get_height()
         if x0>=cw or y0>=ch or x0+w<0 or y0+h<0:
             return
-        
+       
         x1 = x0 + w - 1
         y1 = y0 + h - 1
         dx1 = dx0 + w - 1
@@ -174,19 +174,6 @@ class Renderer:
         self.pixblend(pxa_src, pxa_dest, todo)
         del pxa_src
         del pxa_dest
-                #~ a = c_precalc[i][j]
-                #~ if x0-i>=0 and y0-j>=0: 
-                    #~ self.cha(pxa, x0-i, y0-j, a)
-                #~ if x1+i<sw and y0-j>=0: 
-                    #~ self.cha(pxa, x1+i, y0-j, a)
-                #~ if x0-i>=0 and y1+j<sh: 
-                    #~ self.cha(pxa, x0-i, y1+j, a)
-                #~ if x1+i<sw and y1+j<sh: 
-                    #~ self.cha(pxa, x1+i, y1+j, a)
-        #~ dest.blit(src2, (dx-fade, dy-fade), (x0-fade, y0-fade, fade, fade))
-        #~ dest.blit(src2, (dx-fade, dy+h), (x0-fade, y1+1, fade, fade))
-        #~ dest.blit(src2, (dx+w, dy-fade), (x1+1, y0-fade, fade, fade))
-        #~ dest.blit(src2, (dx+w, dy+h), (x1+1, y1+1, fade, fade))
 
     
     def render(self, pos, motion=False, mode="spot"):
@@ -268,7 +255,7 @@ class Renderer:
 class DisplayerApp:
     def __init__(self, comix, callback=None):
         pygame.init()
-        window = pygame.display.set_mode((0,0), FULLSCREEN, 32)
+        window = pygame.display.set_mode((0,0), HWSURFACE|DOUBLEBUF|FULLSCREEN)
         scrdim = pygame.display.get_surface().get_size()
         pygame.display.set_caption('page player')
         self.renderer = Renderer(pygame.display.get_surface(), pygame.font.Font('freesansbold.ttf', 16))
@@ -507,7 +494,7 @@ class DisplayerApp:
         return        
     
     def loop(self, events): 
-        msec = self.clock.tick(100)
+        msec = self.clock.tick(50)
         self.force_redraw = False
         for event in events:
             if event.type == QUIT:
@@ -564,8 +551,10 @@ class DisplayerApp:
                 
                 target_pos = self.states[self.state]["target"](self)
                 if self.progress>=1:
+                    self.progress = 1
                     if "onfinish" in self.states[self.state]:
                         self.states[self.state]["onfinish"](self)
+                        self.clock.tick(50) # transition should not take progress time
                     else:
                         self.pos = target_pos
                     self.state = self.states[self.state]["changeto"]
