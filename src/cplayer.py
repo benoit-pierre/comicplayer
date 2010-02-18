@@ -143,17 +143,17 @@ class App:
     def __init__(self):
         self.lastpath = ""
         self.window = MyWindow(520,180)
-        self.pathbox = Fl_Input(60,20,260,20, "Comic: ")
+        self.pathbox = Fl_Input(60,20,240,20, "Comic: ")
         self.pathbox.value('<none selected>')
-        self.btn_openf = Fl_Button(330,20,70,20, "Open file")
-        self.btn_opend = Fl_Button(410,20,100,20, "Open directory")
+        self.btn_openf = Fl_Button(310,20,80,20, "Open file")
+        self.btn_opend = Fl_Button(400,20,110,20, "Open directory")
 
         self.btn_openf.callback(self.open_file)
         self.btn_opend.callback(self.open_dir)
 
-        self.btn_segment = Fl_Button(60,140,120,20, "Auto segmentation")
-        self.btn_seg_edit = Fl_Button(200,140,120,20, "Edit segmentation")
-        self.btn_play = Fl_Button(340,140,120,20, "Watch comic")
+        self.btn_segment = Fl_Button(30,140,155,20, "Auto segmentation")
+        self.btn_seg_edit = Fl_Button(200,140,150,20, "Edit segmentation")
+        self.btn_play = Fl_Button(365,140,115,20, "Watch comic")
         
 
         self.btn_segment.callback(self.auto_seg)
