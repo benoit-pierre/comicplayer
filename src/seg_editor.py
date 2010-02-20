@@ -451,6 +451,8 @@ class SegEditorApp:
                 self.rb_p.activate()
                 self.set_grid_mode(self.rb_h)
                 self.canvas.editor = GridEditor(self.canvas)
+            self.rects2lines()
+            self.refresh_text()
             self.canvas.damage(1)
 
         self.emode = widget.mode
@@ -692,8 +694,7 @@ class SegEditorApp:
         self.right.resizable(self.text)
         self.text.callback(self.text_select)
         
-        self.set_edit_mode(self.rb_mg)
-                
+              
 
         self.zooms = [(4, '25%'), (3, '33%'), (2, '50%'), (1, '100%')]
 
@@ -727,6 +728,8 @@ class SegEditorApp:
 
         self.load_segmentation()
         self.selected_panel = None
+        self.set_edit_mode(self.rb_mg)
+
 
         self.window.show(["Comic Watcher - segmentation editor"])
         self.saved = {}
