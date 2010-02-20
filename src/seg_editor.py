@@ -440,7 +440,7 @@ class SegEditorApp:
     def set_edit_mode(self, widget):
         if self.emode != widget.mode:
             if widget.mode=='p':
-                self.help.value("Drag panel corners to resize them.")
+                #~ self.help.value("Drag panel corners to resize them.")
                 self.rb_h.deactivate()
                 self.rb_v.deactivate()
                 self.rb_p.deactivate()
@@ -458,10 +458,10 @@ class SegEditorApp:
 
     def set_grid_mode(self, widget):
         self.mode = widget.mode
-        if widget.mode in ["h", "v"]:
-            self.help.value("Left button click - create line.\nLeft button drag - move line.\nRight button click - delete line.")
-        else:
-            self.help.value("Left button click - create panel.\nLeft button drag - modify panel.\nRight button click - delete panel.")
+        #~ if widget.mode in ["h", "v"]:
+            #~ self.help.value("Left button click - create line.\nLeft button drag - move line.\nRight button click - delete line.")
+        #~ else:
+            #~ self.help.value("Left button click - create panel.\nLeft button drag - modify panel.\nRight button click - delete panel.")
         widget.setonly()
 
     def get_cell(self, xy):
@@ -604,6 +604,22 @@ class SegEditorApp:
     def text_select(self, w):
         self.selected_panel = w.value()-1
         self.canvas.redraw()
+        
+    def show_help(self, widget):
+        self.help_wnd = Fl_Window(640, 480, "Help")
+        close_btn = Fl_Button(270, 440, 100, 20, "OK")
+        close_btn.callback(self.close_help)
+        scroll = Fl_Scroll(20, 20, 600, 400)
+        help_panel = Fl_Multiline_Output (20, 20, 585, 600)
+        scroll.end()
+        help_panel.wrap(True)
+        help_panel.value(help_text)
+        self.help_wnd.set_modal()
+        self.help_wnd.show()
+        
+    def close_help(self, widget):
+        self.help_wnd.hide()
+        
 
     def __init__(self, comicbook, callback):
         self.comix = comicbook
@@ -666,10 +682,13 @@ class SegEditorApp:
         self.rb_p.type(FL_RADIO_BUTTON);
         self.grid_mode_btns.end()
         
-        self.help = Fl_Multiline_Output (520, 145, 210, 60)
-        self.help.box(FL_DOWN_FRAME)
+        #~ self.help = Fl_Multiline_Output (520, 145, 210, 60)
+        #~ self.help.box(FL_DOWN_FRAME)
         
-        self.text = PanelList(self, 520, 210, 205, 225)
+        self.help_btn = Fl_Button(520, 155, 210, 30, "HELP")
+        self.help_btn.callback(self.show_help)
+        
+        self.text = PanelList(self, 520, 200, 205, 235)
         self.right.resizable(self.text)
         self.text.callback(self.text_select)
         
@@ -712,7 +731,33 @@ class SegEditorApp:
         self.window.show(["Comic Watcher - segmentation editor"])
         self.saved = {}
         Fl.run()
-        
+
+help_text = """This tool can help you to edit the results of an automatic comic segmentation or to perform a manual segmentation.
+
+You can select individual comic page to edit by topmost "Prev" and "Next" buttons or by using a drop-down list.
+
+The editor has two main modes of operation:
+GRID - editing the comic layout as a grid (since most comics are laid out so)
+PANELS - moving and resizing individual panels
+
+In the GRID mode you can create the grid lines and then form rectangular panels by selecting individual grid cells or cell groups. 
+
+In the GRID VERTICAL/HORIZONTAL mode:
+left mouse button - create a new line or move (drag) an existing one;
+right mouse button - delete a line.
+
+In the GRID PANELS mode:
+click a panel in the panel coordinates list to highlight it;
+left mouse button - drag from one cell to another to select a cell group to use for this panel;
+right mouse button - delete a panel
+
+In the PANELS mode:
+left mouse button - drag a corner of a panel
+
+Changes are commited to the disk automatically when you press the "DONE" button.
+
+Other buttons are hopefully self-explanatory.
+"""
 
 if __name__=="__main__":
     try:
