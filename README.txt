@@ -1,0 +1,76 @@
+=== Comic Player v 0.2 - brief manual ===
+
+
+QUICK INTRO
+===========
+
+The purpose of this application is simple.
+
+It is not very convenient to read a comic (either scanned or digitally drawn) on a regular computer display. 
+Usually vertical resolution is unsatisfactory and you have to zoom it (quality sucks) or scroll it (irritating).
+
+This program can segment a comic page into individual panels and highlight them one by one (or row by row),
+allowing you to navigate between them using the keyboard. Segmentation is performed automatically (via some quite dumb
+and slow algorithm), but you can fix/adjust it manually.
+
+
+SUPPORTED PLATFORMS
+===================
+
+Windows (XP, Vista - tested; 2000, 7 - should work; NT, 9x - not sure and you should abandon them anyway)
+
+Linux (Debian Squeeze, Ubuntu 9.10 - tested and already have all necessary compiled packages; with other distros you are on your own)
+
+INSTALLATION INSTRUCTIONS
+=========================
+
+* Linux: Ubuntu 9.10 or Debian Squeeze ("testing" branch at the moment)
+
+Switch to root and issue the following commands:
+
+apt-get install python-setuptools python-imaging python-fltk python-pygame unrar
+easy_install pyunrar2
+
+You should be all set. Launch the application by issuing:
+
+cd <directory_with_this_readme>/src
+./cplayer.py
+
+* Windows
+
+Install Python 2.x (http://python.org/download/), version 2.6 is recommended at the moment
+
+Install setuptools package (http://pypi.python.org/pypi/setuptools)
+
+Open Command Line window, change directory to C:\Python26\Scripts (or wherever you have installed Python)
+
+Issue the following command:
+
+easy_install PIL pyFLTK pygame pyunrar2
+    
+Go to a folder where you have downloaded comicplayer, go to subfolder "src", launch cplayer.py
+
+BASIC USAGE
+===========
+
+The workflow is like this:
+
+1. Open a comic book (either a folder with image files or .cbz / .cbr file).
+
+2. Perform the auto-segmentation (if you didn't before).
+
+3. Start watching the comic and review the auto-segmentation results.
+
+4. If auto-segmentation failed (comic has too complex layout) or you are planning to cleanup segmentation 
+    to give it away to somebody - launch a segmentation editor and correct it.
+
+
+FEEDBACK
+========
+
+Feel free to report your feedback.
+
+Project page: http://code.google.com/p/comicplayer/
+
+Author email: yk4ever@gmail.com
+
