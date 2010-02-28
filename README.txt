@@ -24,19 +24,22 @@ Linux (Debian Squeeze, Ubuntu 9.10 - tested and already have all necessary compi
 INSTALLATION INSTRUCTIONS
 =========================
 
-* Linux: Ubuntu 9.10 or Debian Squeeze ("testing" branch at the moment)
+Ubuntu or Debian Linux
+----------------------
 
 Switch to root and issue the following commands:
 
-apt-get install python-setuptools python-imaging python-fltk python-pygame unrar
-easy_install pyunrar2
+> apt-get install python-setuptools python-imaging python-fltk python-pygame unrar
+> easy_install pyunrar2
 
 You should be all set. Launch the application by issuing:
 
-cd <directory_with_this_readme>/src
-./cplayer.py
+> cd <directory_with_this_readme>/src
+> ./cplayer.py
 
-* Windows
+
+Windows
+-------
 
 Install Python 2.x (http://python.org/download/), version 2.6 is recommended at the moment
 
@@ -46,8 +49,18 @@ Open Command Line window, change directory to C:\Python26\Scripts (or wherever y
 
 Issue the following command:
 
-easy_install PIL pyFLTK pygame pyunrar2
-    
+easy_install PIL pyunrar2
+
+Since Windows builds of pyFLTK and pygame have setuptools support broken at the moment,
+you will need to install them separately from their respective web sites:
+
+http://sourceforge.net/projects/pyfltk/files/
+
+http://www.pygame.org/download.shtml
+
+You will also need to get msvcr71.dll and put it into your "windows\system32" folder,
+if you do not have it already (chances are, you do).
+
 Go to a folder where you have downloaded comicplayer, go to subfolder "src", launch cplayer.py
 
 BASIC USAGE
