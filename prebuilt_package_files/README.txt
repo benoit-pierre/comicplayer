@@ -21,27 +21,13 @@ Windows (XP, Vista - tested; 2000, 7 - should work; NT, 9x - not sure and you sh
 
 Linux (Debian Squeeze, Ubuntu 9.10 - tested and already have all necessary compiled packages; with other distros you are on your own)
 
-INSTALLATION INSTRUCTIONS
-=========================
-
-Ubuntu or Debian Linux
-----------------------
-
-Switch to root and issue the following commands:
-
-> apt-get install python-setuptools python-imaging python-fltk python-pygame unrar
-> easy_install pyunrar2
-
-You should be all set. Launch the application by issuing:
-
-> cd <directory_with_this_readme>/src
-> ./cplayer.py
+To use this application in Linux - use source download
 
 
-Windows, using prebuilt package
--------------------------------
+INSTALLATION INSTRUCTIONS - Windows, using prebuilt package
+===========================================================
 
-Download a prebuilt package and unzip it.
+Download a prebuilt package and unzip it (if you are reading this, you are probably past that step)
 
 If you do not have Python 2.6 or later installed, chances are you need msvcr90.dll (a.k.a. "MS VS 2008 redistributable").
 You can get it here:
@@ -49,33 +35,6 @@ http://www.microsoft.com/downloads/details.aspx?FamilyID=9b2da534-3e03-4391-8a4d
 
 Go to the folder where you unzipped the prebuilt package to and launch cplayer.exe 
 
-
-Windows, from source
---------------------
-
-Install Python 2.x (http://python.org/download/), version 2.6 is recommended at the moment
-
-Install setuptools package (http://pypi.python.org/pypi/setuptools)
-
-Open Command Line window, change directory to C:\Python26\Scripts (or wherever you have installed Python)
-
-Issue the following command:
-
-easy_install PIL pyunrar2
-
-Since Windows builds of pyFLTK and pygame have setuptools support broken at the moment,
-you will need to install them separately from their respective web sites:
-
-http://sourceforge.net/projects/pyfltk/files/
-
-http://www.pygame.org/download.shtml
-
-You will also need to get msvcr71.dll and put it into your "windows\system32" folder,
-if you do not have it already (chances are, you do).
-It can be downloaded here:
-http://www.microsoft.com/downloads/details.aspx?familyid=32bc1bee-a3f9-4c13-9c99-220b62a191ee&displaylang=en
-
-Go to a folder where you have downloaded comicplayer, go to subfolder "src", launch cplayer.py
 
 BASIC USAGE
 ===========
