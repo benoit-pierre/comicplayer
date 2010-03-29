@@ -84,8 +84,11 @@ class MyConfigParser(RawConfigParser):
        
 
 class Blob:
-    def __init__(self):
+    def __init__(self, maxx, maxy):
         self.segs = {}
+        self.touches_edge = False
+        self.maxx = maxx
+        self.maxy = maxy
 
     def does_touch(self, y, xx):
         if not self.segs.has_key(y-1):
@@ -97,6 +100,10 @@ class Blob:
 
     def add(self, y, xx):
         # todo: remove dupes
+        if y==0 or y==self.maxy-1:
+            self.touches_edge = True
+        if xx[0]==0 or xx[1]==self.maxx-1:
+            self.touches_edge = True
         try:
             self.segs[y].append(xx)
         except KeyError:
@@ -174,14 +181,14 @@ class CommonSegmentor:
             for seq in sequences:
                 touchers = []
                 for bid, blob in blobs.iteritems():
-                    if blob.does_touch(y, seq):
+                    if blob.touches_edge or blob.does_touch(y, seq):
                         touchers.append(bid)
                         try:
                             untouched.remove(bid)
                         except KeyError:
                             pass
                 if len(touchers)==0:
-                    newblob = Blob()
+                    newblob = Blob(im.size[0], im.size[1])
                     newblob.add(y, seq)
                     blobs[next_bid] = newblob
                     next_bid += 1
@@ -233,7 +240,7 @@ class CommonSegmentor:
                     except KeyError:
                         pass
                 if len(touchers)==0:
-                    newblob = Blob()
+                    newblob = Blob(im.size[0], im.size[1])
                     newblob.add(y, seq)
                     blobs[next_bid] = newblob
                     new_recent_blobs.add(next_bid)
