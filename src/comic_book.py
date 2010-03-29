@@ -42,6 +42,12 @@ import Image
 
 img_extensions = ['jpg', 'gif', 'png']
 
+class UnsupportedFileTypeError:
+    pass
+    
+class FilenameNotFoundError:
+    pass
+
 class AZNamer:
     def __init__(self, caps=True):
         self.caps = caps
@@ -74,6 +80,11 @@ def ComicBook(path):
             return ZipComicBook(path)
         elif ext in ['rar','cbr']:
             return RarComicBook(path)
+        elif ext in img_extensions:
+            return SingleFileComicBook(path)
+        else:
+            raise UnsupportedFileTypeError
+            
 
 class BaseComicBook:
     def __init__(self, path):
@@ -177,6 +188,7 @@ class BaseComicBook:
         out = StringIO.StringIO()
         config.write(out)
         self.add_file('panels.ini', out.getvalue())
+        self.has_segmentation = True
         return res
 
 class ZipComicBook(BaseComicBook):
@@ -184,7 +196,9 @@ class ZipComicBook(BaseComicBook):
         BaseComicBook.__init__(self, path)
         self.zf = zipfile.ZipFile(path, 'r', zipfile.ZIP_DEFLATED)
         self.writable = False
-        self.filenames = [fn for fn in self.zf.namelist() if os.path.splitext(fn)[1][1:] in img_extensions]
+        namelist = self.zf.namelist()
+        self.has_segmentation = "panels.ini" in namelist
+        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:] in img_extensions]
         self.filenames.sort()
 
     def get_file_by_name(self, name):
@@ -207,7 +221,9 @@ class RarComicBook(BaseComicBook):
     def __init__(self, path):
         BaseComicBook.__init__(self, path)
         rf = UnRAR2.RarFile(path)
-        self.filenames = [f.filename for f in rf.infoiter() if os.path.splitext(f.filename)[1][1:] in img_extensions]
+        namelist = [f.filename for f in rf.infoiter()]
+        self.has_segmentation = "panels.ini" in namelist
+        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:] in img_extensions]
         self.filenames.sort()
         del rf
         self.writable = False
@@ -231,7 +247,9 @@ class DirComicBook(BaseComicBook):
         except IOError:
             self.writable = False
         mask = os.path.join(os.path.normpath(path), '*')
-        self.filenames = [fn[len(mask)-1:] for fn in glob.glob(mask) if os.path.splitext(fn)[1][1:] in img_extensions]
+        namelist = [fn[len(mask)-1:] for fn in glob.glob(mask)]
+        self.has_segmentation = "panels.ini" in namelist
+        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:] in img_extensions]
         self.filenames.sort()
 
     def get_file_by_name(self, name):
@@ -251,6 +269,32 @@ class DirComicBook(BaseComicBook):
             open(os.path.join(path, comix2.get_filename(i)), 'wb').write(comix2.get_file(i).read())
         return DirComicBook(path)
 
+class SingleFileComicBook(BaseComicBook):
+    def __init__(self, path):
+        BaseComicBook.__init__(self, path)
+        try:
+            tmp = open(path+"_test__.tmp", "wb")
+            tmp.close()
+            os.unlink(path+"_test__.tmp")
+            self.writable = True
+        except IOError:
+            self.writable = False
+        try:
+            self.get_file_by_name("panels.ini")
+            self.has_segmentation = True
+        except:
+            self.has_segmentation = False
+        self.filenames = [path]
+
+    def get_file_by_name(self, name):
+        basepath, simple_name = os.path.split(self.filenames[0])
+        if name==self.filenames[0] or name==simple_name:
+            return open(self.filenames[0], 'rb')
+        else:
+            return open(self.filenames[0]+"_"+name, 'rb')
+        
+    def add_file(self, name, bytez):
+        open(self.filenames[0]+"_"+name, 'wb').write(bytez)
 
 if __name__=="__main__":
     try:

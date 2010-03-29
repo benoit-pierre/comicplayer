@@ -25,7 +25,7 @@
 #   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 #   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import glob, os
+import glob, os, copy
 
 import Image, ImageDraw
 
@@ -145,7 +145,7 @@ class CommonSegmentor:
         return ord(pairs[0][0])
     
     @classmethod
-    def extract_borders(cls, im, border_color=None, tolerance=40, **kwargs):
+    def extract_borders(cls, im, border_color=0, tolerance=30, **kwargs):
         s = im.convert("L").tostring()
         line = im.size[0]
        
@@ -192,7 +192,6 @@ class CommonSegmentor:
                         del blobs[bid]
             for bid in untouched:
                 del blobs[bid]
-                
         res = []
         bloblist = list(blobs.values())
         
@@ -251,43 +250,62 @@ class CommonSegmentor:
         return list(blobs.values())
     
     @classmethod
-    def blobs2panels(cls, blobs, minlimit=50):
+    def blobs2panels(cls, blobs, min_frame_size=200, auto_edge_snap_limit=20, **kwargs):
     
         rects = []
         
         for blob in blobs: 
             rect = blob.get_rect()
-            # Remove small
-            if rect[2]-rect[0]<minlimit or rect[3]-rect[1]<minlimit:
-                continue
             rects.append(rect)
+        rects = cls.remove_overlaps(rects)
+
         res = []
-        # Remove overlapping
-        unprocessed = set(rects)
-        for r1_0 in rects:
-            if not r1_0 in unprocessed:
+        for rect in rects:
+            if rect[2]-rect[0]<min_frame_size or rect[3]-rect[1]<min_frame_size:
                 continue
-            r1 = r1_0
-            processed = set(r1_0)
-            for r2 in unprocessed:
-                if r2==r1:
+            res.append(rect)
+        
+        auto_edge_snap(res, (0,2), auto_edge_snap_limit)
+        auto_edge_snap(res, (1,3), auto_edge_snap_limit)
+        return res
+        
+    @classmethod
+    def remove_overlaps(cls, rects):
+        has_been_merges = True
+        while has_been_merges:
+            has_been_merges = False
+            res = []
+            # Remove overlapping
+            # Straightforward algo. Can be optimized, I suppose
+            unprocessed = set(rects)
+            for r1 in rects:
+                if r1 not in unprocessed:
                     continue
-                isect = rect_intersect(r1, r2)
-                isect_area = rect_area(isect)
-                if isect_area>0.6*rect_area(r1) or isect_area>0.6*rect_area(r2):
-                    processed.add(r2)
-                    r1 = rect_merge(r1,r2)
-            res.append(r1)
-            unprocessed -= processed
-        auto_edge_snap(res, (0,2), 20)
-        auto_edge_snap(res, (1,3), 20)
+                overlaps = set()
+                overlaps.add(r1)
+                overlaps_found = True
+                while overlaps_found:
+                    overlaps_found = False
+                    for r2 in unprocessed:
+                        if r2 in overlaps:
+                            continue
+                        isect = rect_intersect(r1, r2)
+                        isect_area = rect_area(isect)
+                        if isect_area>0.6*rect_area(r1) or isect_area>0.6*rect_area(r2):
+                            overlaps_found = True
+                            has_been_merges = True
+                            overlaps.add(r2)
+                            r1 = rect_merge(r1,r2)
+                res.append(r1)
+                unprocessed -= overlaps
+            rects = res
         return res
     
     @classmethod
     def extract_panels(cls, im, **opts):
         borderblob = cls.extract_borders(im, **opts)
         blobs = cls.extract_blobs(im, borderblob)
-        panels = cls.blobs2panels(blobs)
+        panels = cls.blobs2panels(blobs, **opts)
         return panels
 
 class QCSegmentor:

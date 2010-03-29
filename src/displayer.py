@@ -514,11 +514,21 @@ class DisplayerApp:
                         self.zoom()
                     if event.key == K_h:
                         self.state_spotlight = not self.state_spotlight
+                        mode = "cell"
+                        if self.state_rownav:
+                            mode = "row"
+                        if not self.state_spotlight:
+                            mode = "none"
+                        self.add_msg("Highlight mode: " + mode)
                         self.force_redraw = True
                     if event.key == K_F1:
                         self.show_help()
                     if event.key == K_r:
                         self.state_rownav = not self.state_rownav
+                        mode = "cell"
+                        if self.state_rownav:
+                            mode = "row"
+                        self.add_msg("Highlight mode: " + mode)
                         self.load_nav(self.state_rownav, True)
                         self.navigate_panel(0, True)
                     if self.state not in ['zoomed', 'leaving_page']:
