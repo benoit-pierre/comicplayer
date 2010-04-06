@@ -25,9 +25,9 @@
 #   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 #   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import glob, os, copy
+import glob, os, copy, array
 
-import Image, ImageDraw
+import Image, ImageDraw, ImageFilter
 
 from pprint import pprint
 
@@ -85,15 +85,25 @@ class MyConfigParser(RawConfigParser):
 
 class Blob:
     def __init__(self, maxx, maxy):
-        self.segs = {}
+        self.segs = []
+        self.yshift = -1
         self.touches_edge = False
         self.maxx = maxx
         self.maxy = maxy
 
+    def has_line(self, y):
+        return y>=self.yshift and y<self.yshift+len(self.segs)
+
+    def get_line(self, y):
+        return self.segs[y-self.yshift]
+
+
+    # does horiz line at y touch blob's horiz line at y-1
     def does_touch(self, y, xx):
-        if not self.segs.has_key(y-1):
+        if not self.has_line(y-1):
             return False
-        for myx0, myx1 in self.segs[y-1]:
+        line = self.segs[y-1-self.yshift]
+        for myx0, myx1 in line:
             if not (myx1<xx[0] or myx0>xx[1]):
                 return True
         return False
@@ -104,25 +114,31 @@ class Blob:
             self.touches_edge = True
         if xx[0]==0 or xx[1]==self.maxx-1:
             self.touches_edge = True
-        try:
-            self.segs[y].append(xx)
-        except KeyError:
-            self.segs[y] = [xx]
+        if self.yshift==-1:
+            self.yshift = y
+            self.segs = [[]]
+        elif y<self.yshift:
+            esegs = []
+            for i in xrange(y, self.yshift):
+                esegs.append([])
+            self.segs = esegs + self.segs
+            self.yshift = y
+        elif y==self.yshift+len(self.segs):
+            self.segs.append([])
+        line = self.get_line(y)
+        line.append(xx)
 
     def merge(self, blob2):
-        for y, pairs in blob2.segs.iteritems():
+        for dy, pairs in enumerate(blob2.segs):
+            y = dy + blob2.yshift
             for xx in pairs:
                 self.add(y, xx)
 
     def get_rect(self):
-        y0, y1 = 1000000, 0
+        y0, y1 = self.yshift, self.yshift+len(self.segs)
         x0, x1 = 1000000, 0
-        for y, pairs in self.segs.iteritems():
+        for pairs in self.segs:
             for xx in pairs:
-                if y0>y:
-                    y0 = y
-                if y1<y:
-                    y1 = y
                 if x0>xx[0]:
                     x0 = xx[0]
                 if x1<xx[1]:
@@ -152,13 +168,31 @@ class CommonSegmentor:
         return ord(pairs[0][0])
     
     @classmethod
-    def extract_borders(cls, im, border_color=0, tolerance=30, **kwargs):
-        s = im.convert("L").tostring()
+    def extract_borders(cls, im, border_color=None, tolerance=20, border_thickness=1, **kwargs):
+        bwim = im.convert("L")
         line = im.size[0]
        
         if border_color==None:
-            border_color = cls.get_border_color(im, s, line)
-       
+            border_color = cls.get_border_color(im, bwim.tostring(), line)
+            
+        #create a lookup table
+        lut = array.array("B")
+        for i in xrange(0, 256):
+            if abs(i-border_color)<tolerance:
+                lut.append(1)
+            else:
+                lut.append(0)
+        bit_im = bwim.point(lut)
+        if border_thickness>1:
+            bt = border_thickness
+            bit_im = bit_im.filter(ImageFilter.Kernel((bt,bt), [1]*(bt*bt), scale=1))
+            draw = ImageDraw.Draw(bit_im)
+            draw.rectangle([(0,0),(im.size[0]-1, im.size[1]-1)], outline=(bt*bt))
+            draw.rectangle([(1,1),(im.size[0]-2, im.size[1]-2)], outline=(bt*bt))
+        s = bit_im.getdata()
+        
+        right_color = border_thickness * border_thickness
+        
         xrng = range(0, im.size[0])
         blobs = {}
         next_bid = 0
@@ -167,14 +201,16 @@ class CommonSegmentor:
             sequences = []
             in_border = True
             x0 = 0
+            idx = y*line
             for x in xrng:
-                if abs(ord(s[y*line+x])-border_color)<tolerance:
+                if s[idx]==right_color:
                     if not in_border:
                         x0 = x
                         in_border = True
                 elif in_border:
                     sequences.append((x0,x-1))
                     in_border = False
+                idx += 1
             if in_border:
                 sequences.append((x0,im.size[0]-1))
             untouched = set(blobs.keys())
@@ -209,16 +245,15 @@ class CommonSegmentor:
         return megablob
             
     @classmethod
-    def extract_blobs(cls, im, megablob):
-        bordsegs = megablob.segs
+    def extract_blobs(cls, imsize, megablob, **kwargs):
         # Second pass - extract panel blobs
         blobs = {}
         recent_blobs = set()
         next_bid = 0
-        for y in xrange(0, im.size[1]):
-            if bordsegs.has_key(y):
+        for y in xrange(0, imsize[1]):
+            if megablob.has_line(y):
                 # Calculating border's complement
-                segs = bordsegs[y]
+                segs = megablob.get_line(y)
                 segs.sort(key=lambda x:x[0])
                 sequences = []
                 lastend = -1
@@ -226,10 +261,10 @@ class CommonSegmentor:
                     if lastend+1<seg[0]:
                         sequences.append((lastend+1, seg[0]-1))
                     lastend = seg[1]
-                if lastend<im.size[0]-1:
-                    sequences.append((lastend+1, im.size[0]-1))
+                if lastend<imsize[0]-1:
+                    sequences.append((lastend+1, imsize[0]-1))
             else:
-                sequences = [(0, im.size[0]-1)]
+                sequences = [(0, imsize[0]-1)]
             new_recent_blobs = set()
             for seq in sequences:
                 touchers = []
@@ -240,7 +275,7 @@ class CommonSegmentor:
                     except KeyError:
                         pass
                 if len(touchers)==0:
-                    newblob = Blob(im.size[0], im.size[1])
+                    newblob = Blob(imsize[0], imsize[1])
                     newblob.add(y, seq)
                     blobs[next_bid] = newblob
                     new_recent_blobs.add(next_bid)
@@ -265,6 +300,7 @@ class CommonSegmentor:
             rect = blob.get_rect()
             rects.append(rect)
         rects = cls.remove_overlaps(rects)
+        
 
         res = []
         for rect in rects:
@@ -311,7 +347,7 @@ class CommonSegmentor:
     @classmethod
     def extract_panels(cls, im, **opts):
         borderblob = cls.extract_borders(im, **opts)
-        blobs = cls.extract_blobs(im, borderblob)
+        blobs = cls.extract_blobs(im.size, borderblob)
         panels = cls.blobs2panels(blobs, **opts)
         return panels
 
@@ -383,8 +419,9 @@ def preview_blobs(im, rects, prevname):
     im_res.putpalette(palette)
 
     for b in rects:
-        for y in b.segs:
-            for xx in b.segs[y]:
+        for dy, pairs in enumerate(b.segs):
+            y = dy + b.yshift
+            for xx in pairs:
                 canv.line(((xx[0],y),(xx[1],y)), fill=8)
     im_res.save(prevname)
 
@@ -415,12 +452,19 @@ def preview_blobs_and_panels(im, blobs, rects, prevname):
         palette[3*i+2] = i*36
     palette[24] = 255
     palette[28] = 255
+    for i in xrange(0,16):
+        palette[384+3*i] = 0
+        palette[384+3*i+1] = 255-i*12
+        palette[384+3*i+2] = 0
     im_res.putpalette(palette)
 
+    rn = 0
     for b in blobs:
-        for y in b.segs:
-            for xx in b.segs[y]:
-                canv.line(((xx[0],y),(xx[1],y)), fill=9)
+        for dy, pairs in enumerate(b.segs):
+            y = dy + b.yshift
+            for xx in pairs:
+                canv.line(((xx[0],y),(xx[1],y)), fill=128+rn)
+        rn = (rn+1) % 16
     for r in rects:
         canv.rectangle((r[0],r[1],r[2],r[3]), outline=8)
     im_res.save(prevname)

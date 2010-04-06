@@ -86,7 +86,7 @@ class App:
 
     def auto_seg(self, widget):
         if self.check_writability():
-            self.seg_window = Fl_Window(500, 160)
+            self.seg_window = Fl_Window(500, 175)
             self.seg_progress = Fl_Progress(20, 10, 460, 20)
             self.seg_progress.minimum(0)
             self.seg_progress.maximum(len(self.comix))
@@ -99,12 +99,16 @@ class App:
                 self.seg_border.add(c[0])
             self.seg_border.value(0)
             self.seg_tol = Fl_Input(250, 80, 100, 20, "Border tolerance")
-            self.seg_tol.value("30")
-            self.seg_min_frame = Fl_Input(250, 100, 100, 20, "Minimum frame size")
+            self.seg_tol.value("20")
+            self.seg_border_thick = Fl_Choice(250, 100, 120, 20, "Minimum border thickness")
+            for c in self.border_thick_choices:
+                self.seg_border_thick.add(c[0])
+            self.seg_border_thick.value(0)
+            self.seg_min_frame = Fl_Input(250, 120, 100, 20, "Minimum panel size")
             self.seg_min_frame.value("200")
-            self.seg_go = Fl_Button(170, 130, 70, 20, "GO")
+            self.seg_go = Fl_Button(170, 150, 70, 20, "GO")
             self.seg_go.callback(self.do_auto_seg)
-            self.seg_cancel = Fl_Button(260, 130, 70, 20, "Cancel")
+            self.seg_cancel = Fl_Button(260, 150, 70, 20, "Cancel")
             self.seg_cancel.callback(self.auto_seg_end)
             self.seg_window.end()
             self.seg_window.set_modal()
@@ -114,6 +118,7 @@ class App:
     def do_auto_seg(self, widget):
         opts = {}
         opts["border_color"] = self.border_choices[int(self.seg_border.value())][1]
+        opts["border_thickness"] = self.border_thick_choices[int(self.seg_border_thick.value())][1]
         opts["tolerance"] = int(self.seg_tol.value())
         opts["segmentor_class"] = seg_algos[int(self.seg_algo.value())]
         opts["min_frame_size"] = int(self.seg_min_frame.value())
@@ -166,6 +171,7 @@ class App:
 
     def __init__(self):
         self.border_choices = [("Autodetect", None), ("Force black", 0), ("Force white", 255)]
+        self.border_thick_choices = [("1 px", 1), ("3 px square", 3), ("5 px square", 5)]
         self.lastpath = ""
         self.window = MyWindow(520,180)
         self.pathbox = Fl_Input(60,20,240,20, "Comic: ")
