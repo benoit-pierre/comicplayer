@@ -509,7 +509,6 @@ class DisplayerApp:
         elif event.type == VIDEOEXPOSE:
             self.force_redraw = True
         elif event.type == KEYDOWN:
-            print self.state, event.key
             if self.state == 'help':
                 if event.key == K_ESCAPE or event.key == K_q:
                     self.state = 'change_panel'
