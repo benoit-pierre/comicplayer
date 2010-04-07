@@ -1,4 +1,4 @@
-=== Comic Player v 0.2 - brief manual ===
+=== Comic Player v 0.3 - brief manual ===
 
 
 QUICK INTRO

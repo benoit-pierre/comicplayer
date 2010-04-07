@@ -31,12 +31,10 @@ from fltk import *
 import sys
 import os.path
 
-from seg_editor import SegEditorApp
-from comic_book import ComicBook, RarComicBook, ZipComicBook, DirComicBook
-from auto_segment import segmentate, seg_algos
-from displayer import DisplayerApp
-
-import threading
+from libs.seg_editor import SegEditorApp
+from libs.comic_book import ComicBook, RarComicBook, ZipComicBook, DirComicBook
+from libs.auto_segment import segmentate, seg_algos
+from libs.displayer import DisplayerApp
 
 class MyWindow(Fl_Window):
     def draw(self):
@@ -98,7 +96,7 @@ class App:
             for c in self.border_choices:
                 self.seg_border.add(c[0])
             self.seg_border.value(0)
-            self.seg_tol = Fl_Input(250, 80, 100, 20, "Border tolerance")
+            self.seg_tol = Fl_Input(250, 80, 100, 20, "Border color tolerance")
             self.seg_tol.value("20")
             self.seg_border_thick = Fl_Choice(250, 100, 120, 20, "Minimum border thickness")
             for c in self.border_thick_choices:

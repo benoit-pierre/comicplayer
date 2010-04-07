@@ -436,15 +436,15 @@ class DisplayerApp:
         self.renderer.brightness = 255
         self.renderer.render(self.pos)
 
-    def add_msg(self, text):
-        image_f = self.renderer.font.render(text, True, (128,255,160))
+    def add_msg(self, text, color=(128,255,160), ttl=1.5):
+        image_f = self.renderer.font.render(text, True, color)
         image_b = self.renderer.font.render(text, True, (0,32,0))
         base = pygame.Surface((image_f.get_width()+2, image_f.get_height()+2), 0, 32)
         base.blit(image_b, (2,2))
         base.blit(image_f, (0,0))
         image = base.convert(8)
         image.set_colorkey((0,0,0))
-        self.renderer.textimages.append([image,255,1.5])
+        self.renderer.textimages.append([image,255,ttl])
         
     def show_help(self):
         self.state = 'help'
@@ -492,68 +492,75 @@ class DisplayerApp:
     def quit(self):
         self.running = False
         return        
+        
+    def show_mode(self):
+        mode = "cell"
+        if self.state_rownav:
+            mode = "row"
+        if self.state_spotlight:
+            mode += " spotlight"
+        else:
+            mode += " focus"
+        self.add_msg("Highlight mode: " + mode)
     
-    def loop(self, events): 
-        msec = self.clock.tick(50)
-        self.force_redraw = False
-        for event in events:
-            if event.type == QUIT:
-                self.quit()
-            elif event.type == VIDEOEXPOSE:
-                self.force_redraw = True
-            elif event.type == KEYDOWN:
+    def process_event(self, event):
+        if event.type == QUIT:
+            self.quit()
+        elif event.type == VIDEOEXPOSE:
+            self.force_redraw = True
+        elif event.type == KEYDOWN:
+            print self.state, event.key
+            if self.state == 'help':
                 if event.key == K_ESCAPE or event.key == K_q:
-                    self.quit()
-                if self.state == 'zooming' or self.state == 'zoomed':
-                    self.unzoom()
-                elif self.state == 'help':
                     self.state = 'change_panel'
-                    self.progress = 1 
-                else:
-                    if event.key == K_SPACE:
-                        self.zoom()
-                    if event.key == K_h:
-                        self.state_spotlight = not self.state_spotlight
-                        mode = "cell"
-                        if self.state_rownav:
-                            mode = "row"
-                        if not self.state_spotlight:
-                            mode = "none"
-                        self.add_msg("Highlight mode: " + mode)
-                        self.force_redraw = True
-                    if event.key == K_F1:
-                        self.show_help()
-                    if event.key == K_r:
-                        self.state_rownav = not self.state_rownav
-                        mode = "cell"
-                        if self.state_rownav:
-                            mode = "row"
-                        self.add_msg("Highlight mode: " + mode)
-                        self.load_nav(self.state_rownav, True)
-                        self.navigate_panel(0, True)
-                    if self.state not in ['zoomed', 'leaving_page']:
-                        if event.key == K_PAGEUP:
-                            if event.mod & KMOD_SHIFT:
-                                self.flip_page(-5)
-                            elif event.mod & KMOD_CTRL:
-                                self.flip_page(-20)
-                            else:
-                                self.flip_page(-1)
-                        elif event.key == K_PAGEDOWN:
-                            if event.mod & KMOD_SHIFT:
-                                self.flip_page(+5)
-                            elif event.mod & KMOD_CTRL:
-                                self.flip_page(+20)
-                            else:
-                                self.flip_page(+1)
-                        elif event.key == K_LEFT:
-                            self.navigate_panel(-1)
-                        elif event.key == K_RIGHT:
-                            self.navigate_panel(+1)
-                        elif event.key == K_UP:
-                            self.navigate_vertical(-1)
-                        elif event.key == K_DOWN:
-                            self.navigate_vertical(+1)
+                    self.progress = 1
+                return
+            elif event.key == K_ESCAPE or event.key == K_q:
+                self.quit()
+            if self.state == 'zooming' or self.state == 'zoomed':
+                self.unzoom()
+            else:
+                if event.key == K_SPACE:
+                    self.zoom()
+                if event.key == K_h:
+                    self.state_spotlight = not self.state_spotlight
+                    self.show_mode()
+                    self.force_redraw = True
+                if event.key == K_F1:
+                    self.show_help()
+                    self.force_redraw = False
+                if event.key == K_r:
+                    self.state_rownav = not self.state_rownav
+                    self.show_mode()
+                    self.load_nav(self.state_rownav, True)
+                    self.navigate_panel(0, True)
+                if self.state not in ['zoomed', 'leaving_page']:
+                    if event.key == K_PAGEUP:
+                        if event.mod & KMOD_SHIFT:
+                            self.flip_page(-5)
+                        elif event.mod & KMOD_CTRL:
+                            self.flip_page(-20)
+                        else:
+                            self.flip_page(-1)
+                    elif event.key == K_PAGEDOWN:
+                        if event.mod & KMOD_SHIFT:
+                            self.flip_page(+5)
+                        elif event.mod & KMOD_CTRL:
+                            self.flip_page(+20)
+                        else:
+                            self.flip_page(+1)
+                    elif event.key == K_LEFT:
+                        self.navigate_panel(-1)
+                    elif event.key == K_RIGHT:
+                        self.navigate_panel(+1)
+                    elif event.key == K_UP:
+                        self.navigate_vertical(-1)
+                    elif event.key == K_DOWN:
+                        self.navigate_vertical(+1)
+
+    def update_screen(self, msec):
+        if self.state=='help':
+            return
         if self.states[self.state]["motion"] or self.force_redraw or len(self.renderer.textimages)>0:
             light = "spot" if self.state_spotlight else "bright"
             if self.states[self.state]["motion"]:
@@ -584,9 +591,17 @@ class DisplayerApp:
             self.renderer.textimages = [ti for ti in self.renderer.textimages if ti[1]>0]
             
             self.renderer.render(self.pos, self.states[self.state]["motion"], light)
+    
+    def loop(self, events): 
+        msec = self.clock.tick(50)
+        self.force_redraw = False
+        for event in events:
+            self.process_event(event)
+        self.update_screen(msec)
             
             
     def run(self):
+        self.add_msg("Press F1 for help", color=(255,64,80), ttl=4)
         while self.running: 
             self.loop(pygame.event.get())
         pygame.quit()
