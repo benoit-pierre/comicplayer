@@ -66,14 +66,20 @@ easy_install PIL pyunrar2
 Since Windows builds of pyFLTK and pygame have setuptools support broken at the moment,
 you will need to install them separately from their respective web sites:
 
-http://sourceforge.net/projects/pyfltk/files/
+    http://sourceforge.net/projects/pyfltk/files/
 
-http://www.pygame.org/download.shtml
+    http://www.pygame.org/download.shtml
 
-You will also need to get msvcr71.dll and put it into your "windows\system32" folder,
-if you do not have it already (chances are, you do).
-It can be downloaded here:
-http://www.microsoft.com/downloads/details.aspx?familyid=32bc1bee-a3f9-4c13-9c99-220b62a191ee&displaylang=en
+You also need to have msvcr71.dll in your "WINDOWS\system32" folder,
+Chances are, you already do.
+If not - you can install it as a part of .Net framework:
+
+    http://www.microsoft.com/downloads/details.aspx?FamilyId=262D25E3-F589-4842-8157-034D1E7CF3A3&displaylang=en
+
+and copy it manually from "WINDOWS\Microsoft.NET\Framework\v1.1.4322" to "WINDOWS\system32"
+... or download it from any other trusted source, for example:
+
+    http://www.dll-files.com/dllindex/dll-files.shtml?msvcr71
 
 Go to a folder where you have downloaded comicplayer, go to subfolder "src", launch cplayer.py
 
