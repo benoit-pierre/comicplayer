@@ -30,7 +30,6 @@
 import pygame
 import pygame.key
 import math
-import copy
 
 import pygame.locals as pyg
 
@@ -74,47 +73,28 @@ class DisplayerApp:
         self.renderer.page = page
         self.renderer.zoom_cache = {}
         
-        #~ panels = self.comix.load_panels(page_id)
         hei = 1.0 * page.get_height()
-        scrolls = int(math.floor(hei/self.renderer.scrdim[1]*2))
         
-        panels = []
-        for i in range(scrolls):
-            panels.append((0, int(round(i*hei/scrolls)), page.get_width()-1, int(round((i+1)*hei/scrolls))))
+        offsets = []
+        extra_hei = hei - self.renderer.scrdim[1]
+        scrolls = int(math.ceil(extra_hei/self.renderer.scrdim[1]*2))
+        for i in range(scrolls+1):
+            offsets.append(int(round(i*extra_hei/scrolls)))
         
-        self.raw_panels = panels
-        self.panel_id = 0
-        self.load_nav(self.state_rownav)
+        self.offsets = offsets
+        self.offset_id = 0
         self.progress = 0.0
-        self.pos = copy.copy(panels[self.panel_id])
-        self.src_pos = self.pos
+        self.pos = self.oid2pos(0)
+        self.src_pos = self.oid2pos(0)
         self.add_msg(self.comix.get_filename(page_id))
         
-    def load_nav(self, rownav = False, convert_id = True):
-        panels = self.raw_panels
-        oldid = self.panel_id
-        if rownav or convert_id:
-            rows = []
-            y0 = -1
-            y1 = -1
-            x0 = -1
-            for i, p in enumerate(panels):
-                if p[1] == y0 and p[3]==y1: 
-                    x1 = p[2]
-                else:
-                    if y0>=0:
-                        rows.append([x0, y0, x1, y1])
-                    x0, y0, x1, y1 = p
-                    if convert_id and not rownav and len(rows)==oldid:
-                        self.panel_id = i
-                if convert_id and rownav and i==oldid:
-                    self.panel_id = len(rows)
-            rows.append([x0, y0, x1, y1])
-        if rownav:
-            self.panels = rows
-        else:
-            self.panels = panels
-    
+    def oid2pos(self, oid):
+        offset = self.offsets[oid]
+        shei = self.renderer.scrdim[1]
+        pwid = self.renderer.page.get_width()
+        return [0, offset, pwid, offset+shei]
+        
+        
     def zoom(self):
         self.src_pos = self.pos
         self.state = 'zooming'
@@ -122,10 +102,10 @@ class DisplayerApp:
         
     def unzoom(self):
         self.src_pos = self.pos
-        self.state = 'change_panel'
+        self.state = 'change_offset'
         self.progress = 0.0
        
-    def flip_page(self, delta, panelwise = False):
+    def flip_page(self, delta, offsetwise = False):
         nci = self.comic_id
         nci += delta
         if nci<0:
@@ -135,80 +115,25 @@ class DisplayerApp:
         if nci!=self.comic_id:
             self.next_comic_id = nci
             self.flip_dir = nci>self.comic_id
-            self.flip_to_last = panelwise
+            self.flip_to_last = offsetwise
             self.src_pos = self.pos
             self.state = "leaving_page"
 
-    def navigate_panel(self, delta, force=False):
-        pid = self.panel_id
-        pid += delta
-        if pid<0:
+    def navigate_offset(self, delta, force=False):
+        oid = self.offset_id
+        oid += delta
+        if oid<0:
             self.flip_page(-1,True)
             return
-        if pid>=len(self.panels):
+        if oid>=len(self.offsets):
             self.flip_page(+1)
             return
-        if force or self.panel_id!=pid:
-            self.panel_id = pid
+        if force or self.offset_id!=oid:
+            self.offset_id = oid
             self.progress = 0.0
             self.renderer.brightness = 255
             self.src_pos = self.pos
-            self.state = "change_panel"
-
-    def navigate_horizontal(self, delta):
-        if delta==0:
-            return
-        pid = self.panel_id
-        p0 = self.panels[pid]
-        if delta>0:
-            filt = lambda p0, p: p[0]>p0[0] and not(p[3]<=p0[1] or p[1]>=p0[3])
-        else:
-            filt = lambda p0, p: p[0]<p0[0] and not(p[3]<=p0[1] or p[1]>=p0[3])
-        
-        candidates = [pid_rect for pid_rect in enumerate(self.panels) if filt(p0, pid_rect[1])]
-            
-        c0 = rect_center(p0)
-        def centerrange(pid_rect):
-            return xy_rhombic_range(rect_center(pid_rect[1]), c0)
-        candidates.sort(key=centerrange)
-        
-        if len(candidates)==0:
-            self.navigate_panel(delta)
-            return
-        else:
-            self.panel_id = candidates[0][0]
-            self.progress = 0.0
-            self.renderer.brightness = 255
-            self.src_pos = self.pos
-            self.state = "change_panel"
-
-
-    def navigate_vertical(self, delta):
-        if delta==0:
-            return
-        pid = self.panel_id
-        p0 = self.panels[pid]
-        if delta>0:
-            filt = lambda p0, p: p[1]>p0[1] and not(p[2]<=p0[0] or p[0]>=p0[2])
-        else:
-            filt = lambda p0, p: p[1]<p0[1] and not(p[2]<=p0[0] or p[0]>=p0[2])
-        
-        candidates = [pid_rect for pid_rect in enumerate(self.panels) if filt(p0, pid_rect[1])]
-            
-        c0 = rect_center(p0)
-        def centerrange(pid_rect):
-            return xy_rhombic_range(rect_center(pid_rect[1]), c0)
-        candidates.sort(key=centerrange)
-        
-        if len(candidates)==0:
-            self.flip_page(delta,delta<0)
-            return
-        else:
-            self.panel_id = candidates[0][0]
-            self.progress = 0.0
-            self.renderer.brightness = 255
-            self.src_pos = self.pos
-            self.state = "change_panel"
+            self.state = "change_offset"
 
     def shifted_page(self, back = False):
         x0,y0,x1,y1 = self.pos
@@ -216,10 +141,10 @@ class DisplayerApp:
         cw = self.renderer.page.get_width()
         
         if back: 
-            shift=-x1
+            shift=-h
         else:
-            shift = cw-x0
-        return (x0+shift,y0,x1+shift,y1)
+            shift = h-x0
+        return (x0,y0+shift,x1,y1+shift)
 
     def adjust_brightness(self, back = False):
             self.renderer.brightness = 55+int(200*self.progress)
@@ -229,10 +154,10 @@ class DisplayerApp:
     def start_load_page(self):
         self.load_page(self.next_comic_id)
         if not self.flip_dir and self.flip_to_last:
-            self.panel_id = len(self.panels)-1
+            self.offset_id = len(self.offsets)-1
         else:
-            self.panel_id = 0
-        self.target_pos = self.panels[self.panel_id]
+            self.offset_id = 0
+        self.target_pos = self.oid2pos(self.offset_id)
         self.pos = self.target_pos
         self.src_pos= self.shifted_page(self.flip_dir)
 
@@ -256,9 +181,9 @@ class DisplayerApp:
         
 
     states = {
-        "change_panel": {
+        "change_offset": {
             "motion": True,
-            "target": lambda self: self.panels[self.panel_id],
+            "target": lambda self: self.oid2pos(self.offset_id),
             "changeto": "static"
         },
         "zooming": {
@@ -275,7 +200,7 @@ class DisplayerApp:
         },
         "entering_page": {
             "motion": True,
-            "target": lambda self: self.panels[self.panel_id],
+            "target": lambda self: self.oid2pos(self.offset_id),
             "changeto": "static",
             #~ "onfinish": end_changing_page,
             #~ "onprogress": lambda self:self.adjust_brightness(True)
@@ -307,7 +232,7 @@ class DisplayerApp:
         elif event.type == pyg.KEYDOWN:
             if self.state == 'help':
                 if event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
-                    self.state = 'change_panel'
+                    self.state = 'change_offset'
                     self.progress = 1
                 return
             elif event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
@@ -323,31 +248,26 @@ class DisplayerApp:
                 if event.key == pyg.K_r:
                     self.state_rownav = not self.state_rownav
                     self.show_mode()
-                    self.load_nav(self.state_rownav, True)
-                    self.navigate_panel(0, True)
+                    self.navigate_offset(0, True)
                 if self.state not in ['zoomed', 'leaving_page']:
-                    if event.key == pyg.K_PAGEUP:
+                    if event.key == pyg.K_LEFT:
                         if event.mod & pyg.KMOD_SHIFT:
                             self.flip_page(-5)
                         elif event.mod & pyg.KMOD_CTRL:
                             self.flip_page(-20)
                         else:
                             self.flip_page(-1)
-                    elif event.key == pyg.K_PAGEDOWN:
+                    elif event.key == pyg.K_RIGHT:
                         if event.mod & pyg.KMOD_SHIFT:
                             self.flip_page(+5)
                         elif event.mod & pyg.KMOD_CTRL:
                             self.flip_page(+20)
                         else:
                             self.flip_page(+1)
-                    elif event.key == pyg.K_LEFT:
-                        self.navigate_panel(-1)
-                    elif event.key == pyg.K_RIGHT:
-                        self.navigate_panel(+1)
                     elif event.key == pyg.K_UP:
-                        self.navigate_vertical(-1)
+                        self.navigate_offset(-1)
                     elif event.key == pyg.K_DOWN:
-                        self.navigate_vertical(+1)
+                        self.navigate_offset(+1)
 
     def update_screen(self, msec):
         if self.state=='help':

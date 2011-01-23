@@ -102,8 +102,9 @@ class Renderer:
             dest[x1][y1] = (((r<<8)+g)<<8)+b
     
     def render(self, pos, motion=False):
-        wid, hei = pos[2]-pos[0], pos[3]-pos[1]
         sw, sh = self.scrdim
+
+        wid, hei = pos[2]-pos[0], pos[3]-pos[1]
         k = min(1.0*sw/wid, 1.0*sh/hei)
         if k<1:
             cw, ch = self.page.get_width(), self.page.get_height()
