@@ -29,22 +29,15 @@
 
 
 import pygame
-from array import array
 import math
+
+from displayer_help import help
+
 
 class Renderer:
     
     def __init__(self, screen, font):
         self.fade = 6
-        c_precalc = []
-        for i in xrange(self.fade+1):
-            c_precalc.append(array("f"))
-            for j in xrange(self.fade+1):
-                a = 1-0.16*(math.sqrt(i*i+j*j))
-                if a<0:
-                    a = 0
-                c_precalc[-1].append(a)
-        self.c_precalc = c_precalc
         self.zoom_cache = {}
         self.brightness = 255
         self.screen = screen
@@ -108,58 +101,7 @@ class Renderer:
             r = (r1*a + r2*(255-a))//255
             dest[x1][y1] = (((r<<8)+g)<<8)+b
     
-    def fuzz_blit(self, dest, src, dest_coord, src_rect):
-        x0, y0, w, h = src_rect
-        dx0, dy0 = dest_coord
-        fade = self.fade
-        x0+=fade//2;    y0+= fade//2;
-        w-= 2*fade//2;    h-= 2*fade//2
-        dx0+= fade//2;    dy0+= fade//2
-        src.set_alpha(self.brightness)
-        dest.blit(src, (dx0,dy0), (x0,y0,w,h))
-        cw, ch = src.get_width(), src.get_height()
-        if x0>=cw or y0>=ch or x0+w<0 or y0+h<0:
-            return
-       
-        x1 = x0 + w - 1
-        y1 = y0 + h - 1
-        dx1 = dx0 + w - 1
-        dy1 = dy0 + h - 1
-        c_precalc = self.c_precalc
-        for i in xrange(1,fade+1):
-            src.set_alpha(int(self.brightness*c_precalc[0][i]))
-            dest.blit(src, (dx0, dy0-i), (x0, y0-i, w, 1))
-            dest.blit(src, (dx0, dy1+i), (x0, y1+i, w, 1))
-            dest.blit(src, (dx0-i, dy0), (x0-i, y0, 1, h))
-            dest.blit(src, (dx1+i, dy0), (x1+i, y0, 1, h))
-        sw, sh = self.scrdim
-        
-        pxa_src = pygame.PixelArray(src)
-        pxa_dest = pygame.PixelArray(self.screen)
-        lim_i0 = min(x0, dx0)
-        lim_i1 = min(cw-1-x1, sw-1-dx1)
-        lim_j0 = min(y0, dy0)
-        lim_j1 = min(ch-1-y1, sh-1-dy1)
-        todo = []
-        for i in xrange(1, fade+1):
-            for j in xrange(1, fade+1):
-                a = int(self.brightness*c_precalc[i][j])
-                if a==0:
-                    continue
-                if i<lim_i0 and j<lim_j0:
-                    todo.append((x0-i, y0-j, dx0-i, dy0-j, a))
-                if i<lim_i1 and j<lim_j0:
-                    todo.append((x1+i, y0-j, dx1+i, dy0-j,a))
-                if i<lim_i0 and j<lim_j1:
-                    todo.append((x0-i, y1+j, dx0-i, dy1+j, a))
-                if i<lim_i1 and j<lim_j1:
-                    todo.append((x1+i, y1+j, dx1+i, dy1+j, a))
-        self.pixblend(pxa_src, pxa_dest, todo)
-        del pxa_src
-        del pxa_dest
-
-    
-    def render(self, pos, motion=False, mode="spot"):
+    def render(self, pos, motion=False):
         wid, hei = pos[2]-pos[0], pos[3]-pos[1]
         sw, sh = self.scrdim
         k = min(1.0*sw/wid, 1.0*sh/hei)
@@ -178,11 +120,7 @@ class Renderer:
         if page!=None:
             marg_x = (self.scrdim[0]-wid)//2
             marg_y = (self.scrdim[1]-hei)//2
-            q = 1.0 if mode=="bright" else 0.4
-            page.set_alpha(int(self.brightness*q))
             self.screen.blit(page, (marg_x-x0, marg_y-y0))
-            if mode=="spot":
-                self.fuzz_blit(self.screen, page, (marg_x, marg_y), (x0, y0, wid, hei))
         self.show_texts()
         pygame.display.flip()
 
@@ -191,7 +129,6 @@ class Renderer:
         scrdim = self.scrdim
         cw, ch = page.get_width(), page.get_height()
         sw, sh = scrdim
-        k = min(1.0*sw/cw, 1.0*sh/ch)
         page, start, size = self.zoomed_comic((0,0,cw,ch))
         wid, hei = size
         marg_x = (scrdim[0]-wid)//2
@@ -221,7 +158,6 @@ class Renderer:
         
     def write(self, text, x, y):
         image = self.font.render(text, True, (160,255,128))
-        rect = image.get_rect()
         self.screen.blit(image, (x,y))
         
     def show_help(self):

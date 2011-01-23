@@ -27,18 +27,15 @@
 #   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 #   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import pygame, sys,os
+import pygame
 import pygame.key
-import time, math
+import math
 import copy
-import glob
 
-from array import array
-from pygame.locals import * 
+import pygame.locals as pyg
 
-from comic_book import ComicBook
-from displayer_help import help
 from displayer_renderer import Renderer
+
 
 def rect_center(r):
     return [(r[0]+r[2])/2, (r[1]+r[3])/2]
@@ -53,7 +50,7 @@ def xy_rhombic_range(xy1, xy2):
 class DisplayerApp:
     def __init__(self, comix, callback=None):
         pygame.init()
-        window = pygame.display.set_mode((0,0), HWSURFACE|DOUBLEBUF|FULLSCREEN)
+        pygame.display.set_mode((0,0), pyg.HWSURFACE|pyg.DOUBLEBUF|pyg.FULLSCREEN)
         scrdim = pygame.display.get_surface().get_size()
         pygame.display.set_caption('page player')
         self.renderer = Renderer(pygame.display.get_surface(), pygame.font.Font('freesansbold.ttf', 16))
@@ -63,7 +60,6 @@ class DisplayerApp:
         self.comix = comix
         self.comic_id = 0
         self.next_comic_id = 0
-        self.state_spotlight = True
         self.state_rownav = False
         self.state = "entering_page"
         self.load_page(0)
@@ -80,7 +76,7 @@ class DisplayerApp:
         
         #~ panels = self.comix.load_panels(page_id)
         hei = 1.0 * page.get_height()
-        scrolls = math.floor(hei/self.renderer.scrdim[1]*2)
+        scrolls = int(math.floor(hei/self.renderer.scrdim[1]*2))
         
         panels = []
         for i in range(scrolls):
@@ -100,6 +96,8 @@ class DisplayerApp:
         if rownav or convert_id:
             rows = []
             y0 = -1
+            y1 = -1
+            x0 = -1
             for i, p in enumerate(panels):
                 if p[1] == y0 and p[3]==y1: 
                     x1 = p[2]
@@ -273,7 +271,6 @@ class DisplayerApp:
             "target": lambda self: self.shifted_page(not self.flip_dir),
             "changeto": "entering_page",
             "onfinish": start_load_page,
-            "nospotlight": True,
             #~ "onprogress": lambda self:self.adjust_brightness()
         },
         "entering_page": {
@@ -281,7 +278,6 @@ class DisplayerApp:
             "target": lambda self: self.panels[self.panel_id],
             "changeto": "static",
             #~ "onfinish": end_changing_page,
-            "nospotlight": True,
             #~ "onprogress": lambda self:self.adjust_brightness(True)
         },
         "static": {
@@ -300,74 +296,63 @@ class DisplayerApp:
         return        
         
     def show_mode(self):
-        mode = "cell"
-        if self.state_rownav:
-            mode = "row"
-        if self.state_spotlight:
-            mode += " spotlight"
-        else:
-            mode += " focus"
-        self.add_msg("Highlight mode: " + mode)
+        pass
+        # TODO: remove
     
     def process_event(self, event):
-        if event.type == QUIT:
+        if event.type == pyg.QUIT:
             self.quit()
-        elif event.type == VIDEOEXPOSE:
+        elif event.type == pyg.VIDEOEXPOSE:
             self.force_redraw = True
-        elif event.type == KEYDOWN:
+        elif event.type == pyg.KEYDOWN:
             if self.state == 'help':
-                if event.key == K_ESCAPE or event.key == K_q:
+                if event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
                     self.state = 'change_panel'
                     self.progress = 1
                 return
-            elif event.key == K_ESCAPE or event.key == K_q:
+            elif event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
                 self.quit()
             if self.state == 'zooming' or self.state == 'zoomed':
                 self.unzoom()
             else:
-                if event.key == K_SPACE:
+                if event.key == pyg.K_SPACE:
                     self.zoom()
-                if event.key == K_h:
-                    self.state_spotlight = not self.state_spotlight
-                    self.show_mode()
-                    self.force_redraw = True
-                if event.key == K_F1:
+                if event.key == pyg.K_F1:
                     self.show_help()
                     self.force_redraw = False
-                if event.key == K_r:
+                if event.key == pyg.K_r:
                     self.state_rownav = not self.state_rownav
                     self.show_mode()
                     self.load_nav(self.state_rownav, True)
                     self.navigate_panel(0, True)
                 if self.state not in ['zoomed', 'leaving_page']:
-                    if event.key == K_PAGEUP:
-                        if event.mod & KMOD_SHIFT:
+                    if event.key == pyg.K_PAGEUP:
+                        if event.mod & pyg.KMOD_SHIFT:
                             self.flip_page(-5)
-                        elif event.mod & KMOD_CTRL:
+                        elif event.mod & pyg.KMOD_CTRL:
                             self.flip_page(-20)
                         else:
                             self.flip_page(-1)
-                    elif event.key == K_PAGEDOWN:
-                        if event.mod & KMOD_SHIFT:
+                    elif event.key == pyg.K_PAGEDOWN:
+                        if event.mod & pyg.KMOD_SHIFT:
                             self.flip_page(+5)
-                        elif event.mod & KMOD_CTRL:
+                        elif event.mod & pyg.KMOD_CTRL:
                             self.flip_page(+20)
                         else:
                             self.flip_page(+1)
-                    elif event.key == K_LEFT:
+                    elif event.key == pyg.K_LEFT:
                         self.navigate_panel(-1)
-                    elif event.key == K_RIGHT:
+                    elif event.key == pyg.K_RIGHT:
                         self.navigate_panel(+1)
-                    elif event.key == K_UP:
+                    elif event.key == pyg.K_UP:
                         self.navigate_vertical(-1)
-                    elif event.key == K_DOWN:
+                    elif event.key == pyg.K_DOWN:
                         self.navigate_vertical(+1)
 
     def update_screen(self, msec):
         if self.state=='help':
             return
         if self.states[self.state]["motion"] or self.force_redraw or len(self.renderer.textimages)>0:
-            light = "spot" if self.state_spotlight else "bright"
             if self.states[self.state]["motion"]:
                 self.progress += 0.0035*msec
                 
@@ -395,7 +380,7 @@ class DisplayerApp:
                     ti[1] = 255+255*2*ti[2]
             self.renderer.textimages = [ti for ti in self.renderer.textimages if ti[1]>0]
             
-            self.renderer.render(self.pos, self.states[self.state]["motion"], light)
+            self.renderer.render(self.pos, self.states[self.state]["motion"])
     
     def loop(self, events): 
         msec = self.clock.tick(50)
