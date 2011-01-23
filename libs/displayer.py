@@ -279,7 +279,15 @@ class DisplayerApp:
         page = pygame.image.load(fil, name).convert(32)
         self.renderer.page = page
         self.renderer.zoom_cache = {}
-        panels = self.comix.load_panels(page_id)
+        
+        #~ panels = self.comix.load_panels(page_id)
+        hei = 1.0 * page.get_height()
+        scrolls = math.floor(hei/self.renderer.scrdim[1]*2)
+        
+        panels = []
+        for i in range(scrolls):
+            panels.append((0, int(round(i*hei/scrolls)), page.get_width()-1, int(round((i+1)*hei/scrolls))))
+        
         self.raw_panels = panels
         self.panel_id = 0
         self.load_nav(self.state_rownav)
