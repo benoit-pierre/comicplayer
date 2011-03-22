@@ -1,0 +1,4 @@
+syntax: glob
+*.pyc
+libs/prev*.png
+libs/debug_scripts.py
