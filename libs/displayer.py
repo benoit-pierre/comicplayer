@@ -30,6 +30,7 @@
 import pygame
 import pygame.key
 import math
+import time
 
 import pygame.locals as pyg
 
@@ -217,6 +218,7 @@ class DisplayerApp:
     }
     
     def quit(self):
+        self.add_msg("QUITTING...", color=(255,64,80), ttl=4)
         self.running = False
         return        
         
@@ -240,7 +242,7 @@ class DisplayerApp:
             if self.state == 'zooming' or self.state == 'zoomed':
                 self.unzoom()
             else:
-                if event.key == pyg.K_SPACE:
+                if event.key == pyg.K_RETURN:
                     self.zoom()
                 if event.key == pyg.K_F1:
                     self.show_help()
@@ -266,7 +268,7 @@ class DisplayerApp:
                             self.flip_page(+1)
                     elif event.key == pyg.K_UP:
                         self.navigate_offset(-1)
-                    elif event.key == pyg.K_DOWN:
+                    elif event.key == pyg.K_DOWN or event.key == pyg.K_SPACE:
                         self.navigate_offset(+1)
 
     def update_screen(self, msec):
