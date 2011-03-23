@@ -71,6 +71,15 @@ class DisplayerApp:
         name = self.comix.get_filename(page_id)
         fil = self.comix.get_file(page_id)
         page = pygame.image.load(fil, name).convert(32)
+        
+        # widen to occupy 5:4 ratio zone on screen
+        scr_hei = self.renderer.scrdim[1]
+        width_5_4 = scr_hei * 5 / 4.0
+        coeff = width_5_4 / page.get_width()
+        new_height = coeff * page.get_height()
+        page = pygame.transform.smoothscale(page, (int(width_5_4), int(new_height)))
+        
+        
         self.renderer.page = page
         self.renderer.zoom_cache = {}
         
