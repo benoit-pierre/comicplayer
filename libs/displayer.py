@@ -150,15 +150,15 @@ class DisplayerApp:
             self.src_pos = self.pos
             self.state = "change_offset"
 
-    def shifted_page(self, back = False):
+    def shifted_page(self, forward = False):
         x0,y0,x1,y1 = self.pos
         w,h = self.renderer.scrdim
-        cw = self.renderer.page.get_width()
+        ch = self.renderer.page.get_height()
         
-        if back: 
+        if forward: 
             shift=-h
         else:
-            shift = h-x0
+            shift = ch
         return (x0,y0+shift,x1,y1+shift)
 
     def adjust_brightness(self, back = False):
@@ -168,13 +168,15 @@ class DisplayerApp:
                 
     def start_load_page(self):
         self.load_page(self.next_comic_id)
+        print self.flip_dir
         if not self.flip_dir and self.flip_to_last:
             self.offset_id = len(self.offsets)-1
         else:
             self.offset_id = 0
         self.target_pos = self.oid2pos(self.offset_id)
         self.pos = self.target_pos
-        self.src_pos= self.shifted_page(self.flip_dir)
+        self.src_pos = self.shifted_page(self.flip_dir)
+        self.pos = self.src_pos
 
     def end_changing_page(self):
         self.renderer.brightness = 255
