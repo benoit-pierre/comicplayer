@@ -32,6 +32,7 @@ import pygame.key
 import math
 import time
 import subprocess
+import StringIO
 
 import pygame.locals as pyg
 
@@ -77,12 +78,12 @@ class DisplayerApp:
         width_5_4 = scr_hei * 5 / 4
         buf_size = 64 * 1024
         
-        gm_cmdline = "gm convert - -enhance -normalize -filter Lanczos -resize %sx10000 -quality 0 __temp__.png" % width_5_4
+        gm_cmdline = "gm convert - -enhance -normalize -filter Lanczos -resize %sx10000 -quality 0 BMP:-" % width_5_4
         
-        gm_proc = subprocess.Popen(gm_cmdline, shell=True, stdin=subprocess.PIPE)
-        gm_proc.communicate(fil.read())
+        gm_proc = subprocess.Popen(gm_cmdline, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        outdata, errdata = gm_proc.communicate(fil.read())
         
-        page = pygame.image.load("__temp__.png").convert(32)
+        page = pygame.image.load(StringIO.StringIO(outdata), "temp.bmp").convert(32)
         
         self.renderer.page = page
         self.renderer.zoom_cache = {}
