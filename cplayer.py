@@ -31,9 +31,7 @@ from fltk import *
 import sys
 import os.path
 
-from libs.seg_editor import SegEditorApp
 from libs.comic_book import ComicBook, RarComicBook, ZipComicBook, DirComicBook
-from libs.auto_segment import segmentate, seg_algos
 from libs.displayer import DisplayerApp
 
 class MyWindow(Fl_Window):
@@ -48,8 +46,6 @@ class App:
         self.lastpath = newpath
         self.pathbox.value(self.lastpath)
         self.comix = ComicBook(self.lastpath)
-        self.btn_segment.activate()
-        self.btn_seg_edit.activate()
         self.btn_play.activate()        
         self.refresh_info()
         
@@ -60,8 +56,6 @@ class App:
         self.lastpath = newpath
         self.pathbox.value(self.lastpath)
         self.comix = ComicBook(self.lastpath)
-        self.btn_segment.activate()
-        self.btn_seg_edit.activate()
         self.btn_play.activate()        
         self.refresh_info()
 
@@ -80,71 +74,6 @@ class App:
             self.refresh_info()
             return True
         return False
-
-
-    def auto_seg(self, widget):
-        if self.check_writability():
-            self.seg_window = Fl_Window(500, 175)
-            self.seg_progress = Fl_Progress(20, 10, 460, 20)
-            self.seg_progress.minimum(0)
-            self.seg_progress.maximum(len(self.comix))
-            self.seg_algo = Fl_Choice(250, 40, 200, 20, "Segmentation algorithm")
-            for c in seg_algos:
-                self.seg_algo.add(c.__name__)
-            self.seg_algo.value(0)
-            self.seg_border = Fl_Choice(250, 60, 120, 20, "Border color")
-            for c in self.border_choices:
-                self.seg_border.add(c[0])
-            self.seg_border.value(0)
-            self.seg_tol = Fl_Input(250, 80, 100, 20, "Border color tolerance")
-            self.seg_tol.value("20")
-            self.seg_border_thick = Fl_Choice(250, 100, 120, 20, "Minimum border thickness")
-            for c in self.border_thick_choices:
-                self.seg_border_thick.add(c[0])
-            self.seg_border_thick.value(0)
-            self.seg_min_frame = Fl_Input(250, 120, 100, 20, "Minimum panel size")
-            self.seg_min_frame.value("200")
-            self.seg_go = Fl_Button(170, 150, 70, 20, "GO")
-            self.seg_go.callback(self.do_auto_seg)
-            self.seg_cancel = Fl_Button(260, 150, 70, 20, "Cancel")
-            self.seg_cancel.callback(self.auto_seg_end)
-            self.seg_window.end()
-            self.seg_window.set_modal()
-            self.seg_window.show(["Automatic segmentation"])
-            opts = {}
-        
-    def do_auto_seg(self, widget):
-        opts = {}
-        opts["border_color"] = self.border_choices[int(self.seg_border.value())][1]
-        opts["border_thickness"] = self.border_thick_choices[int(self.seg_border_thick.value())][1]
-        opts["tolerance"] = int(self.seg_tol.value())
-        opts["segmentor_class"] = seg_algos[int(self.seg_algo.value())]
-        opts["min_frame_size"] = int(self.seg_min_frame.value())
-        self.seg_go.deactivate()
-        for i in range(len(self.comix)):
-            panels = segmentate(opts, self.comix, i, '.')
-            self.comix.save_panels(i, panels[0], "rect")
-            self.aseg_upd_progress('')
-            Fl.wait(0)
-        self.seg_window.hide()
-        self.refresh_info()
-        
-        
-    def aseg_upd_progress(self, fn):
-        cur = self.seg_progress.value()
-        self.seg_progress.value(cur+1)
-
-    def auto_seg_end(self, widget):
-        self.seg_window.hide()
-        self.refresh_info()
-        
-    def seg_editor(self, widget):
-        if self.check_writability():
-            SegEditorApp(self.comix, self.seg_editor_end)
-        self.refresh_info()
-
-    def seg_editor_end(self):
-        self.refresh_info()
 
     def play(self, widget):
         self.window.hide()
@@ -180,20 +109,14 @@ class App:
         self.btn_openf.callback(self.open_file)
         self.btn_opend.callback(self.open_dir)
 
-        self.btn_segment = Fl_Button(30,140,155,20, "Auto segmentation")
-        self.btn_seg_edit = Fl_Button(200,140,150,20, "Edit segmentation")
-        self.btn_play = Fl_Button(365,140,115,20, "Watch comic")
+        self.btn_play = Fl_Button(30,140,450,20, "Watch comic")
         
         self.comic_info = Fl_Multiline_Output(10,50,500,20)
         self.comic_info.box(FL_DOWN_BOX)
         self.comic_info.color(FL_BACKGROUND_COLOR)
         
-        self.btn_segment.callback(self.auto_seg)
-        self.btn_seg_edit.callback(self.seg_editor)
         self.btn_play.callback(self.play)
 
-        self.btn_segment.deactivate()
-        self.btn_seg_edit.deactivate()
         self.btn_play.deactivate()
 
         self.window.end()
