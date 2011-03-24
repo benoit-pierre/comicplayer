@@ -168,7 +168,6 @@ class DisplayerApp:
                 
     def start_load_page(self):
         self.load_page(self.next_comic_id)
-        print self.flip_dir
         if not self.flip_dir and self.flip_to_last:
             self.offset_id = len(self.offsets)-1
         else:
