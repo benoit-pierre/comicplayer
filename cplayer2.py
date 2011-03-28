@@ -25,12 +25,14 @@ class ComicPlayer:
         filesel.destroy()
         self.comix = ComicBook(self.path)
         self.refresh_info()
+        num = len(self.comix.filenames)
+        self.btn_play.set_sensitive(num>0)
 
     def refresh_info(self):
-        num = len(self.comix.filenames)
         if self.comix==None:
             self.comic_info.value("")
             return
+        num = len(self.comix.filenames)
         has_seg = "no"
         if self.comix.has_segmentation:
             has_seg = "has"
@@ -65,6 +67,7 @@ class ComicPlayer:
 
         self.btn_play = gtk.Button("Watch comic")
         self.btn_play.connect("clicked", self.play, None)
+        self.btn_play.set_sensitive(False)
         vbox.pack_end(self.btn_play)
 
 
