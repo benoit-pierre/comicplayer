@@ -30,30 +30,22 @@ class RowDetector : GLib.Object {
         Pid pid;
         int stdin_handle;
         int stdout_handle;
-        stdout.printf("qqq\n");
         GLib.Process.spawn_async_with_pipes (null, cmdline, null, SpawnFlags.SEARCH_PATH, null, out pid, out stdin_handle, out stdout_handle);
         var stdin_stream = FileStream.fdopen(stdin_handle, "wb");
         var stdout_stream = FileStream.fdopen(stdout_handle, "rb");
-        stdout.printf("rrr\n");
         foreach (var bce in input) {
             stdin_stream.write(bce.buffer);
         }
         stdin_stream.flush();
         stdin_stream = null;
-        stdout.printf("ggg\n");
-//~         uint8[] output = new uint8[65536];
-//~         var read_bytes = stdout_stream.read(output);
-//~         stdout.printf("ttt%d\n", (int)read_bytes);
         string output = stdout_stream.read_line();
         var pieces = output.split(" ");
-//~         var pieces = new string[2];
         GLib.Process.close_pid(pid);
         return new Coords2D() { x = pieces[0].to_int(), y = pieces[1].to_int() };
     }
 
     public static ImageObject load_image(Gee.List<BufChainElement> input) throws GLib.SpawnError {
         var size = get_image_size(input);
-        stdout.printf("SIZE %d %d\n", size.x, size.y);
         var data = new uint8[size.x*size.y];
         var cmdline = new string[] {"gm", "convert", "-", "-monochrome", "-normalize", "GRAY:-"};
         Pid pid;
@@ -69,7 +61,6 @@ class RowDetector : GLib.Object {
         stdin_stream.flush();
         stdin_stream = null;
         var read_bytes = stdout_stream.read(data);
-        stdout.printf("RBYTES %d\n", (int)read_bytes);
         assert(read_bytes==size.x*size.y);
         GLib.Process.close_pid(pid);
         return new ImageObject() { size=size, data=data };
@@ -103,7 +94,6 @@ class RowDetector : GLib.Object {
         var image = load_image(input);
 
         var filled_lines = get_filled_lines(image, target_color);
-            stdout.printf("gotranges\n");
         var res = new ArrayList<LineRange>();
         
         var start = -1;
@@ -135,12 +125,9 @@ class RowDetector : GLib.Object {
                 var buf = new uint8[65536];
                 read_bytes = stdin.read(buf);
                 if (read_bytes>0) {
-                    stdout.printf("zzz%d\n", (int)read_bytes);
                     buf.resize((int)(uint64)read_bytes);
                     var bce = new BufChainElement() {buffer=buf};
-                    stdout.printf("zzy\n");
                     buf_list.add(bce);
-                    stdout.printf("zzz\n");
                 } else {
                     break;
                 }
