@@ -37,7 +37,14 @@ import StringIO
 import pygame.locals as pyg
 
 from displayer_renderer import Renderer
+import detect_rows
 
+class FakeImage:
+    def __init__(self, strdata, size):
+        self.size = size
+        self.strdata = strdata
+    def tostring(self):
+        return self.strdata
 
 def rect_center(r):
     return [(r[0]+r[2])/2, (r[1]+r[3])/2]
@@ -72,18 +79,22 @@ class DisplayerApp:
         self.comic_id = page_id 
         name = self.comix.get_filename(page_id)
         fil = self.comix.get_file(page_id)
+        fil_data = fil.read()
         
         # widen to occupy 5:4 ratio zone on screen
         scr_hei = self.renderer.scrdim[1]
         width_5_4 = scr_hei * 5 / 4
         buf_size = 64 * 1024
         
-        gm_cmdline = "gm convert - -enhance -normalize -filter Lanczos -resize %sx10000 -quality 0 BMP:-" % width_5_4
-        
+        gm_cmdline = "gm convert - -enhance -normalize -filter Lanczos -resize %sx10000 -quality 0 RGBA:-" % width_5_4
         gm_proc = subprocess.Popen(gm_cmdline, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        outdata, errdata = gm_proc.communicate(fil.read())
-        
-        page = pygame.image.load(StringIO.StringIO(outdata), "temp.bmp").convert(32)
+        outdata, errdata = gm_proc.communicate(fil_data)
+        height = len(outdata)/(width_5_4*4)
+        page = pygame.image.frombuffer(outdata, (width_5_4, height), "RGBA")
+
+        pseudo_pil_page = FakeImage(outdata, (page.get_width(), page.get_height()))
+        rngs = detect_rows.get_ranges(pseudo_pil_page, 255, 30, 0.125)
+
         
         self.renderer.page = page
         self.renderer.zoom_cache = {}
@@ -93,8 +104,19 @@ class DisplayerApp:
         offsets = []
         extra_hei = hei - self.renderer.scrdim[1]
         scrolls = int(math.ceil(extra_hei/self.renderer.scrdim[1]*2))
-        for i in range(scrolls+1):
-            offsets.append(int(round(i*extra_hei/scrolls)))
+        
+        scr_hei = self.renderer.scrdim[1]
+        for r in rngs:
+            start, end = r
+            hei = end-start
+            if hei>scr_hei:
+                overlap = 2 * scr_hei / 3
+                steps_num = int(math.ceil(1.0*hei/overlap))
+                step_hei = (hei-scr_hei) // (steps_num-1)
+                for i in xrange(steps_num):
+                    offsets.append(start+(step_hei*i))
+            else:        
+                offsets.append((start+end-scr_hei)/2)
         
         self.offsets = offsets
         self.offset_id = 0
