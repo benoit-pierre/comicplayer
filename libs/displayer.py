@@ -36,8 +36,15 @@ import StringIO
 
 import pygame.locals as pyg
 
+import sys, ctypes
+import gm_wrap
+
 from displayer_renderer import Renderer
 import detect_rows
+
+gm_wrap.InitializeMagick(sys.argv[0]);
+exception = ctypes.pointer(gm_wrap.ExceptionInfo())
+gm_wrap.GetExceptionInfo(exception)
 
 class FakeImage:
     def __init__(self, strdata, size):
@@ -58,7 +65,8 @@ def xy_rhombic_range(xy1, xy2):
 
 class DisplayerApp:
     def __init__(self, comix, callback=None):
-        pygame.init()
+        pygame.display.init()
+        pygame.font.init()
         pygame.display.set_mode((0,0), pyg.HWSURFACE|pyg.DOUBLEBUF|pyg.FULLSCREEN)
         scrdim = pygame.display.get_surface().get_size()
         pygame.display.set_caption('page player')
@@ -86,13 +94,34 @@ class DisplayerApp:
         width_5_4 = scr_hei * 5 / 4
         buf_size = 64 * 1024
         
-        gm_cmdline = "gm convert - -enhance -normalize -filter Lanczos -resize %sx10000 -quality 0 RGBA:-" % width_5_4
-        gm_proc = subprocess.Popen(gm_cmdline, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        outdata, errdata = gm_proc.communicate(fil_data)
-        height = len(outdata)/(width_5_4*4)
-        page = pygame.image.frombuffer(outdata, (width_5_4, height), "RGBA")
+        #~ gm_cmdline = "gm convert - -enhance -normalize -filter Lanczos -resize %sx10000 -quality 0 RGBA:-" % width_5_4
+        #~ gm_proc = subprocess.Popen(gm_cmdline, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        #~ outdata, errdata = gm_proc.communicate(fil_data)
+        #~ height = len(outdata)/(width_5_4*4)
+        #~ page = pygame.image.frombuffer(outdata, (width_5_4, height), "RGBA")
 
-        pseudo_pil_page = FakeImage(outdata, (page.get_width(), page.get_height()))
+        t1 = time.time()
+
+        image_info = gm_wrap.CloneImageInfo(None)
+        image_info.contents.filename = name
+
+        image = gm_wrap.BlobToImage(image_info, fil_data, len(fil_data), exception)
+        
+        
+        image = gm_wrap.EnhanceImage(image, exception)
+        gm_wrap.NormalizeImage(image, exception)
+        width = image.contents.columns
+        height = image.contents.rows
+        multiplier = 1.0*width_5_4 / width
+        height2 = int(math.floor(height * multiplier))
+        image = gm_wrap.ResizeImage(image, width_5_4, height2, gm_wrap.LanczosFilter, 1, exception)
+        
+        buffer = ctypes.create_string_buffer(width_5_4 * height2 * 3)
+        gm_wrap.DispatchImage(image, 0, 0, width_5_4, height2, "RGB", gm_wrap.CharPixel, buffer, exception )
+        page = pygame.image.frombuffer(buffer.raw, (width_5_4, height2), "RGB")
+        
+
+        pseudo_pil_page = FakeImage(buffer.raw, (page.get_width(), page.get_height()))
         rngs = detect_rows.get_ranges(pseudo_pil_page, 255, 30, 0.125)
 
         
@@ -353,6 +382,7 @@ class DisplayerApp:
         self.add_msg("Press F1 for help", color=(255,64,80), ttl=4)
         while self.running: 
             self.loop(pygame.event.get())
+        t1 = time.time()
         pygame.quit()
         if self.callback!=None:
             self.callback()
