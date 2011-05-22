@@ -62,6 +62,16 @@ def xy_range(xy1, xy2):
 def xy_rhombic_range(xy1, xy2):
     return abs(xy2[0]-xy1[0]) + abs(xy2[1]-xy1[1])
 
+def row_merger(rows, scr_hei):
+    # helper function to merge small rows into comfortably-sized ones
+    old = rows[0]
+    for new in rows[1:]:
+        if new[1]-old[0]<scr_hei*0.8:
+            old = (old[0], new[1])
+        else:
+            yield old
+            old = new
+    yield old
 
 class DisplayerApp:
     def __init__(self, comix, callback=None):
@@ -131,21 +141,21 @@ class DisplayerApp:
         hei = 1.0 * page.get_height()
         
         rows = []
-        extra_hei = hei - self.renderer.scrdim[1]
-        scrolls = int(math.ceil(extra_hei/self.renderer.scrdim[1]*2))
         
         scr_hei = self.renderer.scrdim[1]
-        for r in rngs:
+        for r in row_merger(rngs, scr_hei):
             start, end = r
             hei = end-start
             if hei>scr_hei:
                 if hei>scr_hei*1.5:
+                    # very wide "row", split into small steps
                     overlap = 2 * scr_hei / 3
                     steps_num = int(math.ceil(1.0*hei/overlap))
                     step_hei = (hei-scr_hei) // (steps_num-1)
                     for i in xrange(steps_num):
                         rows.append((start+(step_hei*i), start+(step_hei*i)+scr_hei))
                 else:
+                    # somewhat wide row, zoom to fit onscreen
                     rows.append((start, end))
             else:        
                 rows.append(((start+end-scr_hei)/2, (start+end+scr_hei)/2))
