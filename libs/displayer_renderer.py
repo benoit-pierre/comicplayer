@@ -69,7 +69,6 @@ class Renderer:
         pos1x, pos1y = pos[0]-wx, pos[1]-wy # начало спотлайта в вырезке
         pos2x, pos2y = (int(round(pos1x*k)), int(round(pos1y*k))) # начало спотлайта в ресайзеной вырезке
         
-        fast_rect = [8*(x//8) for x in rect]
         
         if rect in self.zoom_cache:
             resized = self.zoom_cache[rect]

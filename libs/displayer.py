@@ -30,9 +30,6 @@
 import pygame
 import pygame.key
 import math
-import time
-import subprocess
-import StringIO
 
 import pygame.locals as pyg
 
@@ -102,16 +99,7 @@ class DisplayerApp:
         # widen to occupy 5:4 ratio zone on screen
         scr_hei = self.renderer.scrdim[1]
         width_5_4 = scr_hei * 5 / 4
-        buf_size = 64 * 1024
         
-        #~ gm_cmdline = "gm convert - -enhance -normalize -filter Lanczos -resize %sx10000 -quality 0 RGBA:-" % width_5_4
-        #~ gm_proc = subprocess.Popen(gm_cmdline, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        #~ outdata, errdata = gm_proc.communicate(fil_data)
-        #~ height = len(outdata)/(width_5_4*4)
-        #~ page = pygame.image.frombuffer(outdata, (width_5_4, height), "RGBA")
-
-        t1 = time.time()
-
         image_info = gm_wrap.CloneImageInfo(None)
         image_info.contents.filename = name
 
@@ -394,7 +382,6 @@ class DisplayerApp:
         self.add_msg("Press F1 for help", color=(255,64,80), ttl=4)
         while self.running: 
             self.loop(pygame.event.get())
-        t1 = time.time()
         pygame.quit()
         if self.callback!=None:
             self.callback()

@@ -1,7 +1,6 @@
 import math
 import pyximport; pyximport.install()
 import detect_rows_fastcore
-import pprint
 
 def get_filled_lines(image, target_color, tolerance):
     res = []
@@ -30,5 +29,3 @@ def get_ranges(image, target_color, tolerance, min_row_ratio):
                     start = -1
     return res
 
-#~ for rng in get_ranges(im, 255, 20, 0.125):
-    #~ print "%s-%s" % rng
