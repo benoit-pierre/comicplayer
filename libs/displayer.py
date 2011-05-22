@@ -130,7 +130,7 @@ class DisplayerApp:
         
         hei = 1.0 * page.get_height()
         
-        offsets = []
+        rows = []
         extra_hei = hei - self.renderer.scrdim[1]
         scrolls = int(math.ceil(extra_hei/self.renderer.scrdim[1]*2))
         
@@ -139,26 +139,28 @@ class DisplayerApp:
             start, end = r
             hei = end-start
             if hei>scr_hei:
-                overlap = 2 * scr_hei / 3
-                steps_num = int(math.ceil(1.0*hei/overlap))
-                step_hei = (hei-scr_hei) // (steps_num-1)
-                for i in xrange(steps_num):
-                    offsets.append(start+(step_hei*i))
+                if hei>scr_hei*1.5:
+                    overlap = 2 * scr_hei / 3
+                    steps_num = int(math.ceil(1.0*hei/overlap))
+                    step_hei = (hei-scr_hei) // (steps_num-1)
+                    for i in xrange(steps_num):
+                        rows.append((start+(step_hei*i), start+(step_hei*i)+scr_hei))
+                else:
+                    rows.append((start, end))
             else:        
-                offsets.append((start+end-scr_hei)/2)
+                rows.append(((start+end-scr_hei)/2, (start+end+scr_hei)/2))
         
-        self.offsets = offsets
-        self.offset_id = 0
+        self.rows = rows
+        self.row_id = 0
         self.progress = 0.0
         self.pos = self.oid2pos(0)
         self.src_pos = self.oid2pos(0)
         self.add_msg(self.comix.get_filename(page_id))
         
     def oid2pos(self, oid):
-        offset = self.offsets[oid]
-        shei = self.renderer.scrdim[1]
+        row = self.rows[oid]
         pwid = self.renderer.page.get_width()
-        return [0, offset, pwid, offset+shei]
+        return [0, row[0], pwid, row[1]]
         
         
     def zoom(self):
@@ -168,10 +170,10 @@ class DisplayerApp:
         
     def unzoom(self):
         self.src_pos = self.pos
-        self.state = 'change_offset'
+        self.state = 'change_row'
         self.progress = 0.0
        
-    def flip_page(self, delta, offsetwise = False):
+    def flip_page(self, delta, rowwise = False):
         nci = self.comic_id
         nci += delta
         if nci<0:
@@ -181,25 +183,25 @@ class DisplayerApp:
         if nci!=self.comic_id:
             self.next_comic_id = nci
             self.flip_dir = nci>self.comic_id
-            self.flip_to_last = offsetwise
+            self.flip_to_last = rowwise
             self.src_pos = self.pos
             self.state = "leaving_page"
 
-    def navigate_offset(self, delta, force=False):
-        oid = self.offset_id
+    def navigate_row(self, delta, force=False):
+        oid = self.row_id
         oid += delta
         if oid<0:
             self.flip_page(-1,True)
             return
-        if oid>=len(self.offsets):
+        if oid>=len(self.rows):
             self.flip_page(+1)
             return
-        if force or self.offset_id!=oid:
-            self.offset_id = oid
+        if force or self.row_id!=oid:
+            self.row_id = oid
             self.progress = 0.0
             self.renderer.brightness = 255
             self.src_pos = self.pos
-            self.state = "change_offset"
+            self.state = "change_row"
 
     def shifted_page(self, forward = False):
         x0,y0,x1,y1 = self.pos
@@ -220,10 +222,10 @@ class DisplayerApp:
     def start_load_page(self):
         self.load_page(self.next_comic_id)
         if not self.flip_dir and self.flip_to_last:
-            self.offset_id = len(self.offsets)-1
+            self.row_id = len(self.rows)-1
         else:
-            self.offset_id = 0
-        self.target_pos = self.oid2pos(self.offset_id)
+            self.row_id = 0
+        self.target_pos = self.oid2pos(self.row_id)
         self.pos = self.target_pos
         self.src_pos = self.shifted_page(self.flip_dir)
         self.pos = self.src_pos
@@ -248,9 +250,9 @@ class DisplayerApp:
         
 
     states = {
-        "change_offset": {
+        "change_row": {
             "motion": True,
-            "target": lambda self: self.oid2pos(self.offset_id),
+            "target": lambda self: self.oid2pos(self.row_id),
             "changeto": "static"
         },
         "zooming": {
@@ -267,7 +269,7 @@ class DisplayerApp:
         },
         "entering_page": {
             "motion": True,
-            "target": lambda self: self.oid2pos(self.offset_id),
+            "target": lambda self: self.oid2pos(self.row_id),
             "changeto": "static",
             #~ "onfinish": end_changing_page,
             #~ "onprogress": lambda self:self.adjust_brightness(True)
@@ -300,7 +302,7 @@ class DisplayerApp:
         elif event.type == pyg.KEYDOWN:
             if self.state == 'help':
                 if event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
-                    self.state = 'change_offset'
+                    self.state = 'change_row'
                     self.progress = 1
                 return
             elif event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
@@ -316,7 +318,7 @@ class DisplayerApp:
                 if event.key == pyg.K_r:
                     self.state_rownav = not self.state_rownav
                     self.show_mode()
-                    self.navigate_offset(0, True)
+                    self.navigate_row(0, True)
                 if self.state not in ['zoomed', 'leaving_page']:
                     if event.key == pyg.K_LEFT:
                         if event.mod & pyg.KMOD_SHIFT:
@@ -333,9 +335,9 @@ class DisplayerApp:
                         else:
                             self.flip_page(+1)
                     elif event.key == pyg.K_UP:
-                        self.navigate_offset(-1)
+                        self.navigate_row(-1)
                     elif event.key == pyg.K_DOWN or event.key == pyg.K_SPACE:
-                        self.navigate_offset(+1)
+                        self.navigate_row(+1)
 
     def update_screen(self, msec):
         if self.state=='help':
