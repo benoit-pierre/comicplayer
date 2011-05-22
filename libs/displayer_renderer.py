@@ -69,10 +69,10 @@ class Renderer:
         pos1x, pos1y = pos[0]-wx, pos[1]-wy # начало спотлайта в вырезке
         pos2x, pos2y = (int(round(pos1x*k)), int(round(pos1y*k))) # начало спотлайта в ресайзеной вырезке
         
-        if (rect, False) in self.zoom_cache:
-            resized = self.zoom_cache[(rect, False)]
-        elif (rect, fast) in self.zoom_cache:
-            resized = self.zoom_cache[(rect, fast)]
+        fast_rect = [8*(x//8) for x in rect]
+        
+        if rect in self.zoom_cache:
+            resized = self.zoom_cache[rect]
         else:
             if ww==cw and wh==ch:
                 source = self.page
@@ -81,8 +81,8 @@ class Renderer:
             if fast:
                 resized = pygame.transform.scale(source, dims)
             else:
-                self.zoom_cache[(rect, False)] = pygame.transform.smoothscale(source, dims)
-                resized = self.zoom_cache[(rect, fast)]
+                resized = pygame.transform.smoothscale(source, dims)
+                self.zoom_cache[rect] = resized
         return resized, (pos2x, pos2y), (pw2, ph2)
 
     @staticmethod
