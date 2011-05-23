@@ -73,8 +73,6 @@ class Renderer:
         if wy<0: 
             wy = 0
         if wye>=pageH: wye = pageH-1
-        print "A", spotlight
-        print "B", (wx, wy, wxe, wye)
      
         shift = (a*wx+bX, a*wy+bY)
         
