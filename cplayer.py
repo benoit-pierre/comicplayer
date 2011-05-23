@@ -114,7 +114,7 @@ class ComicPlayer:
         self.denoise_jpeg.set_active(False)
         vbox.pack_start(self.denoise_jpeg, expand=False)
 
-        self.ignore_small_rows = gtk.CheckButton(label="Ignore non-blank parts on page edges")
+        self.ignore_small_rows = gtk.CheckButton(label="Ignore small non-blank parts of the page")
         self.ignore_small_rows.set_alignment(0.2, 0)
         self.ignore_small_rows.set_active(True)
         vbox.pack_start(self.ignore_small_rows, expand=False)

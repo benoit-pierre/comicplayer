@@ -125,7 +125,7 @@ class DisplayerApp:
         
 
         pseudo_pil_page = FakeImage(buffer.raw, (page.get_width(), page.get_height()))
-        rngs = detect_rows.get_ranges(pseudo_pil_page, 255, 50, 0.125, ignore_small_rows=self.ignore_small_rows)
+        rngs = detect_rows.get_ranges(pseudo_pil_page, 255, 50, 0.1, ignore_small_rows=self.ignore_small_rows)
 
         
         self.renderer.page = page
@@ -133,14 +133,14 @@ class DisplayerApp:
         
         hei = 1.0 * page.get_height()
         
+        # convert detected rows into navigation rows
         rows = []
-        
         scr_hei = self.renderer.scrdim[1]
         for r in row_merger(rngs, scr_hei):
-            start, end = r
+            start, end, scrollable = r
             hei = end-start
             if hei>scr_hei:
-                if hei>scr_hei*1.5:
+                if scrollable or hei>scr_hei*1.5:
                     # very wide "row", split into small steps
                     overlap = 2 * scr_hei / 3
                     steps_num = int(math.ceil(1.0*hei/overlap))

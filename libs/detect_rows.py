@@ -10,13 +10,16 @@ def get_filled_lines(image, target_color, tolerance):
         res.append(sqd>thresh)
     return res
 
+# each resulting range is: [start, end, scrollable]
+# scrollable is a hint to displayer, whether it's worth to try to fit the whole row on screen
+
 def get_ranges(image, target_color, tolerance, min_row_ratio, ignore_small_rows=True):
 
     filled_lines = get_filled_lines(image, target_color, tolerance)
-    res = []
+    ranges = []
     
     start = -1
-    min_row_pixels = math.floor(image.size[1]*min_row_ratio)
+    min_row_pixels = int(math.floor(image.size[1]*min_row_ratio))
     for y in xrange(image.size[1]+1):
         filled = (y<image.size[1]) and filled_lines[y]
         if filled:
@@ -24,21 +27,28 @@ def get_ranges(image, target_color, tolerance, min_row_ratio, ignore_small_rows=
                 start = y
         else:
             if start!=-1:
-                res.append((start,y))
+                ranges.append((start,y))
                 start = -1
 
-    
-    if len(res)>0 and res[0][1]-res[0][0]<min_row_pixels:
-        if ignore_small_rows:
-            res = res[1:]
-        else:
-            res[:2] = [(res[0][0], res[1][1])]
-    if len(res)>0 and res[-1][1]-res[-1][0]<min_row_pixels:
-        if ignore_small_rows:
-            res = res[:-1]
-        else:
-            res[-2:] = [(res[-2][0], res[-1][1])]
+    def is_small(r):
+        return r[1]-r[0]<min_row_pixels
 
+    # dealing with small ranges
+    res = []
+    smalls = []
+    for r in ranges+[None]:
+        if r==None or not is_small(r):
+            if smalls:
+                coerced = (smalls[0][0], smalls[-1][1], True)
+                if (not is_small(coerced)) or (not ignore_small_rows):
+                    res.append(coerced)
+                smalls = []
+            if r!=None:
+                res.append((r[0], r[1], False))
+        else:
+            smalls.append(r)
+
+    
     if len(res)==0:
         return [(0,image.size[1])]
 
