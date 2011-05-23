@@ -24,8 +24,23 @@ def get_ranges(image, target_color, tolerance, min_row_ratio):
                 start = y
         else:
             if start!=-1:
-                if y-start>min_row_pixels:
-                    res.append((start,y))
-                    start = -1
+                res.append((start,y))
+                start = -1
+
+    small_rows_found = True
+    while small_rows_found:
+        small_rows_found = False
+        for i,r in enumerate(res):
+            if r[1]-r[0]<min_row_pixels:
+                prev_row = 999999 if i==0 else res[i-1][1]-res[i-1][0]
+                next_row = 999999 if i==len(res)-1 else res[i+1][1]-res[i+1][0]
+                if prev_row == next_row == 999999:
+                    break
+                small_rows_found = True
+                if prev_row<next_row:
+                    res[i-1:i+1] = [(res[i-1][0], res[i][1])]
+                if prev_row>next_row:
+                    res[i:i+2] = [(res[i][0], res[i+1][1])]
+                
     return res
 
