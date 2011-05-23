@@ -28,16 +28,19 @@ def get_ranges(image, target_color, tolerance, min_row_ratio, ignore_small_rows=
                 start = -1
 
     
-    while len(res)>0 and res[0][1]-res[0][0]<min_row_pixels:
+    if len(res)>0 and res[0][1]-res[0][0]<min_row_pixels:
         if ignore_small_rows:
             res = res[1:]
         else:
             res[:2] = [(res[0][0], res[1][1])]
-    while len(res)>0 and res[-1][1]-res[-1][0]<min_row_pixels:
+    if len(res)>0 and res[-1][1]-res[-1][0]<min_row_pixels:
         if ignore_small_rows:
             res = res[:-1]
         else:
             res[-2:] = [(res[-2][0], res[-1][1])]
+
+    if len(res)==0:
+        return [(0,image.size[1])]
 
     return res
 
