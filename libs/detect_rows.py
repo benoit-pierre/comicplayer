@@ -50,7 +50,7 @@ def get_ranges(image, target_color, tolerance, min_row_ratio, ignore_small_rows=
 
     
     if len(res)==0:
-        return [(0,image.size[1])]
+        return [(0,image.size[1], True)]
 
     return res
 

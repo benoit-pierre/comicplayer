@@ -64,7 +64,7 @@ def row_merger(rows, scr_hei):
     old = rows[0]
     for new in rows[1:]:
         if new[1]-old[0]<scr_hei*0.8:
-            old = (old[0], new[1])
+            old = (old[0], new[1], old[2])
         else:
             yield old
             old = new
