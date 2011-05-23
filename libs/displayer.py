@@ -109,7 +109,9 @@ class DisplayerApp:
         
         ext = name.lower().split(".")[-1]
         if ext in ["jpg","jpeg"] and self.denoise_jpeg:
-            image = gm_wrap.EnhanceImage(image, exception)
+            quality = int(gm_wrap.GetImageAttribute(image, "JPEG-Quality").contents.value)
+            if quality<85:
+                image = gm_wrap.EnhanceImage(image, exception)
         gm_wrap.NormalizeImage(image, exception)
         width = image.contents.columns
         height = image.contents.rows

@@ -109,9 +109,9 @@ class ComicPlayer:
         seg_opts.set_alignment(0, 0)
         vbox.pack_start(seg_opts, expand=False)
         
-        self.denoise_jpeg = gtk.CheckButton(label="Denoise JPEG images (slower page load)")
+        self.denoise_jpeg = gtk.CheckButton(label="Denoise low-quality JPEG images")
         self.denoise_jpeg.set_alignment(0.2, 0)
-        self.denoise_jpeg.set_active(True)
+        self.denoise_jpeg.set_active(False)
         vbox.pack_start(self.denoise_jpeg, expand=False)
 
         self.ignore_small_rows = gtk.CheckButton(label="Ignore non-blank parts on page edges")

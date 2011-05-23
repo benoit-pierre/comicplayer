@@ -1,7 +1,7 @@
 '''Wrapper for image.h
 
 Generated with:
-/home/rainman/projects/ctypesgen-read-only/ctypesgen.py -lGraphicsMagick -llcms -ltiff -lfreetype -ljasper -ljpeg -lpng -lwmflite -lXext -lSM -lICE -lX11 -lbz2 -lxml2 -lz -lm -lgomp -lpthread -lltdl gmagick_hdrs/magick/image.h gmagick_hdrs/magick/magick.h gmagick_hdrs/magick/error.h gmagick_hdrs/magick/constitute.h gmagick_hdrs/magick/resize.h gmagick_hdrs/magick/delegate.h gmagick_hdrs/magick/effect.h gmagick_hdrs/magick/enhance.h gmagick_hdrs/magick/pixel_cache.h gmagick_hdrs/magick/blob.h -o gm_wrap.py -I gmagick_hdrs/
+/home/rainman/projects/ctypesgen-read-only/ctypesgen.py -lGraphicsMagick -llcms -ltiff -lfreetype -ljasper -ljpeg -lpng -lwmflite -lXext -lSM -lICE -lX11 -lbz2 -lxml2 -lz -lm -lgomp -lpthread -lltdl gmagick_hdrs/magick/image.h gmagick_hdrs/magick/magick.h gmagick_hdrs/magick/error.h gmagick_hdrs/magick/constitute.h gmagick_hdrs/magick/resize.h gmagick_hdrs/magick/delegate.h gmagick_hdrs/magick/effect.h gmagick_hdrs/magick/enhance.h gmagick_hdrs/magick/pixel_cache.h gmagick_hdrs/magick/blob.h gmagick_hdrs/magick/attribute.h -o gm_wrap.py -I gmagick_hdrs/
 
 Do not modify this file.
 '''
@@ -588,17 +588,17 @@ add_library_search_dirs([])
 # Begin libraries
 
 _libs["GraphicsMagick"] = load_library("GraphicsMagick")
-#~ _libs["lcms"] = load_library("lcms")
-#~ _libs["tiff"] = load_library("tiff")
-#~ _libs["freetype"] = load_library("freetype")
-#~ _libs["jasper"] = load_library("jasper")
+_libs["lcms"] = load_library("lcms")
+_libs["tiff"] = load_library("tiff")
+_libs["freetype"] = load_library("freetype")
+_libs["jasper"] = load_library("jasper")
 _libs["jpeg"] = load_library("jpeg")
 _libs["png"] = load_library("png")
-#~ _libs["wmflite"] = load_library("wmflite")
-#~ _libs["Xext"] = load_library("Xext")
-#~ _libs["SM"] = load_library("SM")
-#~ _libs["ICE"] = load_library("ICE")
-#~ _libs["X11"] = load_library("X11")
+_libs["wmflite"] = load_library("wmflite")
+_libs["Xext"] = load_library("Xext")
+_libs["SM"] = load_library("SM")
+_libs["ICE"] = load_library("ICE")
+_libs["X11"] = load_library("X11")
 _libs["bz2"] = load_library("bz2")
 _libs["xml2"] = load_library("xml2")
 _libs["z"] = load_library("z")
@@ -634,7 +634,7 @@ class struct__CacheInfo(Structure):
 
 _CacheInfoPtr_ = POINTER(struct__CacheInfo) # gmagick_hdrs/magick/forward.h: 24
 
-# gmagick_hdrs/magick/forward.h: 26
+# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 20
 class struct__ImageAttribute(Structure):
     pass
 
@@ -3723,6 +3723,59 @@ if hasattr(_libs['GraphicsMagick'], 'MSBOrderShort'):
     MSBOrderShort.argtypes = [POINTER(c_ubyte), c_size_t]
     MSBOrderShort.restype = None
 
+struct__ImageAttribute.__slots__ = [
+    'key',
+    'value',
+    'length',
+    'previous',
+    'next',
+]
+struct__ImageAttribute._fields_ = [
+    ('key', String),
+    ('value', String),
+    ('length', c_size_t),
+    ('previous', POINTER(struct__ImageAttribute)),
+    ('next', POINTER(struct__ImageAttribute)),
+]
+
+ImageAttribute = struct__ImageAttribute # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 32
+
+# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 38
+if hasattr(_libs['GraphicsMagick'], 'GetImageAttribute'):
+    GetImageAttribute = _libs['GraphicsMagick'].GetImageAttribute
+    GetImageAttribute.argtypes = [POINTER(Image), String]
+    GetImageAttribute.restype = POINTER(ImageAttribute)
+
+# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 38
+if hasattr(_libs['GraphicsMagick'], 'GetImageClippingPathAttribute'):
+    GetImageClippingPathAttribute = _libs['GraphicsMagick'].GetImageClippingPathAttribute
+    GetImageClippingPathAttribute.argtypes = [POINTER(Image)]
+    GetImageClippingPathAttribute.restype = POINTER(ImageAttribute)
+
+# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 38
+if hasattr(_libs['GraphicsMagick'], 'GetImageInfoAttribute'):
+    GetImageInfoAttribute = _libs['GraphicsMagick'].GetImageInfoAttribute
+    GetImageInfoAttribute.argtypes = [POINTER(ImageInfo), POINTER(Image), String]
+    GetImageInfoAttribute.restype = POINTER(ImageAttribute)
+
+# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 43
+if hasattr(_libs['GraphicsMagick'], 'CloneImageAttributes'):
+    CloneImageAttributes = _libs['GraphicsMagick'].CloneImageAttributes
+    CloneImageAttributes.argtypes = [POINTER(Image), POINTER(Image)]
+    CloneImageAttributes.restype = c_uint
+
+# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 43
+if hasattr(_libs['GraphicsMagick'], 'SetImageAttribute'):
+    SetImageAttribute = _libs['GraphicsMagick'].SetImageAttribute
+    SetImageAttribute.argtypes = [POINTER(Image), String, String]
+    SetImageAttribute.restype = c_uint
+
+# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 47
+if hasattr(_libs['GraphicsMagick'], 'DestroyImageAttributes'):
+    DestroyImageAttributes = _libs['GraphicsMagick'].DestroyImageAttributes
+    DestroyImageAttributes.argtypes = [POINTER(Image)]
+    DestroyImageAttributes.restype = None
+
 # gmagick_hdrs/magick/magick_config.h: 22
 try:
     MaxRGB = 255
@@ -3824,6 +3877,8 @@ except:
     pass
 
 _Image = struct__Image # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 553
+
+_ImageAttribute = struct__ImageAttribute # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 20
 
 _ExceptionInfo = struct__ExceptionInfo # gmagick_hdrs/magick/error.h: 230
 
