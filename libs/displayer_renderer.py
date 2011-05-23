@@ -45,35 +45,48 @@ class Renderer:
         self.scrdim = self.screen.get_width(), self.screen.get_height()
         self.textimages = []
         
-    def zoomed_comic(self, pos, fast=False):
-        cw, ch = self.page.get_width(), self.page.get_height()
-        pw, ph = pos[2]-pos[0], pos[3]-pos[1]
-        sw, sh = self.scrdim
-        kx, ky = 1.0*sw/pw, 1.0*sh/ph
-        k = min(kx, ky)
-        # TODO: продумать все округления
-        pw2, ph2 = (int(round(pw*k)), int(round(ph*k))) # новый размер спотлайта
-        mx, my = (sw-pw2)//2, (sh-ph2)//2 # смещение спотлайта на экране
-        mx2, my2 = (int(round(mx/k)), int(round(my/k))) # смещение спотлайта на экране в старых единицах
+    def zoomed_comic(self, spotlight, fast=False):
+        pageW, pageH = self.page.get_width(), self.page.get_height()
+        centerX, centerY = (spotlight[2]+spotlight[0])/2, (spotlight[3]+spotlight[1])/2
+        spotW, spotH = spotlight[2]-spotlight[0], spotlight[3]-spotlight[1]
+        spotAR = 1.0*spotW/spotH
+        screenAR = 1.0*self.scrdim[0]/self.scrdim[1]
         
-        wx, wy = pos[0]-mx2, pos[1]-my2 # начало окна в старом комиксе
-        wxe, wye = wx+pw+2*mx2, wy+ph+2*my2 # конец окна в старом комиксе
+        if screenAR>spotAR:
+            spotW = int(round(spotH*screenAR))
+        else:
+            spotH = int(round(spotW/screenAR))
+            
+        # comic-to-screen conversion is: scrX = a*comX  + bX , scrY = a*comY  + bY
+        
+        a = 1.0*self.scrdim[1]/spotH
+        bX = (self.scrdim[0]//2) - int(round(a*centerX))
+        bY = (self.scrdim[1]//2) - int(round(a*centerY))
+            
+        wx, wy = centerX-spotW/2, centerY-spotH/2
+        wxe, wye = centerX+spotW/2, centerY+spotH/2
+        
 
-        if wx<0: wx = 0
-        if wxe>=cw: wxe = cw-1
-        if wy<0: wy = 0
-        if wye>=ch: wye = ch-1
+        if wx<0: 
+            wx = 0
+        if wxe>=pageW: wxe = pageW-1
+        if wy<0: 
+            wy = 0
+        if wye>=pageH: wye = pageH-1
+        print "A", spotlight
+        print "B", (wx, wy, wxe, wye)
+     
+        shift = (a*wx+bX, a*wy+bY)
+        
         ww, wh = wxe-wx, wye-wy
         rect = (wx, wy, ww, wh)
-        dims = (int(round(ww*k)), int(round(wh*k)))
-        pos1x, pos1y = pos[0]-wx, pos[1]-wy # начало спотлайта в вырезке
-        pos2x, pos2y = (int(round(pos1x*k)), int(round(pos1y*k))) # начало спотлайта в ресайзеной вырезке
+        dims = (int(round(ww*a)), int(round(wh*a)))
         
         
         if rect in self.zoom_cache:
             resized = self.zoom_cache[rect]
         else:
-            if ww==cw and wh==ch:
+            if ww==pageW and wh==pageH:
                 source = self.page
             else:
                 source = self.page.subsurface(rect)
@@ -82,24 +95,8 @@ class Renderer:
             else:
                 resized = pygame.transform.smoothscale(source, dims)
                 self.zoom_cache[rect] = resized
-        return resized, (pos2x, pos2y), (pw2, ph2)
+        return resized, shift
 
-    @staticmethod
-    def pixblend(src, dest, todo):
-        for x0, y0, x1, y1, a in todo:
-            p1 = src[x0][y0]
-            p2 = dest[x1][y1]
-            b1 = p1 & 255
-            b2 = p2 & 255
-            g1 = (p1>>8) & 255
-            g2 = (p2>>8) & 255
-            r1 = (p1>>16) & 255
-            r2 = (p2>>16) & 255
-            b = (b1*a + b2*(255-a))//255
-            g = (g1*a + g2*(255-a))//255
-            r = (r1*a + r2*(255-a))//255
-            dest[x1][y1] = (((r<<8)+g)<<8)+b
-    
     def render(self, pos, motion=False):
         sw, sh = self.scrdim
 
@@ -110,17 +107,15 @@ class Renderer:
             if pos[0]>cw or pos[1]>ch or pos[2]<0 or pos[3]<0:
                 page = None
             else:
-                page, start, size = self.zoomed_comic(pos, motion)
-                x0, y0 = start
-                wid, hei = size
+                page, shift = self.zoomed_comic(pos, motion)
         else:
             page = self.page
-            x0, y0 = pos[0], pos[1]
-        self.screen.fill((0,0,0))
-        if page!=None:
             marg_x = (self.scrdim[0]-wid)//2
             marg_y = (self.scrdim[1]-hei)//2
-            self.screen.blit(page, (marg_x-x0, marg_y-y0))
+            shift = marg_x-pos[0], marg_y-pos[1]
+        self.screen.fill((0,0,0))
+        if page!=None:
+            self.screen.blit(page, shift)
         self.show_texts()
         pygame.display.flip()
 
@@ -129,8 +124,8 @@ class Renderer:
         scrdim = self.scrdim
         cw, ch = page.get_width(), page.get_height()
         sw, sh = scrdim
-        page, start, size = self.zoomed_comic((0,0,cw,ch))
-        wid, hei = size
+        page, shift = self.zoomed_comic((0,0,cw,ch))
+        wid, hei = page.get_width(), page.get_height()
         marg_x = (scrdim[0]-wid)//2
         marg_y = (scrdim[1]-hei)//2
         page.set_alpha(255)
