@@ -86,7 +86,6 @@ class DisplayerApp:
         self.ignore_small_rows = ignore_small_rows
         self.comic_id = 0
         self.next_comic_id = 0
-        self.state_rownav = False
         self.state = "entering_page"
         self.load_page(0)
         self.running = True
@@ -310,37 +309,33 @@ class DisplayerApp:
                 return
             elif event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
                 self.quit()
-            if self.state == 'zooming' or self.state == 'zoomed':
-                self.unzoom()
-            else:
-                if event.key == pyg.K_RETURN:
+            if event.key == pyg.K_RETURN:
+                if self.state == 'zooming' or self.state == 'zoomed':
+                    self.unzoom()
+                else:
                     self.zoom()
-                if event.key == pyg.K_F1:
-                    self.show_help()
-                    self.force_redraw = False
-                if event.key == pyg.K_r:
-                    self.state_rownav = not self.state_rownav
-                    self.show_mode()
-                    self.navigate_row(0, True)
-                if self.state not in ['zoomed', 'leaving_page']:
-                    if event.key == pyg.K_LEFT:
-                        if event.mod & pyg.KMOD_SHIFT:
-                            self.flip_page(-5)
-                        elif event.mod & pyg.KMOD_CTRL:
-                            self.flip_page(-20)
-                        else:
-                            self.flip_page(-1)
-                    elif event.key == pyg.K_RIGHT:
-                        if event.mod & pyg.KMOD_SHIFT:
-                            self.flip_page(+5)
-                        elif event.mod & pyg.KMOD_CTRL:
-                            self.flip_page(+20)
-                        else:
-                            self.flip_page(+1)
-                    elif event.key == pyg.K_UP:
-                        self.navigate_row(-1)
-                    elif event.key == pyg.K_DOWN or event.key == pyg.K_SPACE:
-                        self.navigate_row(+1)
+            if event.key == pyg.K_F1:
+                self.show_help()
+                self.force_redraw = False
+            if self.state not in ['leaving_page']:
+                if event.key == pyg.K_LEFT:
+                    if event.mod & pyg.KMOD_SHIFT:
+                        self.flip_page(-5)
+                    elif event.mod & pyg.KMOD_CTRL:
+                        self.flip_page(-20)
+                    else:
+                        self.flip_page(-1)
+                elif event.key == pyg.K_RIGHT:
+                    if event.mod & pyg.KMOD_SHIFT:
+                        self.flip_page(+5)
+                    elif event.mod & pyg.KMOD_CTRL:
+                        self.flip_page(+20)
+                    else:
+                        self.flip_page(+1)
+                elif event.key == pyg.K_UP:
+                    self.navigate_row(-1)
+                elif event.key == pyg.K_DOWN or event.key == pyg.K_SPACE:
+                    self.navigate_row(+1)
 
     def update_screen(self, msec):
         if self.state=='help':
