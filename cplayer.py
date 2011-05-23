@@ -6,10 +6,8 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-import sys
-import os.path
 
-from libs.comic_book import ComicBook, RarComicBook, ZipComicBook, DirComicBook
+from libs.comic_book import ComicBook
 from libs.displayer import DisplayerApp
 
 class ComicPlayer:
@@ -55,9 +53,6 @@ class ComicPlayer:
             self.comic_info.value("")
             return
         num = len(self.comix.filenames)
-        has_seg = "no"
-        if self.comix.has_segmentation:
-            has_seg = "has"
         self.comic_info.set_text("\"%s\", %s pages" % (self.comix.pretty_name, num))
         
     def play(self, widget, data=None):
