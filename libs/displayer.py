@@ -77,7 +77,7 @@ class DisplayerApp:
         pygame.display.set_mode((0,0), pyg.HWSURFACE|pyg.DOUBLEBUF|pyg.FULLSCREEN)
         scrdim = pygame.display.get_surface().get_size()
         pygame.display.set_caption('page player')
-        self.renderer = Renderer(pygame.display.get_surface(), pygame.font.Font('freesansbold.ttf', 16))
+        self.renderer = Renderer(pygame.display.get_surface(), pygame.font.Font('freesansbold.ttf', 18))
         self.renderer.scrdim = scrdim
         self.clock = pygame.time.Clock()
 
@@ -239,10 +239,10 @@ class DisplayerApp:
     def add_msg(self, text, color=(128,255,160), ttl=1.5):
         image_f = self.renderer.font.render(text, True, color)
         image_b = self.renderer.font.render(text, True, (0,32,0))
-        base = pygame.Surface((image_f.get_width()+2, image_f.get_height()+2), 0, 32)
+        base = pygame.Surface((image_f.get_width()+3, image_f.get_height()+3), 0, 32)
         base.blit(image_b, (2,2))
         base.blit(image_f, (0,0))
-        image = base.convert(8)
+        image = base
         image.set_colorkey((0,0,0))
         self.renderer.textimages.append([image,255,ttl])
         
