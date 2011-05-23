@@ -28,6 +28,28 @@ class ComicPlayer:
         num = len(self.comix.filenames)
         self.btn_play.set_sensitive(num>0)
 
+    def open_file(self, widget, data=None):
+        buttons = (
+            gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+            gtk.STOCK_OPEN, gtk.RESPONSE_OK
+        )
+        filesel = gtk.FileChooserDialog(title="Open a comic book file", parent=self.window, action=gtk.FILE_CHOOSER_ACTION_OPEN, buttons=buttons)
+        fltr = gtk.FileFilter()
+        fltr.add_pattern("*.cbz")
+        fltr.add_pattern("*.cbr")
+        fltr.add_pattern("*.CBZ")
+        fltr.add_pattern("*.CBR")
+        fltr.set_name("Comicbook archives (.CBZ, .CBR)")
+        filesel.add_filter(fltr)
+        filesel.run()
+        self.path = filesel.get_filename()
+        filesel.destroy()
+        self.comix = ComicBook(self.path)
+        self.refresh_info()
+        num = len(self.comix.filenames)
+        self.btn_play.set_sensitive(num>0)
+
+
     def refresh_info(self):
         if self.comix==None:
             self.comic_info.value("")
@@ -36,10 +58,10 @@ class ComicPlayer:
         has_seg = "no"
         if self.comix.has_segmentation:
             has_seg = "has"
-        self.comic_info.set_text("%s - %s files, %s segmentation" % (self.comix.__class__.__name__, num, has_seg))
+        self.comic_info.set_text("\"%s\", %s pages" % (self.comix.pretty_name, num))
         
     def play(self, widget, data=None):
-        dapp = DisplayerApp(self.comix)
+        dapp = DisplayerApp(self.comix, denoise_jpeg=self.denoise_jpeg.get_active())
         dapp.run()
         
 
@@ -54,26 +76,59 @@ class ComicPlayer:
         self.window.connect("delete_event", self.delete_event)
         self.window.connect("destroy", self.destroy)
         self.window.set_border_width(10)
+        self.window.set_default_size(640, 240)
 
         vbox = gtk.VBox(homogeneous=False, spacing=0)
         self.window.add(vbox)
 
-        self.btn_open_dir = gtk.Button("Open a comic book folder")
+
+        hbox = gtk.HBox(homogeneous=False, spacing=0)
+
+        self.btn_open_file = gtk.Button("Open file")
+        self.btn_open_file.connect("clicked", self.open_file, None)
+        hbox.pack_start(self.btn_open_file)
+
+        self.btn_open_dir = gtk.Button("Open folder")
         self.btn_open_dir.connect("clicked", self.open_dir, None)
-        vbox.pack_start(self.btn_open_dir)
+        hbox.pack_end(self.btn_open_dir)
+        
+        vbox.pack_start(hbox, expand=False)
         
         self.comic_info = gtk.Label("No comic loaded")
-        vbox.pack_start(self.comic_info)
+        vbox.pack_start(self.comic_info, expand=False, padding=8)
 
         self.btn_play = gtk.Button("Watch comic")
         self.btn_play.connect("clicked", self.play, None)
         self.btn_play.set_sensitive(False)
-        vbox.pack_end(self.btn_play)
+        vbox.pack_start(self.btn_play, expand=False)
+        
+        hsep = gtk.HSeparator()
+        vbox.pack_start(hsep, padding=10, expand=False)
+
+        seg_opts = gtk.Label("Displaying options:")
+        seg_opts.set_alignment(0, 0)
+        vbox.pack_start(seg_opts, expand=False)
+        
+        self.denoise_jpeg = gtk.CheckButton(label="Denoise JPEG images (slower page load)")
+        self.denoise_jpeg.set_alignment(0.2, 0)
+        self.denoise_jpeg.set_active(True)
+        vbox.pack_start(self.denoise_jpeg, expand=False)
+
+        self.ignore_small_rows = gtk.CheckButton(label="Ignore non-blank parts on page edges")
+        self.ignore_small_rows.set_alignment(0.2, 0)
+        self.ignore_small_rows.set_active(True)
+        vbox.pack_start(self.ignore_small_rows, expand=False)
 
 
         self.btn_open_dir.show()
+        self.btn_open_file.show()
         self.btn_play.show()
         self.comic_info.show()
+        self.denoise_jpeg.show()
+        self.ignore_small_rows.show()
+        hsep.show()
+        seg_opts.show()
+        hbox.show()
         vbox.show()
         self.window.show()
 

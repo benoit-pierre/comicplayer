@@ -71,7 +71,7 @@ def row_merger(rows, scr_hei):
     yield old
 
 class DisplayerApp:
-    def __init__(self, comix, callback=None):
+    def __init__(self, comix, callback=None, denoise_jpeg=True, ignore_small_rows=True):
         pygame.display.init()
         pygame.font.init()
         pygame.display.set_mode((0,0), pyg.HWSURFACE|pyg.DOUBLEBUF|pyg.FULLSCREEN)
@@ -82,6 +82,8 @@ class DisplayerApp:
         self.clock = pygame.time.Clock()
 
         self.comix = comix
+        self.denoise_jpeg = denoise_jpeg
+        self.ignore_small_rows = ignore_small_rows
         self.comic_id = 0
         self.next_comic_id = 0
         self.state_rownav = False
@@ -105,8 +107,9 @@ class DisplayerApp:
 
         image = gm_wrap.BlobToImage(image_info, fil_data, len(fil_data), exception)
         
-        
-        image = gm_wrap.EnhanceImage(image, exception)
+        ext = name.lower().split(".")[-1]
+        if ext in ["jpg","jpeg"] and self.denoise_jpeg:
+            image = gm_wrap.EnhanceImage(image, exception)
         gm_wrap.NormalizeImage(image, exception)
         width = image.contents.columns
         height = image.contents.rows
@@ -120,7 +123,7 @@ class DisplayerApp:
         
 
         pseudo_pil_page = FakeImage(buffer.raw, (page.get_width(), page.get_height()))
-        rngs = detect_rows.get_ranges(pseudo_pil_page, 255, 30, 0.125)
+        rngs = detect_rows.get_ranges(pseudo_pil_page, 255, 50, 0.125, ignore_small_rows=self.ignore_small_rows)
 
         
         self.renderer.page = page

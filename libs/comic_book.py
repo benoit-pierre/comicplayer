@@ -87,6 +87,10 @@ class BaseComicBook:
     def __init__(self, path):
         self.path = path
         
+    @property
+    def pretty_name(self):
+        return self.path.split(os.sep)[-1]
+
     def __len__(self):
         return len(self.filenames)
         

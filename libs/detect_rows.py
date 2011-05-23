@@ -10,7 +10,7 @@ def get_filled_lines(image, target_color, tolerance):
         res.append(sqd>thresh)
     return res
 
-def get_ranges(image, target_color, tolerance, min_row_ratio):
+def get_ranges(image, target_color, tolerance, min_row_ratio, ignore_small_rows=True):
 
     filled_lines = get_filled_lines(image, target_color, tolerance)
     res = []
@@ -27,20 +27,17 @@ def get_ranges(image, target_color, tolerance, min_row_ratio):
                 res.append((start,y))
                 start = -1
 
-    small_rows_found = True
-    while small_rows_found:
-        small_rows_found = False
-        for i,r in enumerate(res):
-            if r[1]-r[0]<min_row_pixels:
-                prev_row = 999999 if i==0 else res[i-1][1]-res[i-1][0]
-                next_row = 999999 if i==len(res)-1 else res[i+1][1]-res[i+1][0]
-                if prev_row == next_row == 999999:
-                    break
-                small_rows_found = True
-                if prev_row<next_row:
-                    res[i-1:i+1] = [(res[i-1][0], res[i][1])]
-                if prev_row>next_row:
-                    res[i:i+2] = [(res[i][0], res[i+1][1])]
-                
+    
+    while len(res)>0 and res[0][1]-res[0][0]<min_row_pixels:
+        if ignore_small_rows:
+            res = res[1:]
+        else:
+            res[:2] = [(res[0][0], res[1][1])]
+    while len(res)>0 and res[-1][1]-res[-1][0]<min_row_pixels:
+        if ignore_small_rows:
+            res = res[:-1]
+        else:
+            res[-2:] = [(res[-2][0], res[-1][1])]
+
     return res
 
