@@ -106,7 +106,7 @@ class ComicPlayer:
         
         self.denoise_jpeg = gtk.CheckButton(label="Denoise low-quality JPEG images")
         self.denoise_jpeg.set_alignment(0.2, 0)
-        self.denoise_jpeg.set_active(False)
+        self.denoise_jpeg.set_active(True)
         vbox.pack_start(self.denoise_jpeg, expand=False)
 
         self.ignore_small_rows = gtk.CheckButton(label="Ignore small non-blank parts of the page")
