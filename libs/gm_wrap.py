@@ -1,7 +1,7 @@
 '''Wrapper for image.h
 
 Generated with:
-/home/rainman/projects/ctypesgen-read-only/ctypesgen.py -lGraphicsMagick -llcms -ltiff -lfreetype -ljasper -ljpeg -lpng -lwmflite -lXext -lSM -lICE -lX11 -lbz2 -lxml2 -lz -lm -lgomp -lpthread -lltdl gmagick_hdrs/magick/image.h gmagick_hdrs/magick/magick.h gmagick_hdrs/magick/error.h gmagick_hdrs/magick/constitute.h gmagick_hdrs/magick/resize.h gmagick_hdrs/magick/delegate.h gmagick_hdrs/magick/effect.h gmagick_hdrs/magick/enhance.h gmagick_hdrs/magick/pixel_cache.h gmagick_hdrs/magick/blob.h gmagick_hdrs/magick/attribute.h -o gm_wrap.py -I gmagick_hdrs/
+generate_wrapper.py
 
 Do not modify this file.
 '''
@@ -588,576 +588,11 @@ add_library_search_dirs([])
 # Begin libraries
 
 _libs["GraphicsMagick"] = load_library("GraphicsMagick")
-_libs["lcms"] = load_library("lcms")
-_libs["tiff"] = load_library("tiff")
-_libs["freetype"] = load_library("freetype")
-_libs["jasper"] = load_library("jasper")
-_libs["jpeg"] = load_library("jpeg")
-_libs["png"] = load_library("png")
-_libs["wmflite"] = load_library("wmflite")
-_libs["Xext"] = load_library("Xext")
-_libs["SM"] = load_library("SM")
-_libs["ICE"] = load_library("ICE")
-_libs["X11"] = load_library("X11")
-_libs["bz2"] = load_library("bz2")
-_libs["xml2"] = load_library("xml2")
-_libs["z"] = load_library("z")
-_libs["m"] = load_library("m")
-_libs["gomp"] = load_library("gomp")
-_libs["pthread"] = load_library("pthread")
-_libs["ltdl"] = load_library("ltdl")
 
-# 19 libraries
+# 1 libraries
 # End libraries
 
 # No modules
-
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 553
-class struct__Image(Structure):
-    pass
-
-# gmagick_hdrs/magick/forward.h: 20
-class struct__Ascii85Info(Structure):
-    pass
-
-_Ascii85InfoPtr_ = POINTER(struct__Ascii85Info) # gmagick_hdrs/magick/forward.h: 20
-
-# gmagick_hdrs/magick/forward.h: 22
-class struct__BlobInfo(Structure):
-    pass
-
-_BlobInfoPtr_ = POINTER(struct__BlobInfo) # gmagick_hdrs/magick/forward.h: 22
-
-# gmagick_hdrs/magick/forward.h: 24
-class struct__CacheInfo(Structure):
-    pass
-
-_CacheInfoPtr_ = POINTER(struct__CacheInfo) # gmagick_hdrs/magick/forward.h: 24
-
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 20
-class struct__ImageAttribute(Structure):
-    pass
-
-_ImageAttributePtr_ = POINTER(struct__ImageAttribute) # gmagick_hdrs/magick/forward.h: 26
-
-# gmagick_hdrs/magick/forward.h: 28
-class struct__SemaphoreInfo(Structure):
-    pass
-
-_SemaphoreInfoPtr_ = POINTER(struct__SemaphoreInfo) # gmagick_hdrs/magick/forward.h: 28
-
-# gmagick_hdrs/magick/forward.h: 30
-class struct__ThreadViewSet(Structure):
-    pass
-
-_ThreadViewSetPtr_ = POINTER(struct__ThreadViewSet) # gmagick_hdrs/magick/forward.h: 30
-
-ViewInfo = POINTER(None) # gmagick_hdrs/magick/forward.h: 32
-
-Quantum = c_ubyte # gmagick_hdrs/magick/magick_config.h: 38
-
-enum_anon_1 = c_int # gmagick_hdrs/magick/colorspace.h: 113
-
-ColorspaceType = enum_anon_1 # gmagick_hdrs/magick/colorspace.h: 113
-
-enum_anon_2 = c_int # gmagick_hdrs/magick/error.h: 58
-
-UndefinedExceptionBase = 0 # gmagick_hdrs/magick/error.h: 58
-
-ExceptionBase = 1 # gmagick_hdrs/magick/error.h: 58
-
-ResourceBase = 2 # gmagick_hdrs/magick/error.h: 58
-
-ResourceLimitBase = 2 # gmagick_hdrs/magick/error.h: 58
-
-TypeBase = 5 # gmagick_hdrs/magick/error.h: 58
-
-AnnotateBase = 5 # gmagick_hdrs/magick/error.h: 58
-
-OptionBase = 10 # gmagick_hdrs/magick/error.h: 58
-
-DelegateBase = 15 # gmagick_hdrs/magick/error.h: 58
-
-MissingDelegateBase = 20 # gmagick_hdrs/magick/error.h: 58
-
-CorruptImageBase = 25 # gmagick_hdrs/magick/error.h: 58
-
-FileOpenBase = 30 # gmagick_hdrs/magick/error.h: 58
-
-BlobBase = 35 # gmagick_hdrs/magick/error.h: 58
-
-StreamBase = 40 # gmagick_hdrs/magick/error.h: 58
-
-CacheBase = 45 # gmagick_hdrs/magick/error.h: 58
-
-CoderBase = 50 # gmagick_hdrs/magick/error.h: 58
-
-ModuleBase = 55 # gmagick_hdrs/magick/error.h: 58
-
-DrawBase = 60 # gmagick_hdrs/magick/error.h: 58
-
-RenderBase = 60 # gmagick_hdrs/magick/error.h: 58
-
-ImageBase = 65 # gmagick_hdrs/magick/error.h: 58
-
-WandBase = 67 # gmagick_hdrs/magick/error.h: 58
-
-TemporaryFileBase = 70 # gmagick_hdrs/magick/error.h: 58
-
-TransformBase = 75 # gmagick_hdrs/magick/error.h: 58
-
-XServerBase = 80 # gmagick_hdrs/magick/error.h: 58
-
-X11Base = 81 # gmagick_hdrs/magick/error.h: 58
-
-UserBase = 82 # gmagick_hdrs/magick/error.h: 58
-
-MonitorBase = 85 # gmagick_hdrs/magick/error.h: 58
-
-LocaleBase = 86 # gmagick_hdrs/magick/error.h: 58
-
-DeprecateBase = 87 # gmagick_hdrs/magick/error.h: 58
-
-RegistryBase = 90 # gmagick_hdrs/magick/error.h: 58
-
-ConfigureBase = 95 # gmagick_hdrs/magick/error.h: 58
-
-ExceptionBaseType = enum_anon_2 # gmagick_hdrs/magick/error.h: 58
-
-enum_anon_3 = c_int # gmagick_hdrs/magick/error.h: 186
-
-UndefinedException = 0 # gmagick_hdrs/magick/error.h: 186
-
-EventException = 100 # gmagick_hdrs/magick/error.h: 186
-
-ExceptionEvent = (EventException + ExceptionBase) # gmagick_hdrs/magick/error.h: 186
-
-ResourceEvent = (EventException + ResourceBase) # gmagick_hdrs/magick/error.h: 186
-
-ResourceLimitEvent = (EventException + ResourceLimitBase) # gmagick_hdrs/magick/error.h: 186
-
-TypeEvent = (EventException + TypeBase) # gmagick_hdrs/magick/error.h: 186
-
-AnnotateEvent = (EventException + AnnotateBase) # gmagick_hdrs/magick/error.h: 186
-
-OptionEvent = (EventException + OptionBase) # gmagick_hdrs/magick/error.h: 186
-
-DelegateEvent = (EventException + DelegateBase) # gmagick_hdrs/magick/error.h: 186
-
-MissingDelegateEvent = (EventException + MissingDelegateBase) # gmagick_hdrs/magick/error.h: 186
-
-CorruptImageEvent = (EventException + CorruptImageBase) # gmagick_hdrs/magick/error.h: 186
-
-FileOpenEvent = (EventException + FileOpenBase) # gmagick_hdrs/magick/error.h: 186
-
-BlobEvent = (EventException + BlobBase) # gmagick_hdrs/magick/error.h: 186
-
-StreamEvent = (EventException + StreamBase) # gmagick_hdrs/magick/error.h: 186
-
-CacheEvent = (EventException + CacheBase) # gmagick_hdrs/magick/error.h: 186
-
-CoderEvent = (EventException + CoderBase) # gmagick_hdrs/magick/error.h: 186
-
-ModuleEvent = (EventException + ModuleBase) # gmagick_hdrs/magick/error.h: 186
-
-DrawEvent = (EventException + DrawBase) # gmagick_hdrs/magick/error.h: 186
-
-RenderEvent = (EventException + RenderBase) # gmagick_hdrs/magick/error.h: 186
-
-ImageEvent = (EventException + ImageBase) # gmagick_hdrs/magick/error.h: 186
-
-WandEvent = (EventException + WandBase) # gmagick_hdrs/magick/error.h: 186
-
-TemporaryFileEvent = (EventException + TemporaryFileBase) # gmagick_hdrs/magick/error.h: 186
-
-TransformEvent = (EventException + TransformBase) # gmagick_hdrs/magick/error.h: 186
-
-XServerEvent = (EventException + XServerBase) # gmagick_hdrs/magick/error.h: 186
-
-X11Event = (EventException + X11Base) # gmagick_hdrs/magick/error.h: 186
-
-UserEvent = (EventException + UserBase) # gmagick_hdrs/magick/error.h: 186
-
-MonitorEvent = (EventException + MonitorBase) # gmagick_hdrs/magick/error.h: 186
-
-LocaleEvent = (EventException + LocaleBase) # gmagick_hdrs/magick/error.h: 186
-
-DeprecateEvent = (EventException + DeprecateBase) # gmagick_hdrs/magick/error.h: 186
-
-RegistryEvent = (EventException + RegistryBase) # gmagick_hdrs/magick/error.h: 186
-
-ConfigureEvent = (EventException + ConfigureBase) # gmagick_hdrs/magick/error.h: 186
-
-WarningException = 300 # gmagick_hdrs/magick/error.h: 186
-
-ExceptionWarning = (WarningException + ExceptionBase) # gmagick_hdrs/magick/error.h: 186
-
-ResourceWarning = (WarningException + ResourceBase) # gmagick_hdrs/magick/error.h: 186
-
-ResourceLimitWarning = (WarningException + ResourceLimitBase) # gmagick_hdrs/magick/error.h: 186
-
-TypeWarning = (WarningException + TypeBase) # gmagick_hdrs/magick/error.h: 186
-
-AnnotateWarning = (WarningException + AnnotateBase) # gmagick_hdrs/magick/error.h: 186
-
-OptionWarning = (WarningException + OptionBase) # gmagick_hdrs/magick/error.h: 186
-
-DelegateWarning = (WarningException + DelegateBase) # gmagick_hdrs/magick/error.h: 186
-
-MissingDelegateWarning = (WarningException + MissingDelegateBase) # gmagick_hdrs/magick/error.h: 186
-
-CorruptImageWarning = (WarningException + CorruptImageBase) # gmagick_hdrs/magick/error.h: 186
-
-FileOpenWarning = (WarningException + FileOpenBase) # gmagick_hdrs/magick/error.h: 186
-
-BlobWarning = (WarningException + BlobBase) # gmagick_hdrs/magick/error.h: 186
-
-StreamWarning = (WarningException + StreamBase) # gmagick_hdrs/magick/error.h: 186
-
-CacheWarning = (WarningException + CacheBase) # gmagick_hdrs/magick/error.h: 186
-
-CoderWarning = (WarningException + CoderBase) # gmagick_hdrs/magick/error.h: 186
-
-ModuleWarning = (WarningException + ModuleBase) # gmagick_hdrs/magick/error.h: 186
-
-DrawWarning = (WarningException + DrawBase) # gmagick_hdrs/magick/error.h: 186
-
-RenderWarning = (WarningException + RenderBase) # gmagick_hdrs/magick/error.h: 186
-
-ImageWarning = (WarningException + ImageBase) # gmagick_hdrs/magick/error.h: 186
-
-WandWarning = (WarningException + WandBase) # gmagick_hdrs/magick/error.h: 186
-
-TemporaryFileWarning = (WarningException + TemporaryFileBase) # gmagick_hdrs/magick/error.h: 186
-
-TransformWarning = (WarningException + TransformBase) # gmagick_hdrs/magick/error.h: 186
-
-XServerWarning = (WarningException + XServerBase) # gmagick_hdrs/magick/error.h: 186
-
-X11Warning = (WarningException + X11Base) # gmagick_hdrs/magick/error.h: 186
-
-UserWarning = (WarningException + UserBase) # gmagick_hdrs/magick/error.h: 186
-
-MonitorWarning = (WarningException + MonitorBase) # gmagick_hdrs/magick/error.h: 186
-
-LocaleWarning = (WarningException + LocaleBase) # gmagick_hdrs/magick/error.h: 186
-
-DeprecateWarning = (WarningException + DeprecateBase) # gmagick_hdrs/magick/error.h: 186
-
-RegistryWarning = (WarningException + RegistryBase) # gmagick_hdrs/magick/error.h: 186
-
-ConfigureWarning = (WarningException + ConfigureBase) # gmagick_hdrs/magick/error.h: 186
-
-ErrorException = 400 # gmagick_hdrs/magick/error.h: 186
-
-ExceptionError = (ErrorException + ExceptionBase) # gmagick_hdrs/magick/error.h: 186
-
-ResourceError = (ErrorException + ResourceBase) # gmagick_hdrs/magick/error.h: 186
-
-ResourceLimitError = (ErrorException + ResourceLimitBase) # gmagick_hdrs/magick/error.h: 186
-
-TypeError = (ErrorException + TypeBase) # gmagick_hdrs/magick/error.h: 186
-
-AnnotateError = (ErrorException + AnnotateBase) # gmagick_hdrs/magick/error.h: 186
-
-OptionError = (ErrorException + OptionBase) # gmagick_hdrs/magick/error.h: 186
-
-DelegateError = (ErrorException + DelegateBase) # gmagick_hdrs/magick/error.h: 186
-
-MissingDelegateError = (ErrorException + MissingDelegateBase) # gmagick_hdrs/magick/error.h: 186
-
-CorruptImageError = (ErrorException + CorruptImageBase) # gmagick_hdrs/magick/error.h: 186
-
-FileOpenError = (ErrorException + FileOpenBase) # gmagick_hdrs/magick/error.h: 186
-
-BlobError = (ErrorException + BlobBase) # gmagick_hdrs/magick/error.h: 186
-
-StreamError = (ErrorException + StreamBase) # gmagick_hdrs/magick/error.h: 186
-
-CacheError = (ErrorException + CacheBase) # gmagick_hdrs/magick/error.h: 186
-
-CoderError = (ErrorException + CoderBase) # gmagick_hdrs/magick/error.h: 186
-
-ModuleError = (ErrorException + ModuleBase) # gmagick_hdrs/magick/error.h: 186
-
-DrawError = (ErrorException + DrawBase) # gmagick_hdrs/magick/error.h: 186
-
-RenderError = (ErrorException + RenderBase) # gmagick_hdrs/magick/error.h: 186
-
-ImageError = (ErrorException + ImageBase) # gmagick_hdrs/magick/error.h: 186
-
-WandError = (ErrorException + WandBase) # gmagick_hdrs/magick/error.h: 186
-
-TemporaryFileError = (ErrorException + TemporaryFileBase) # gmagick_hdrs/magick/error.h: 186
-
-TransformError = (ErrorException + TransformBase) # gmagick_hdrs/magick/error.h: 186
-
-XServerError = (ErrorException + XServerBase) # gmagick_hdrs/magick/error.h: 186
-
-X11Error = (ErrorException + X11Base) # gmagick_hdrs/magick/error.h: 186
-
-UserError = (ErrorException + UserBase) # gmagick_hdrs/magick/error.h: 186
-
-MonitorError = (ErrorException + MonitorBase) # gmagick_hdrs/magick/error.h: 186
-
-LocaleError = (ErrorException + LocaleBase) # gmagick_hdrs/magick/error.h: 186
-
-DeprecateError = (ErrorException + DeprecateBase) # gmagick_hdrs/magick/error.h: 186
-
-RegistryError = (ErrorException + RegistryBase) # gmagick_hdrs/magick/error.h: 186
-
-ConfigureError = (ErrorException + ConfigureBase) # gmagick_hdrs/magick/error.h: 186
-
-FatalErrorException = 700 # gmagick_hdrs/magick/error.h: 186
-
-ExceptionFatalError = (FatalErrorException + ExceptionBase) # gmagick_hdrs/magick/error.h: 186
-
-ResourceFatalError = (FatalErrorException + ResourceBase) # gmagick_hdrs/magick/error.h: 186
-
-ResourceLimitFatalError = (FatalErrorException + ResourceLimitBase) # gmagick_hdrs/magick/error.h: 186
-
-TypeFatalError = (FatalErrorException + TypeBase) # gmagick_hdrs/magick/error.h: 186
-
-AnnotateFatalError = (FatalErrorException + AnnotateBase) # gmagick_hdrs/magick/error.h: 186
-
-OptionFatalError = (FatalErrorException + OptionBase) # gmagick_hdrs/magick/error.h: 186
-
-DelegateFatalError = (FatalErrorException + DelegateBase) # gmagick_hdrs/magick/error.h: 186
-
-MissingDelegateFatalError = (FatalErrorException + MissingDelegateBase) # gmagick_hdrs/magick/error.h: 186
-
-CorruptImageFatalError = (FatalErrorException + CorruptImageBase) # gmagick_hdrs/magick/error.h: 186
-
-FileOpenFatalError = (FatalErrorException + FileOpenBase) # gmagick_hdrs/magick/error.h: 186
-
-BlobFatalError = (FatalErrorException + BlobBase) # gmagick_hdrs/magick/error.h: 186
-
-StreamFatalError = (FatalErrorException + StreamBase) # gmagick_hdrs/magick/error.h: 186
-
-CacheFatalError = (FatalErrorException + CacheBase) # gmagick_hdrs/magick/error.h: 186
-
-CoderFatalError = (FatalErrorException + CoderBase) # gmagick_hdrs/magick/error.h: 186
-
-ModuleFatalError = (FatalErrorException + ModuleBase) # gmagick_hdrs/magick/error.h: 186
-
-DrawFatalError = (FatalErrorException + DrawBase) # gmagick_hdrs/magick/error.h: 186
-
-RenderFatalError = (FatalErrorException + RenderBase) # gmagick_hdrs/magick/error.h: 186
-
-ImageFatalError = (FatalErrorException + ImageBase) # gmagick_hdrs/magick/error.h: 186
-
-WandFatalError = (FatalErrorException + WandBase) # gmagick_hdrs/magick/error.h: 186
-
-TemporaryFileFatalError = (FatalErrorException + TemporaryFileBase) # gmagick_hdrs/magick/error.h: 186
-
-TransformFatalError = (FatalErrorException + TransformBase) # gmagick_hdrs/magick/error.h: 186
-
-XServerFatalError = (FatalErrorException + XServerBase) # gmagick_hdrs/magick/error.h: 186
-
-X11FatalError = (FatalErrorException + X11Base) # gmagick_hdrs/magick/error.h: 186
-
-UserFatalError = (FatalErrorException + UserBase) # gmagick_hdrs/magick/error.h: 186
-
-MonitorFatalError = (FatalErrorException + MonitorBase) # gmagick_hdrs/magick/error.h: 186
-
-LocaleFatalError = (FatalErrorException + LocaleBase) # gmagick_hdrs/magick/error.h: 186
-
-DeprecateFatalError = (FatalErrorException + DeprecateBase) # gmagick_hdrs/magick/error.h: 186
-
-RegistryFatalError = (FatalErrorException + RegistryBase) # gmagick_hdrs/magick/error.h: 186
-
-ConfigureFatalError = (FatalErrorException + ConfigureBase) # gmagick_hdrs/magick/error.h: 186
-
-ExceptionType = enum_anon_3 # gmagick_hdrs/magick/error.h: 186
-
-# gmagick_hdrs/magick/error.h: 230
-class struct__ExceptionInfo(Structure):
-    pass
-
-struct__ExceptionInfo.__slots__ = [
-    'severity',
-    'reason',
-    'description',
-    'error_number',
-    'module',
-    'function',
-    'line',
-    'signature',
-]
-struct__ExceptionInfo._fields_ = [
-    ('severity', ExceptionType),
-    ('reason', String),
-    ('description', String),
-    ('error_number', c_int),
-    ('module', String),
-    ('function', String),
-    ('line', c_ulong),
-    ('signature', c_ulong),
-]
-
-ExceptionInfo = struct__ExceptionInfo # gmagick_hdrs/magick/error.h: 230
-
-ErrorHandler = CFUNCTYPE(UNCHECKED(None), ExceptionType, String, String) # gmagick_hdrs/magick/error.h: 236
-
-FatalErrorHandler = CFUNCTYPE(UNCHECKED(None), ExceptionType, String, String) # gmagick_hdrs/magick/error.h: 239
-
-WarningHandler = CFUNCTYPE(UNCHECKED(None), ExceptionType, String, String) # gmagick_hdrs/magick/error.h: 242
-
-# gmagick_hdrs/magick/error.h: 248
-if hasattr(_libs['GraphicsMagick'], 'GetLocaleExceptionMessage'):
-    GetLocaleExceptionMessage = _libs['GraphicsMagick'].GetLocaleExceptionMessage
-    GetLocaleExceptionMessage.argtypes = [ExceptionType, String]
-    if sizeof(c_int) == sizeof(c_void_p):
-        GetLocaleExceptionMessage.restype = ReturnString
-    else:
-        GetLocaleExceptionMessage.restype = String
-        GetLocaleExceptionMessage.errcheck = ReturnString
-
-# gmagick_hdrs/magick/error.h: 248
-if hasattr(_libs['GraphicsMagick'], 'GetLocaleMessage'):
-    GetLocaleMessage = _libs['GraphicsMagick'].GetLocaleMessage
-    GetLocaleMessage.argtypes = [String]
-    if sizeof(c_int) == sizeof(c_void_p):
-        GetLocaleMessage.restype = ReturnString
-    else:
-        GetLocaleMessage.restype = String
-        GetLocaleMessage.errcheck = ReturnString
-
-# gmagick_hdrs/magick/error.h: 252
-if hasattr(_libs['GraphicsMagick'], 'SetErrorHandler'):
-    SetErrorHandler = _libs['GraphicsMagick'].SetErrorHandler
-    SetErrorHandler.argtypes = [ErrorHandler]
-    SetErrorHandler.restype = ErrorHandler
-
-# gmagick_hdrs/magick/error.h: 255
-if hasattr(_libs['GraphicsMagick'], 'SetFatalErrorHandler'):
-    SetFatalErrorHandler = _libs['GraphicsMagick'].SetFatalErrorHandler
-    SetFatalErrorHandler.argtypes = [FatalErrorHandler]
-    SetFatalErrorHandler.restype = FatalErrorHandler
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], 'CatchException'):
-    CatchException = _libs['GraphicsMagick'].CatchException
-    CatchException.argtypes = [POINTER(ExceptionInfo)]
-    CatchException.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], 'CopyException'):
-    CopyException = _libs['GraphicsMagick'].CopyException
-    CopyException.argtypes = [POINTER(ExceptionInfo), POINTER(ExceptionInfo)]
-    CopyException.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], 'DestroyExceptionInfo'):
-    DestroyExceptionInfo = _libs['GraphicsMagick'].DestroyExceptionInfo
-    DestroyExceptionInfo.argtypes = [POINTER(ExceptionInfo)]
-    DestroyExceptionInfo.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], 'GetExceptionInfo'):
-    GetExceptionInfo = _libs['GraphicsMagick'].GetExceptionInfo
-    GetExceptionInfo.argtypes = [POINTER(ExceptionInfo)]
-    GetExceptionInfo.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], 'MagickError'):
-    MagickError = _libs['GraphicsMagick'].MagickError
-    MagickError.argtypes = [ExceptionType, String, String]
-    MagickError.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], 'MagickFatalError'):
-    MagickFatalError = _libs['GraphicsMagick'].MagickFatalError
-    MagickFatalError.argtypes = [ExceptionType, String, String]
-    MagickFatalError.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], 'MagickWarning'):
-    MagickWarning = _libs['GraphicsMagick'].MagickWarning
-    MagickWarning.argtypes = [ExceptionType, String, String]
-    MagickWarning.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], '_MagickError'):
-    _MagickError = _libs['GraphicsMagick']._MagickError
-    _MagickError.argtypes = [ExceptionType, String, String]
-    _MagickError.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], '_MagickFatalError'):
-    _MagickFatalError = _libs['GraphicsMagick']._MagickFatalError
-    _MagickFatalError.argtypes = [ExceptionType, String, String]
-    _MagickFatalError.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], '_MagickWarning'):
-    _MagickWarning = _libs['GraphicsMagick']._MagickWarning
-    _MagickWarning.argtypes = [ExceptionType, String, String]
-    _MagickWarning.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], 'SetExceptionInfo'):
-    SetExceptionInfo = _libs['GraphicsMagick'].SetExceptionInfo
-    SetExceptionInfo.argtypes = [POINTER(ExceptionInfo), ExceptionType]
-    SetExceptionInfo.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], 'ThrowException'):
-    ThrowException = _libs['GraphicsMagick'].ThrowException
-    ThrowException.argtypes = [POINTER(ExceptionInfo), ExceptionType, String, String]
-    ThrowException.restype = None
-
-# gmagick_hdrs/magick/error.h: 258
-if hasattr(_libs['GraphicsMagick'], 'ThrowLoggedException'):
-    ThrowLoggedException = _libs['GraphicsMagick'].ThrowLoggedException
-    ThrowLoggedException.argtypes = [POINTER(ExceptionInfo), ExceptionType, String, String, String, String, c_ulong]
-    ThrowLoggedException.restype = None
-
-# gmagick_hdrs/magick/error.h: 275
-if hasattr(_libs['GraphicsMagick'], 'SetWarningHandler'):
-    SetWarningHandler = _libs['GraphicsMagick'].SetWarningHandler
-    SetWarningHandler.argtypes = [WarningHandler]
-    SetWarningHandler.restype = WarningHandler
-
-enum_anon_5 = c_int # gmagick_hdrs/magick/timer.h: 26
-
-TimerState = enum_anon_5 # gmagick_hdrs/magick/timer.h: 26
-
-# gmagick_hdrs/magick/timer.h: 37
-class struct__Timer(Structure):
-    pass
-
-struct__Timer.__slots__ = [
-    'start',
-    'stop',
-    'total',
-]
-struct__Timer._fields_ = [
-    ('start', c_double),
-    ('stop', c_double),
-    ('total', c_double),
-]
-
-Timer = struct__Timer # gmagick_hdrs/magick/timer.h: 37
-
-# gmagick_hdrs/magick/timer.h: 50
-class struct__TimerInfo(Structure):
-    pass
-
-struct__TimerInfo.__slots__ = [
-    'user',
-    'elapsed',
-    'state',
-    'signature',
-]
-struct__TimerInfo._fields_ = [
-    ('user', Timer),
-    ('elapsed', Timer),
-    ('state', TimerState),
-    ('signature', c_ulong),
-]
-
-TimerInfo = struct__TimerInfo # gmagick_hdrs/magick/timer.h: 50
 
 __off_t = c_long # /usr/include/bits/types.h: 141
 
@@ -1249,453 +684,1010 @@ struct__IO_FILE._fields_ = [
     ('_unused2', c_char * (((15 * sizeof(c_int)) - (4 * sizeof(POINTER(None)))) - sizeof(c_size_t))),
 ]
 
-enum_anon_11 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 75
+Quantum = c_ubyte # gm_headers/magick/magick_config.h: 38
 
-UnspecifiedAlpha = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 75
+# /tmp/tmpu80Elu/image.h: 649
+class struct__Image(Structure):
+    pass
 
-AssociatedAlpha = (UnspecifiedAlpha + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 75
+# gm_headers/magick/forward.h: 20
+class struct__Ascii85Info(Structure):
+    pass
 
-UnassociatedAlpha = (AssociatedAlpha + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 75
+_Ascii85InfoPtr_ = POINTER(struct__Ascii85Info) # gm_headers/magick/forward.h: 20
 
-AlphaType = enum_anon_11 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 75
+# gm_headers/magick/forward.h: 22
+class struct__BlobInfo(Structure):
+    pass
 
-enum_anon_12 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+_BlobInfoPtr_ = POINTER(struct__BlobInfo) # gm_headers/magick/forward.h: 22
 
-UndefinedChannel = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+# gm_headers/magick/forward.h: 24
+class struct__CacheInfo(Structure):
+    pass
 
-RedChannel = (UndefinedChannel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+_CacheInfoPtr_ = POINTER(struct__CacheInfo) # gm_headers/magick/forward.h: 24
 
-CyanChannel = (RedChannel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+# /tmp/tmpu80Elu/attribute.h: 28
+class struct__ImageAttribute(Structure):
+    pass
 
-GreenChannel = (CyanChannel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+_ImageAttributePtr_ = POINTER(struct__ImageAttribute) # gm_headers/magick/forward.h: 26
 
-MagentaChannel = (GreenChannel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+# gm_headers/magick/forward.h: 28
+class struct__SemaphoreInfo(Structure):
+    pass
 
-BlueChannel = (MagentaChannel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+_SemaphoreInfoPtr_ = POINTER(struct__SemaphoreInfo) # gm_headers/magick/forward.h: 28
 
-YellowChannel = (BlueChannel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+# gm_headers/magick/forward.h: 30
+class struct__ThreadViewSet(Structure):
+    pass
 
-OpacityChannel = (YellowChannel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+_ThreadViewSetPtr_ = POINTER(struct__ThreadViewSet) # gm_headers/magick/forward.h: 30
 
-BlackChannel = (OpacityChannel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+ViewInfo = POINTER(None) # gm_headers/magick/forward.h: 32
 
-MatteChannel = (BlackChannel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+magick_uint8_t = c_ubyte # gm_headers/magick/magick_types.h: 68
 
-AllChannels = (MatteChannel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+magick_uint16_t = c_ushort # gm_headers/magick/magick_types.h: 71
 
-GrayChannel = (AllChannels + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+magick_uint32_t = c_uint # gm_headers/magick/magick_types.h: 75
 
-ChannelType = enum_anon_12 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 91
+magick_int64_t = c_longlong # gm_headers/magick/magick_types.h: 78
 
-enum_anon_13 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 98
+magick_off_t = magick_int64_t # gm_headers/magick/magick_types.h: 92
 
-UndefinedClass = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 98
+enum_anon_6 = c_int # gm_headers/magick/error.h: 54
 
-DirectClass = (UndefinedClass + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 98
+UndefinedExceptionBase = 0 # gm_headers/magick/error.h: 54
 
-PseudoClass = (DirectClass + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 98
+ExceptionBase = 1 # gm_headers/magick/error.h: 54
 
-ClassType = enum_anon_13 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 98
+ResourceBase = 2 # gm_headers/magick/error.h: 54
 
-enum_anon_14 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+ResourceLimitBase = 2 # gm_headers/magick/error.h: 54
 
-UndefinedCompositeOp = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+TypeBase = 5 # gm_headers/magick/error.h: 54
 
-OverCompositeOp = (UndefinedCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+AnnotateBase = 5 # gm_headers/magick/error.h: 54
 
-InCompositeOp = (OverCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+OptionBase = 10 # gm_headers/magick/error.h: 54
 
-OutCompositeOp = (InCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+DelegateBase = 15 # gm_headers/magick/error.h: 54
 
-AtopCompositeOp = (OutCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+MissingDelegateBase = 20 # gm_headers/magick/error.h: 54
 
-XorCompositeOp = (AtopCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+CorruptImageBase = 25 # gm_headers/magick/error.h: 54
 
-PlusCompositeOp = (XorCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+FileOpenBase = 30 # gm_headers/magick/error.h: 54
 
-MinusCompositeOp = (PlusCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+BlobBase = 35 # gm_headers/magick/error.h: 54
 
-AddCompositeOp = (MinusCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+StreamBase = 40 # gm_headers/magick/error.h: 54
 
-SubtractCompositeOp = (AddCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+CacheBase = 45 # gm_headers/magick/error.h: 54
 
-DifferenceCompositeOp = (SubtractCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+CoderBase = 50 # gm_headers/magick/error.h: 54
 
-MultiplyCompositeOp = (DifferenceCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+ModuleBase = 55 # gm_headers/magick/error.h: 54
 
-BumpmapCompositeOp = (MultiplyCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+DrawBase = 60 # gm_headers/magick/error.h: 54
 
-CopyCompositeOp = (BumpmapCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+RenderBase = 60 # gm_headers/magick/error.h: 54
 
-CopyRedCompositeOp = (CopyCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+ImageBase = 65 # gm_headers/magick/error.h: 54
 
-CopyGreenCompositeOp = (CopyRedCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+WandBase = 67 # gm_headers/magick/error.h: 54
 
-CopyBlueCompositeOp = (CopyGreenCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+TemporaryFileBase = 70 # gm_headers/magick/error.h: 54
 
-CopyOpacityCompositeOp = (CopyBlueCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+TransformBase = 75 # gm_headers/magick/error.h: 54
 
-ClearCompositeOp = (CopyOpacityCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+XServerBase = 80 # gm_headers/magick/error.h: 54
 
-DissolveCompositeOp = (ClearCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+X11Base = 81 # gm_headers/magick/error.h: 54
 
-DisplaceCompositeOp = (DissolveCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+UserBase = 82 # gm_headers/magick/error.h: 54
 
-ModulateCompositeOp = (DisplaceCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+MonitorBase = 85 # gm_headers/magick/error.h: 54
 
-ThresholdCompositeOp = (ModulateCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+LocaleBase = 86 # gm_headers/magick/error.h: 54
 
-NoCompositeOp = (ThresholdCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+DeprecateBase = 87 # gm_headers/magick/error.h: 54
 
-DarkenCompositeOp = (NoCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+RegistryBase = 90 # gm_headers/magick/error.h: 54
 
-LightenCompositeOp = (DarkenCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+ConfigureBase = 95 # gm_headers/magick/error.h: 54
 
-HueCompositeOp = (LightenCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+ExceptionBaseType = enum_anon_6 # gm_headers/magick/error.h: 54
 
-SaturateCompositeOp = (HueCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+enum_anon_7 = c_int # gm_headers/magick/error.h: 182
 
-ColorizeCompositeOp = (SaturateCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+UndefinedException = 0 # gm_headers/magick/error.h: 182
 
-LuminizeCompositeOp = (ColorizeCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+EventException = 100 # gm_headers/magick/error.h: 182
 
-ScreenCompositeOp = (LuminizeCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+ExceptionEvent = (EventException + ExceptionBase) # gm_headers/magick/error.h: 182
 
-OverlayCompositeOp = (ScreenCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+ResourceEvent = (EventException + ResourceBase) # gm_headers/magick/error.h: 182
 
-CopyCyanCompositeOp = (OverlayCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+ResourceLimitEvent = (EventException + ResourceLimitBase) # gm_headers/magick/error.h: 182
 
-CopyMagentaCompositeOp = (CopyCyanCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+TypeEvent = (EventException + TypeBase) # gm_headers/magick/error.h: 182
 
-CopyYellowCompositeOp = (CopyMagentaCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+AnnotateEvent = (EventException + AnnotateBase) # gm_headers/magick/error.h: 182
 
-CopyBlackCompositeOp = (CopyYellowCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+OptionEvent = (EventException + OptionBase) # gm_headers/magick/error.h: 182
 
-DivideCompositeOp = (CopyBlackCompositeOp + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+DelegateEvent = (EventException + DelegateBase) # gm_headers/magick/error.h: 182
 
-CompositeOperator = enum_anon_14 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 139
+MissingDelegateEvent = (EventException + MissingDelegateBase) # gm_headers/magick/error.h: 182
 
-enum_anon_15 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+CorruptImageEvent = (EventException + CorruptImageBase) # gm_headers/magick/error.h: 182
 
-UndefinedCompression = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+FileOpenEvent = (EventException + FileOpenBase) # gm_headers/magick/error.h: 182
 
-NoCompression = (UndefinedCompression + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+BlobEvent = (EventException + BlobBase) # gm_headers/magick/error.h: 182
 
-BZipCompression = (NoCompression + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+StreamEvent = (EventException + StreamBase) # gm_headers/magick/error.h: 182
 
-FaxCompression = (BZipCompression + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+CacheEvent = (EventException + CacheBase) # gm_headers/magick/error.h: 182
 
-Group4Compression = (FaxCompression + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+CoderEvent = (EventException + CoderBase) # gm_headers/magick/error.h: 182
 
-JPEGCompression = (Group4Compression + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+ModuleEvent = (EventException + ModuleBase) # gm_headers/magick/error.h: 182
 
-LosslessJPEGCompression = (JPEGCompression + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+DrawEvent = (EventException + DrawBase) # gm_headers/magick/error.h: 182
 
-LZWCompression = (LosslessJPEGCompression + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+RenderEvent = (EventException + RenderBase) # gm_headers/magick/error.h: 182
 
-RLECompression = (LZWCompression + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+ImageEvent = (EventException + ImageBase) # gm_headers/magick/error.h: 182
 
-ZipCompression = (RLECompression + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+WandEvent = (EventException + WandBase) # gm_headers/magick/error.h: 182
 
-CompressionType = enum_anon_15 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 153
+TemporaryFileEvent = (EventException + TemporaryFileBase) # gm_headers/magick/error.h: 182
 
-enum_anon_16 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 161
+TransformEvent = (EventException + TransformBase) # gm_headers/magick/error.h: 182
 
-UndefinedDispose = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 161
+XServerEvent = (EventException + XServerBase) # gm_headers/magick/error.h: 182
 
-NoneDispose = (UndefinedDispose + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 161
+X11Event = (EventException + X11Base) # gm_headers/magick/error.h: 182
 
-BackgroundDispose = (NoneDispose + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 161
+UserEvent = (EventException + UserBase) # gm_headers/magick/error.h: 182
 
-PreviousDispose = (BackgroundDispose + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 161
+MonitorEvent = (EventException + MonitorBase) # gm_headers/magick/error.h: 182
 
-DisposeType = enum_anon_16 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 161
+LocaleEvent = (EventException + LocaleBase) # gm_headers/magick/error.h: 182
 
-enum_anon_17 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 169
+DeprecateEvent = (EventException + DeprecateBase) # gm_headers/magick/error.h: 182
 
-UndefinedEndian = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 169
+RegistryEvent = (EventException + RegistryBase) # gm_headers/magick/error.h: 182
 
-LSBEndian = (UndefinedEndian + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 169
+ConfigureEvent = (EventException + ConfigureBase) # gm_headers/magick/error.h: 182
 
-MSBEndian = (LSBEndian + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 169
+WarningException = 300 # gm_headers/magick/error.h: 182
 
-NativeEndian = (MSBEndian + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 169
+ExceptionWarning = (WarningException + ExceptionBase) # gm_headers/magick/error.h: 182
 
-EndianType = enum_anon_17 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 169
+ResourceWarning = (WarningException + ResourceBase) # gm_headers/magick/error.h: 182
 
-enum_anon_18 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+ResourceLimitWarning = (WarningException + ResourceLimitBase) # gm_headers/magick/error.h: 182
 
-UndefinedFilter = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+TypeWarning = (WarningException + TypeBase) # gm_headers/magick/error.h: 182
 
-PointFilter = (UndefinedFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+AnnotateWarning = (WarningException + AnnotateBase) # gm_headers/magick/error.h: 182
 
-BoxFilter = (PointFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+OptionWarning = (WarningException + OptionBase) # gm_headers/magick/error.h: 182
 
-TriangleFilter = (BoxFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+DelegateWarning = (WarningException + DelegateBase) # gm_headers/magick/error.h: 182
 
-HermiteFilter = (TriangleFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+MissingDelegateWarning = (WarningException + MissingDelegateBase) # gm_headers/magick/error.h: 182
 
-HanningFilter = (HermiteFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+CorruptImageWarning = (WarningException + CorruptImageBase) # gm_headers/magick/error.h: 182
 
-HammingFilter = (HanningFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+FileOpenWarning = (WarningException + FileOpenBase) # gm_headers/magick/error.h: 182
 
-BlackmanFilter = (HammingFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+BlobWarning = (WarningException + BlobBase) # gm_headers/magick/error.h: 182
 
-GaussianFilter = (BlackmanFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+StreamWarning = (WarningException + StreamBase) # gm_headers/magick/error.h: 182
 
-QuadraticFilter = (GaussianFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+CacheWarning = (WarningException + CacheBase) # gm_headers/magick/error.h: 182
 
-CubicFilter = (QuadraticFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+CoderWarning = (WarningException + CoderBase) # gm_headers/magick/error.h: 182
 
-CatromFilter = (CubicFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+ModuleWarning = (WarningException + ModuleBase) # gm_headers/magick/error.h: 182
 
-MitchellFilter = (CatromFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+DrawWarning = (WarningException + DrawBase) # gm_headers/magick/error.h: 182
 
-LanczosFilter = (MitchellFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+RenderWarning = (WarningException + RenderBase) # gm_headers/magick/error.h: 182
 
-BesselFilter = (LanczosFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+ImageWarning = (WarningException + ImageBase) # gm_headers/magick/error.h: 182
 
-SincFilter = (BesselFilter + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+WandWarning = (WarningException + WandBase) # gm_headers/magick/error.h: 182
 
-FilterTypes = enum_anon_18 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 189
+TemporaryFileWarning = (WarningException + TemporaryFileBase) # gm_headers/magick/error.h: 182
 
-enum_anon_19 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+TransformWarning = (WarningException + TransformBase) # gm_headers/magick/error.h: 182
 
-NoValue = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+XServerWarning = (WarningException + XServerBase) # gm_headers/magick/error.h: 182
 
-XValue = 1 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+X11Warning = (WarningException + X11Base) # gm_headers/magick/error.h: 182
 
-YValue = 2 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+UserWarning = (WarningException + UserBase) # gm_headers/magick/error.h: 182
 
-WidthValue = 4 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+MonitorWarning = (WarningException + MonitorBase) # gm_headers/magick/error.h: 182
 
-HeightValue = 8 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+LocaleWarning = (WarningException + LocaleBase) # gm_headers/magick/error.h: 182
 
-AllValues = 15 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+DeprecateWarning = (WarningException + DeprecateBase) # gm_headers/magick/error.h: 182
 
-XNegative = 16 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+RegistryWarning = (WarningException + RegistryBase) # gm_headers/magick/error.h: 182
 
-YNegative = 32 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+ConfigureWarning = (WarningException + ConfigureBase) # gm_headers/magick/error.h: 182
 
-PercentValue = 4096 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+ErrorException = 400 # gm_headers/magick/error.h: 182
 
-AspectValue = 8192 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+ExceptionError = (ErrorException + ExceptionBase) # gm_headers/magick/error.h: 182
 
-LessValue = 16384 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+ResourceError = (ErrorException + ResourceBase) # gm_headers/magick/error.h: 182
 
-GreaterValue = 32768 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+ResourceLimitError = (ErrorException + ResourceLimitBase) # gm_headers/magick/error.h: 182
 
-AreaValue = 65536 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+TypeError = (ErrorException + TypeBase) # gm_headers/magick/error.h: 182
 
-MinimumValue = 131072 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+AnnotateError = (ErrorException + AnnotateBase) # gm_headers/magick/error.h: 182
 
-GeometryFlags = enum_anon_19 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 215
+OptionError = (ErrorException + OptionBase) # gm_headers/magick/error.h: 182
 
-enum_anon_20 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+DelegateError = (ErrorException + DelegateBase) # gm_headers/magick/error.h: 182
 
-ForgetGravity = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+MissingDelegateError = (ErrorException + MissingDelegateBase) # gm_headers/magick/error.h: 182
 
-NorthWestGravity = (ForgetGravity + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+CorruptImageError = (ErrorException + CorruptImageBase) # gm_headers/magick/error.h: 182
 
-NorthGravity = (NorthWestGravity + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+FileOpenError = (ErrorException + FileOpenBase) # gm_headers/magick/error.h: 182
 
-NorthEastGravity = (NorthGravity + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+BlobError = (ErrorException + BlobBase) # gm_headers/magick/error.h: 182
 
-WestGravity = (NorthEastGravity + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+StreamError = (ErrorException + StreamBase) # gm_headers/magick/error.h: 182
 
-CenterGravity = (WestGravity + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+CacheError = (ErrorException + CacheBase) # gm_headers/magick/error.h: 182
 
-EastGravity = (CenterGravity + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+CoderError = (ErrorException + CoderBase) # gm_headers/magick/error.h: 182
 
-SouthWestGravity = (EastGravity + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+ModuleError = (ErrorException + ModuleBase) # gm_headers/magick/error.h: 182
 
-SouthGravity = (SouthWestGravity + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+DrawError = (ErrorException + DrawBase) # gm_headers/magick/error.h: 182
 
-SouthEastGravity = (SouthGravity + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+RenderError = (ErrorException + RenderBase) # gm_headers/magick/error.h: 182
 
-StaticGravity = (SouthEastGravity + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+ImageError = (ErrorException + ImageBase) # gm_headers/magick/error.h: 182
 
-GravityType = enum_anon_20 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 241
+WandError = (ErrorException + WandBase) # gm_headers/magick/error.h: 182
 
-enum_anon_21 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+TemporaryFileError = (ErrorException + TemporaryFileBase) # gm_headers/magick/error.h: 182
 
-UndefinedType = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+TransformError = (ErrorException + TransformBase) # gm_headers/magick/error.h: 182
 
-BilevelType = (UndefinedType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+XServerError = (ErrorException + XServerBase) # gm_headers/magick/error.h: 182
 
-GrayscaleType = (BilevelType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+X11Error = (ErrorException + X11Base) # gm_headers/magick/error.h: 182
 
-GrayscaleMatteType = (GrayscaleType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+UserError = (ErrorException + UserBase) # gm_headers/magick/error.h: 182
 
-PaletteType = (GrayscaleMatteType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+MonitorError = (ErrorException + MonitorBase) # gm_headers/magick/error.h: 182
 
-PaletteMatteType = (PaletteType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+LocaleError = (ErrorException + LocaleBase) # gm_headers/magick/error.h: 182
 
-TrueColorType = (PaletteMatteType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+DeprecateError = (ErrorException + DeprecateBase) # gm_headers/magick/error.h: 182
 
-TrueColorMatteType = (TrueColorType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+RegistryError = (ErrorException + RegistryBase) # gm_headers/magick/error.h: 182
 
-ColorSeparationType = (TrueColorMatteType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+ConfigureError = (ErrorException + ConfigureBase) # gm_headers/magick/error.h: 182
 
-ColorSeparationMatteType = (ColorSeparationType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+FatalErrorException = 700 # gm_headers/magick/error.h: 182
 
-OptimizeType = (ColorSeparationMatteType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+ExceptionFatalError = (FatalErrorException + ExceptionBase) # gm_headers/magick/error.h: 182
 
-ImageType = enum_anon_21 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 256
+ResourceFatalError = (FatalErrorException + ResourceBase) # gm_headers/magick/error.h: 182
 
-enum_anon_22 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 265
+ResourceLimitFatalError = (FatalErrorException + ResourceLimitBase) # gm_headers/magick/error.h: 182
 
-UndefinedInterlace = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 265
+TypeFatalError = (FatalErrorException + TypeBase) # gm_headers/magick/error.h: 182
 
-NoInterlace = (UndefinedInterlace + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 265
+AnnotateFatalError = (FatalErrorException + AnnotateBase) # gm_headers/magick/error.h: 182
 
-LineInterlace = (NoInterlace + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 265
+OptionFatalError = (FatalErrorException + OptionBase) # gm_headers/magick/error.h: 182
 
-PlaneInterlace = (LineInterlace + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 265
+DelegateFatalError = (FatalErrorException + DelegateBase) # gm_headers/magick/error.h: 182
 
-PartitionInterlace = (PlaneInterlace + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 265
+MissingDelegateFatalError = (FatalErrorException + MissingDelegateBase) # gm_headers/magick/error.h: 182
 
-InterlaceType = enum_anon_22 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 265
+CorruptImageFatalError = (FatalErrorException + CorruptImageBase) # gm_headers/magick/error.h: 182
 
-enum_anon_23 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 273
+FileOpenFatalError = (FatalErrorException + FileOpenBase) # gm_headers/magick/error.h: 182
 
-UndefinedMode = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 273
+BlobFatalError = (FatalErrorException + BlobBase) # gm_headers/magick/error.h: 182
 
-FrameMode = (UndefinedMode + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 273
+StreamFatalError = (FatalErrorException + StreamBase) # gm_headers/magick/error.h: 182
 
-UnframeMode = (FrameMode + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 273
+CacheFatalError = (FatalErrorException + CacheBase) # gm_headers/magick/error.h: 182
 
-ConcatenateMode = (UnframeMode + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 273
+CoderFatalError = (FatalErrorException + CoderBase) # gm_headers/magick/error.h: 182
 
-MontageMode = enum_anon_23 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 273
+ModuleFatalError = (FatalErrorException + ModuleBase) # gm_headers/magick/error.h: 182
 
-enum_anon_24 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 283
+DrawFatalError = (FatalErrorException + DrawBase) # gm_headers/magick/error.h: 182
 
-UniformNoise = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 283
+RenderFatalError = (FatalErrorException + RenderBase) # gm_headers/magick/error.h: 182
 
-GaussianNoise = (UniformNoise + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 283
+ImageFatalError = (FatalErrorException + ImageBase) # gm_headers/magick/error.h: 182
 
-MultiplicativeGaussianNoise = (GaussianNoise + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 283
+WandFatalError = (FatalErrorException + WandBase) # gm_headers/magick/error.h: 182
 
-ImpulseNoise = (MultiplicativeGaussianNoise + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 283
+TemporaryFileFatalError = (FatalErrorException + TemporaryFileBase) # gm_headers/magick/error.h: 182
 
-LaplacianNoise = (ImpulseNoise + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 283
+TransformFatalError = (FatalErrorException + TransformBase) # gm_headers/magick/error.h: 182
 
-PoissonNoise = (LaplacianNoise + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 283
+XServerFatalError = (FatalErrorException + XServerBase) # gm_headers/magick/error.h: 182
 
-NoiseType = enum_anon_24 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 283
+X11FatalError = (FatalErrorException + X11Base) # gm_headers/magick/error.h: 182
 
-enum_anon_25 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+UserFatalError = (FatalErrorException + UserBase) # gm_headers/magick/error.h: 182
 
-UndefinedOrientation = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+MonitorFatalError = (FatalErrorException + MonitorBase) # gm_headers/magick/error.h: 182
 
-TopLeftOrientation = (UndefinedOrientation + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+LocaleFatalError = (FatalErrorException + LocaleBase) # gm_headers/magick/error.h: 182
 
-TopRightOrientation = (TopLeftOrientation + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+DeprecateFatalError = (FatalErrorException + DeprecateBase) # gm_headers/magick/error.h: 182
 
-BottomRightOrientation = (TopRightOrientation + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+RegistryFatalError = (FatalErrorException + RegistryBase) # gm_headers/magick/error.h: 182
 
-BottomLeftOrientation = (BottomRightOrientation + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+ConfigureFatalError = (FatalErrorException + ConfigureBase) # gm_headers/magick/error.h: 182
 
-LeftTopOrientation = (BottomLeftOrientation + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+ExceptionType = enum_anon_7 # gm_headers/magick/error.h: 182
 
-RightTopOrientation = (LeftTopOrientation + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+# gm_headers/magick/error.h: 226
+class struct__ExceptionInfo(Structure):
+    pass
 
-RightBottomOrientation = (RightTopOrientation + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+struct__ExceptionInfo.__slots__ = [
+    'severity',
+    'reason',
+    'description',
+    'error_number',
+    'module',
+    'function',
+    'line',
+    'signature',
+]
+struct__ExceptionInfo._fields_ = [
+    ('severity', ExceptionType),
+    ('reason', String),
+    ('description', String),
+    ('error_number', c_int),
+    ('module', String),
+    ('function', String),
+    ('line', c_ulong),
+    ('signature', c_ulong),
+]
 
-LeftBottomOrientation = (RightBottomOrientation + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+ExceptionInfo = struct__ExceptionInfo # gm_headers/magick/error.h: 226
 
-OrientationType = enum_anon_25 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 299
+ErrorHandler = CFUNCTYPE(UNCHECKED(None), ExceptionType, String, String) # gm_headers/magick/error.h: 232
 
-enum_anon_26 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+FatalErrorHandler = CFUNCTYPE(UNCHECKED(None), ExceptionType, String, String) # gm_headers/magick/error.h: 235
 
-UndefinedPreview = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+WarningHandler = CFUNCTYPE(UNCHECKED(None), ExceptionType, String, String) # gm_headers/magick/error.h: 238
 
-RotatePreview = (UndefinedPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 244
+if hasattr(_libs['GraphicsMagick'], 'GetLocaleExceptionMessage'):
+    GetLocaleExceptionMessage = _libs['GraphicsMagick'].GetLocaleExceptionMessage
+    GetLocaleExceptionMessage.argtypes = [ExceptionType, String]
+    if sizeof(c_int) == sizeof(c_void_p):
+        GetLocaleExceptionMessage.restype = ReturnString
+    else:
+        GetLocaleExceptionMessage.restype = String
+        GetLocaleExceptionMessage.errcheck = ReturnString
 
-ShearPreview = (RotatePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 244
+if hasattr(_libs['GraphicsMagick'], 'GetLocaleMessage'):
+    GetLocaleMessage = _libs['GraphicsMagick'].GetLocaleMessage
+    GetLocaleMessage.argtypes = [String]
+    if sizeof(c_int) == sizeof(c_void_p):
+        GetLocaleMessage.restype = ReturnString
+    else:
+        GetLocaleMessage.restype = String
+        GetLocaleMessage.errcheck = ReturnString
 
-RollPreview = (ShearPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 248
+if hasattr(_libs['GraphicsMagick'], 'SetErrorHandler'):
+    SetErrorHandler = _libs['GraphicsMagick'].SetErrorHandler
+    SetErrorHandler.argtypes = [ErrorHandler]
+    SetErrorHandler.restype = ErrorHandler
 
-HuePreview = (RollPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 251
+if hasattr(_libs['GraphicsMagick'], 'SetFatalErrorHandler'):
+    SetFatalErrorHandler = _libs['GraphicsMagick'].SetFatalErrorHandler
+    SetFatalErrorHandler.argtypes = [FatalErrorHandler]
+    SetFatalErrorHandler.restype = FatalErrorHandler
 
-SaturationPreview = (HuePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], 'CatchException'):
+    CatchException = _libs['GraphicsMagick'].CatchException
+    CatchException.argtypes = [POINTER(ExceptionInfo)]
+    CatchException.restype = None
 
-BrightnessPreview = (SaturationPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], 'CopyException'):
+    CopyException = _libs['GraphicsMagick'].CopyException
+    CopyException.argtypes = [POINTER(ExceptionInfo), POINTER(ExceptionInfo)]
+    CopyException.restype = None
 
-GammaPreview = (BrightnessPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], 'DestroyExceptionInfo'):
+    DestroyExceptionInfo = _libs['GraphicsMagick'].DestroyExceptionInfo
+    DestroyExceptionInfo.argtypes = [POINTER(ExceptionInfo)]
+    DestroyExceptionInfo.restype = None
 
-SpiffPreview = (GammaPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], 'GetExceptionInfo'):
+    GetExceptionInfo = _libs['GraphicsMagick'].GetExceptionInfo
+    GetExceptionInfo.argtypes = [POINTER(ExceptionInfo)]
+    GetExceptionInfo.restype = None
 
-DullPreview = (SpiffPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], 'MagickError'):
+    MagickError = _libs['GraphicsMagick'].MagickError
+    MagickError.argtypes = [ExceptionType, String, String]
+    MagickError.restype = None
 
-GrayscalePreview = (DullPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], 'MagickFatalError'):
+    MagickFatalError = _libs['GraphicsMagick'].MagickFatalError
+    MagickFatalError.argtypes = [ExceptionType, String, String]
+    MagickFatalError.restype = None
 
-QuantizePreview = (GrayscalePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], 'MagickWarning'):
+    MagickWarning = _libs['GraphicsMagick'].MagickWarning
+    MagickWarning.argtypes = [ExceptionType, String, String]
+    MagickWarning.restype = None
 
-DespecklePreview = (QuantizePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], '_MagickError'):
+    _MagickError = _libs['GraphicsMagick']._MagickError
+    _MagickError.argtypes = [ExceptionType, String, String]
+    _MagickError.restype = None
 
-ReduceNoisePreview = (DespecklePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], '_MagickFatalError'):
+    _MagickFatalError = _libs['GraphicsMagick']._MagickFatalError
+    _MagickFatalError.argtypes = [ExceptionType, String, String]
+    _MagickFatalError.restype = None
 
-AddNoisePreview = (ReduceNoisePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], '_MagickWarning'):
+    _MagickWarning = _libs['GraphicsMagick']._MagickWarning
+    _MagickWarning.argtypes = [ExceptionType, String, String]
+    _MagickWarning.restype = None
 
-SharpenPreview = (AddNoisePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], 'SetExceptionInfo'):
+    SetExceptionInfo = _libs['GraphicsMagick'].SetExceptionInfo
+    SetExceptionInfo.argtypes = [POINTER(ExceptionInfo), ExceptionType]
+    SetExceptionInfo.restype = None
 
-BlurPreview = (SharpenPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], 'ThrowException'):
+    ThrowException = _libs['GraphicsMagick'].ThrowException
+    ThrowException.argtypes = [POINTER(ExceptionInfo), ExceptionType, String, String]
+    ThrowException.restype = None
 
-ThresholdPreview = (BlurPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 254
+if hasattr(_libs['GraphicsMagick'], 'ThrowLoggedException'):
+    ThrowLoggedException = _libs['GraphicsMagick'].ThrowLoggedException
+    ThrowLoggedException.argtypes = [POINTER(ExceptionInfo), ExceptionType, String, String, String, String, c_ulong]
+    ThrowLoggedException.restype = None
 
-EdgeDetectPreview = (ThresholdPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/error.h: 271
+if hasattr(_libs['GraphicsMagick'], 'SetWarningHandler'):
+    SetWarningHandler = _libs['GraphicsMagick'].SetWarningHandler
+    SetWarningHandler.argtypes = [WarningHandler]
+    SetWarningHandler.restype = WarningHandler
 
-SpreadPreview = (EdgeDetectPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+enum_anon_9 = c_int # gm_headers/magick/colorspace.h: 110
 
-SolarizePreview = (SpreadPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+ColorspaceType = enum_anon_9 # gm_headers/magick/colorspace.h: 110
 
-ShadePreview = (SolarizePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+enum_anon_10 = c_int # gm_headers/magick/timer.h: 26
 
-RaisePreview = (ShadePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+TimerState = enum_anon_10 # gm_headers/magick/timer.h: 26
 
-SegmentPreview = (RaisePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/timer.h: 37
+class struct__Timer(Structure):
+    pass
 
-SwirlPreview = (SegmentPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+struct__Timer.__slots__ = [
+    'start',
+    'stop',
+    'total',
+]
+struct__Timer._fields_ = [
+    ('start', c_double),
+    ('stop', c_double),
+    ('total', c_double),
+]
 
-ImplodePreview = (SwirlPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+Timer = struct__Timer # gm_headers/magick/timer.h: 37
 
-WavePreview = (ImplodePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+# gm_headers/magick/timer.h: 50
+class struct__TimerInfo(Structure):
+    pass
 
-OilPaintPreview = (WavePreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+struct__TimerInfo.__slots__ = [
+    'user',
+    'elapsed',
+    'state',
+    'signature',
+]
+struct__TimerInfo._fields_ = [
+    ('user', Timer),
+    ('elapsed', Timer),
+    ('state', TimerState),
+    ('signature', c_ulong),
+]
 
-CharcoalDrawingPreview = (OilPaintPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+TimerInfo = struct__TimerInfo # gm_headers/magick/timer.h: 50
 
-JPEGPreview = (CharcoalDrawingPreview + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+enum_anon_11 = c_int # /tmp/tmpu80Elu/image.h: 171
 
-PreviewType = enum_anon_26 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 333
+UnspecifiedAlpha = 0 # /tmp/tmpu80Elu/image.h: 171
 
-enum_anon_27 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 342
+AssociatedAlpha = (UnspecifiedAlpha + 1) # /tmp/tmpu80Elu/image.h: 171
 
-UndefinedIntent = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 342
+UnassociatedAlpha = (AssociatedAlpha + 1) # /tmp/tmpu80Elu/image.h: 171
 
-SaturationIntent = (UndefinedIntent + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 342
+AlphaType = enum_anon_11 # /tmp/tmpu80Elu/image.h: 171
 
-PerceptualIntent = (SaturationIntent + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 342
+enum_anon_12 = c_int # /tmp/tmpu80Elu/image.h: 187
 
-AbsoluteIntent = (PerceptualIntent + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 342
+UndefinedChannel = 0 # /tmp/tmpu80Elu/image.h: 187
 
-RelativeIntent = (AbsoluteIntent + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 342
+RedChannel = (UndefinedChannel + 1) # /tmp/tmpu80Elu/image.h: 187
 
-RenderingIntent = enum_anon_27 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 342
+CyanChannel = (RedChannel + 1) # /tmp/tmpu80Elu/image.h: 187
 
-enum_anon_28 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 349
+GreenChannel = (CyanChannel + 1) # /tmp/tmpu80Elu/image.h: 187
 
-UndefinedResolution = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 349
+MagentaChannel = (GreenChannel + 1) # /tmp/tmpu80Elu/image.h: 187
 
-PixelsPerInchResolution = (UndefinedResolution + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 349
+BlueChannel = (MagentaChannel + 1) # /tmp/tmpu80Elu/image.h: 187
 
-PixelsPerCentimeterResolution = (PixelsPerInchResolution + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 349
+YellowChannel = (BlueChannel + 1) # /tmp/tmpu80Elu/image.h: 187
 
-ResolutionType = enum_anon_28 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 349
+OpacityChannel = (YellowChannel + 1) # /tmp/tmpu80Elu/image.h: 187
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 363
+BlackChannel = (OpacityChannel + 1) # /tmp/tmpu80Elu/image.h: 187
+
+MatteChannel = (BlackChannel + 1) # /tmp/tmpu80Elu/image.h: 187
+
+AllChannels = (MatteChannel + 1) # /tmp/tmpu80Elu/image.h: 187
+
+GrayChannel = (AllChannels + 1) # /tmp/tmpu80Elu/image.h: 187
+
+ChannelType = enum_anon_12 # /tmp/tmpu80Elu/image.h: 187
+
+enum_anon_13 = c_int # /tmp/tmpu80Elu/image.h: 194
+
+UndefinedClass = 0 # /tmp/tmpu80Elu/image.h: 194
+
+DirectClass = (UndefinedClass + 1) # /tmp/tmpu80Elu/image.h: 194
+
+PseudoClass = (DirectClass + 1) # /tmp/tmpu80Elu/image.h: 194
+
+ClassType = enum_anon_13 # /tmp/tmpu80Elu/image.h: 194
+
+enum_anon_14 = c_int # /tmp/tmpu80Elu/image.h: 235
+
+UndefinedCompositeOp = 0 # /tmp/tmpu80Elu/image.h: 235
+
+OverCompositeOp = (UndefinedCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+InCompositeOp = (OverCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+OutCompositeOp = (InCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+AtopCompositeOp = (OutCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+XorCompositeOp = (AtopCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+PlusCompositeOp = (XorCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+MinusCompositeOp = (PlusCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+AddCompositeOp = (MinusCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+SubtractCompositeOp = (AddCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+DifferenceCompositeOp = (SubtractCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+MultiplyCompositeOp = (DifferenceCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+BumpmapCompositeOp = (MultiplyCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+CopyCompositeOp = (BumpmapCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+CopyRedCompositeOp = (CopyCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+CopyGreenCompositeOp = (CopyRedCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+CopyBlueCompositeOp = (CopyGreenCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+CopyOpacityCompositeOp = (CopyBlueCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+ClearCompositeOp = (CopyOpacityCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+DissolveCompositeOp = (ClearCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+DisplaceCompositeOp = (DissolveCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+ModulateCompositeOp = (DisplaceCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+ThresholdCompositeOp = (ModulateCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+NoCompositeOp = (ThresholdCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+DarkenCompositeOp = (NoCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+LightenCompositeOp = (DarkenCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+HueCompositeOp = (LightenCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+SaturateCompositeOp = (HueCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+ColorizeCompositeOp = (SaturateCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+LuminizeCompositeOp = (ColorizeCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+ScreenCompositeOp = (LuminizeCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+OverlayCompositeOp = (ScreenCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+CopyCyanCompositeOp = (OverlayCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+CopyMagentaCompositeOp = (CopyCyanCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+CopyYellowCompositeOp = (CopyMagentaCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+CopyBlackCompositeOp = (CopyYellowCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+DivideCompositeOp = (CopyBlackCompositeOp + 1) # /tmp/tmpu80Elu/image.h: 235
+
+CompositeOperator = enum_anon_14 # /tmp/tmpu80Elu/image.h: 235
+
+enum_anon_15 = c_int # /tmp/tmpu80Elu/image.h: 249
+
+UndefinedCompression = 0 # /tmp/tmpu80Elu/image.h: 249
+
+NoCompression = (UndefinedCompression + 1) # /tmp/tmpu80Elu/image.h: 249
+
+BZipCompression = (NoCompression + 1) # /tmp/tmpu80Elu/image.h: 249
+
+FaxCompression = (BZipCompression + 1) # /tmp/tmpu80Elu/image.h: 249
+
+Group4Compression = (FaxCompression + 1) # /tmp/tmpu80Elu/image.h: 249
+
+JPEGCompression = (Group4Compression + 1) # /tmp/tmpu80Elu/image.h: 249
+
+LosslessJPEGCompression = (JPEGCompression + 1) # /tmp/tmpu80Elu/image.h: 249
+
+LZWCompression = (LosslessJPEGCompression + 1) # /tmp/tmpu80Elu/image.h: 249
+
+RLECompression = (LZWCompression + 1) # /tmp/tmpu80Elu/image.h: 249
+
+ZipCompression = (RLECompression + 1) # /tmp/tmpu80Elu/image.h: 249
+
+CompressionType = enum_anon_15 # /tmp/tmpu80Elu/image.h: 249
+
+enum_anon_16 = c_int # /tmp/tmpu80Elu/image.h: 257
+
+UndefinedDispose = 0 # /tmp/tmpu80Elu/image.h: 257
+
+NoneDispose = (UndefinedDispose + 1) # /tmp/tmpu80Elu/image.h: 257
+
+BackgroundDispose = (NoneDispose + 1) # /tmp/tmpu80Elu/image.h: 257
+
+PreviousDispose = (BackgroundDispose + 1) # /tmp/tmpu80Elu/image.h: 257
+
+DisposeType = enum_anon_16 # /tmp/tmpu80Elu/image.h: 257
+
+enum_anon_17 = c_int # /tmp/tmpu80Elu/image.h: 265
+
+UndefinedEndian = 0 # /tmp/tmpu80Elu/image.h: 265
+
+LSBEndian = (UndefinedEndian + 1) # /tmp/tmpu80Elu/image.h: 265
+
+MSBEndian = (LSBEndian + 1) # /tmp/tmpu80Elu/image.h: 265
+
+NativeEndian = (MSBEndian + 1) # /tmp/tmpu80Elu/image.h: 265
+
+EndianType = enum_anon_17 # /tmp/tmpu80Elu/image.h: 265
+
+enum_anon_18 = c_int # /tmp/tmpu80Elu/image.h: 285
+
+UndefinedFilter = 0 # /tmp/tmpu80Elu/image.h: 285
+
+PointFilter = (UndefinedFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+BoxFilter = (PointFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+TriangleFilter = (BoxFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+HermiteFilter = (TriangleFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+HanningFilter = (HermiteFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+HammingFilter = (HanningFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+BlackmanFilter = (HammingFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+GaussianFilter = (BlackmanFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+QuadraticFilter = (GaussianFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+CubicFilter = (QuadraticFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+CatromFilter = (CubicFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+MitchellFilter = (CatromFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+LanczosFilter = (MitchellFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+BesselFilter = (LanczosFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+SincFilter = (BesselFilter + 1) # /tmp/tmpu80Elu/image.h: 285
+
+FilterTypes = enum_anon_18 # /tmp/tmpu80Elu/image.h: 285
+
+enum_anon_19 = c_int # /tmp/tmpu80Elu/image.h: 311
+
+NoValue = 0 # /tmp/tmpu80Elu/image.h: 311
+
+XValue = 1 # /tmp/tmpu80Elu/image.h: 311
+
+YValue = 2 # /tmp/tmpu80Elu/image.h: 311
+
+WidthValue = 4 # /tmp/tmpu80Elu/image.h: 311
+
+HeightValue = 8 # /tmp/tmpu80Elu/image.h: 311
+
+AllValues = 15 # /tmp/tmpu80Elu/image.h: 311
+
+XNegative = 16 # /tmp/tmpu80Elu/image.h: 311
+
+YNegative = 32 # /tmp/tmpu80Elu/image.h: 311
+
+PercentValue = 4096 # /tmp/tmpu80Elu/image.h: 311
+
+AspectValue = 8192 # /tmp/tmpu80Elu/image.h: 311
+
+LessValue = 16384 # /tmp/tmpu80Elu/image.h: 311
+
+GreaterValue = 32768 # /tmp/tmpu80Elu/image.h: 311
+
+AreaValue = 65536 # /tmp/tmpu80Elu/image.h: 311
+
+MinimumValue = 131072 # /tmp/tmpu80Elu/image.h: 311
+
+GeometryFlags = enum_anon_19 # /tmp/tmpu80Elu/image.h: 311
+
+enum_anon_20 = c_int # /tmp/tmpu80Elu/image.h: 337
+
+ForgetGravity = 0 # /tmp/tmpu80Elu/image.h: 337
+
+NorthWestGravity = (ForgetGravity + 1) # /tmp/tmpu80Elu/image.h: 337
+
+NorthGravity = (NorthWestGravity + 1) # /tmp/tmpu80Elu/image.h: 337
+
+NorthEastGravity = (NorthGravity + 1) # /tmp/tmpu80Elu/image.h: 337
+
+WestGravity = (NorthEastGravity + 1) # /tmp/tmpu80Elu/image.h: 337
+
+CenterGravity = (WestGravity + 1) # /tmp/tmpu80Elu/image.h: 337
+
+EastGravity = (CenterGravity + 1) # /tmp/tmpu80Elu/image.h: 337
+
+SouthWestGravity = (EastGravity + 1) # /tmp/tmpu80Elu/image.h: 337
+
+SouthGravity = (SouthWestGravity + 1) # /tmp/tmpu80Elu/image.h: 337
+
+SouthEastGravity = (SouthGravity + 1) # /tmp/tmpu80Elu/image.h: 337
+
+StaticGravity = (SouthEastGravity + 1) # /tmp/tmpu80Elu/image.h: 337
+
+GravityType = enum_anon_20 # /tmp/tmpu80Elu/image.h: 337
+
+enum_anon_21 = c_int # /tmp/tmpu80Elu/image.h: 352
+
+UndefinedType = 0 # /tmp/tmpu80Elu/image.h: 352
+
+BilevelType = (UndefinedType + 1) # /tmp/tmpu80Elu/image.h: 352
+
+GrayscaleType = (BilevelType + 1) # /tmp/tmpu80Elu/image.h: 352
+
+GrayscaleMatteType = (GrayscaleType + 1) # /tmp/tmpu80Elu/image.h: 352
+
+PaletteType = (GrayscaleMatteType + 1) # /tmp/tmpu80Elu/image.h: 352
+
+PaletteMatteType = (PaletteType + 1) # /tmp/tmpu80Elu/image.h: 352
+
+TrueColorType = (PaletteMatteType + 1) # /tmp/tmpu80Elu/image.h: 352
+
+TrueColorMatteType = (TrueColorType + 1) # /tmp/tmpu80Elu/image.h: 352
+
+ColorSeparationType = (TrueColorMatteType + 1) # /tmp/tmpu80Elu/image.h: 352
+
+ColorSeparationMatteType = (ColorSeparationType + 1) # /tmp/tmpu80Elu/image.h: 352
+
+OptimizeType = (ColorSeparationMatteType + 1) # /tmp/tmpu80Elu/image.h: 352
+
+ImageType = enum_anon_21 # /tmp/tmpu80Elu/image.h: 352
+
+enum_anon_22 = c_int # /tmp/tmpu80Elu/image.h: 361
+
+UndefinedInterlace = 0 # /tmp/tmpu80Elu/image.h: 361
+
+NoInterlace = (UndefinedInterlace + 1) # /tmp/tmpu80Elu/image.h: 361
+
+LineInterlace = (NoInterlace + 1) # /tmp/tmpu80Elu/image.h: 361
+
+PlaneInterlace = (LineInterlace + 1) # /tmp/tmpu80Elu/image.h: 361
+
+PartitionInterlace = (PlaneInterlace + 1) # /tmp/tmpu80Elu/image.h: 361
+
+InterlaceType = enum_anon_22 # /tmp/tmpu80Elu/image.h: 361
+
+enum_anon_23 = c_int # /tmp/tmpu80Elu/image.h: 369
+
+UndefinedMode = 0 # /tmp/tmpu80Elu/image.h: 369
+
+FrameMode = (UndefinedMode + 1) # /tmp/tmpu80Elu/image.h: 369
+
+UnframeMode = (FrameMode + 1) # /tmp/tmpu80Elu/image.h: 369
+
+ConcatenateMode = (UnframeMode + 1) # /tmp/tmpu80Elu/image.h: 369
+
+MontageMode = enum_anon_23 # /tmp/tmpu80Elu/image.h: 369
+
+enum_anon_24 = c_int # /tmp/tmpu80Elu/image.h: 379
+
+UniformNoise = 0 # /tmp/tmpu80Elu/image.h: 379
+
+GaussianNoise = (UniformNoise + 1) # /tmp/tmpu80Elu/image.h: 379
+
+MultiplicativeGaussianNoise = (GaussianNoise + 1) # /tmp/tmpu80Elu/image.h: 379
+
+ImpulseNoise = (MultiplicativeGaussianNoise + 1) # /tmp/tmpu80Elu/image.h: 379
+
+LaplacianNoise = (ImpulseNoise + 1) # /tmp/tmpu80Elu/image.h: 379
+
+PoissonNoise = (LaplacianNoise + 1) # /tmp/tmpu80Elu/image.h: 379
+
+NoiseType = enum_anon_24 # /tmp/tmpu80Elu/image.h: 379
+
+enum_anon_25 = c_int # /tmp/tmpu80Elu/image.h: 395
+
+UndefinedOrientation = 0 # /tmp/tmpu80Elu/image.h: 395
+
+TopLeftOrientation = (UndefinedOrientation + 1) # /tmp/tmpu80Elu/image.h: 395
+
+TopRightOrientation = (TopLeftOrientation + 1) # /tmp/tmpu80Elu/image.h: 395
+
+BottomRightOrientation = (TopRightOrientation + 1) # /tmp/tmpu80Elu/image.h: 395
+
+BottomLeftOrientation = (BottomRightOrientation + 1) # /tmp/tmpu80Elu/image.h: 395
+
+LeftTopOrientation = (BottomLeftOrientation + 1) # /tmp/tmpu80Elu/image.h: 395
+
+RightTopOrientation = (LeftTopOrientation + 1) # /tmp/tmpu80Elu/image.h: 395
+
+RightBottomOrientation = (RightTopOrientation + 1) # /tmp/tmpu80Elu/image.h: 395
+
+LeftBottomOrientation = (RightBottomOrientation + 1) # /tmp/tmpu80Elu/image.h: 395
+
+OrientationType = enum_anon_25 # /tmp/tmpu80Elu/image.h: 395
+
+enum_anon_26 = c_int # /tmp/tmpu80Elu/image.h: 429
+
+UndefinedPreview = 0 # /tmp/tmpu80Elu/image.h: 429
+
+RotatePreview = (UndefinedPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+ShearPreview = (RotatePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+RollPreview = (ShearPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+HuePreview = (RollPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+SaturationPreview = (HuePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+BrightnessPreview = (SaturationPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+GammaPreview = (BrightnessPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+SpiffPreview = (GammaPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+DullPreview = (SpiffPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+GrayscalePreview = (DullPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+QuantizePreview = (GrayscalePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+DespecklePreview = (QuantizePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+ReduceNoisePreview = (DespecklePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+AddNoisePreview = (ReduceNoisePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+SharpenPreview = (AddNoisePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+BlurPreview = (SharpenPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+ThresholdPreview = (BlurPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+EdgeDetectPreview = (ThresholdPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+SpreadPreview = (EdgeDetectPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+SolarizePreview = (SpreadPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+ShadePreview = (SolarizePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+RaisePreview = (ShadePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+SegmentPreview = (RaisePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+SwirlPreview = (SegmentPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+ImplodePreview = (SwirlPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+WavePreview = (ImplodePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+OilPaintPreview = (WavePreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+CharcoalDrawingPreview = (OilPaintPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+JPEGPreview = (CharcoalDrawingPreview + 1) # /tmp/tmpu80Elu/image.h: 429
+
+PreviewType = enum_anon_26 # /tmp/tmpu80Elu/image.h: 429
+
+enum_anon_27 = c_int # /tmp/tmpu80Elu/image.h: 438
+
+UndefinedIntent = 0 # /tmp/tmpu80Elu/image.h: 438
+
+SaturationIntent = (UndefinedIntent + 1) # /tmp/tmpu80Elu/image.h: 438
+
+PerceptualIntent = (SaturationIntent + 1) # /tmp/tmpu80Elu/image.h: 438
+
+AbsoluteIntent = (PerceptualIntent + 1) # /tmp/tmpu80Elu/image.h: 438
+
+RelativeIntent = (AbsoluteIntent + 1) # /tmp/tmpu80Elu/image.h: 438
+
+RenderingIntent = enum_anon_27 # /tmp/tmpu80Elu/image.h: 438
+
+enum_anon_28 = c_int # /tmp/tmpu80Elu/image.h: 445
+
+UndefinedResolution = 0 # /tmp/tmpu80Elu/image.h: 445
+
+PixelsPerInchResolution = (UndefinedResolution + 1) # /tmp/tmpu80Elu/image.h: 445
+
+PixelsPerCentimeterResolution = (PixelsPerInchResolution + 1) # /tmp/tmpu80Elu/image.h: 445
+
+ResolutionType = enum_anon_28 # /tmp/tmpu80Elu/image.h: 445
+
+# /tmp/tmpu80Elu/image.h: 459
 class struct__AffineMatrix(Structure):
     pass
 
@@ -1716,9 +1708,9 @@ struct__AffineMatrix._fields_ = [
     ('ty', c_double),
 ]
 
-AffineMatrix = struct__AffineMatrix # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 363
+AffineMatrix = struct__AffineMatrix # /tmp/tmpu80Elu/image.h: 459
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 371
+# /tmp/tmpu80Elu/image.h: 467
 class struct__PrimaryInfo(Structure):
     pass
 
@@ -1733,9 +1725,9 @@ struct__PrimaryInfo._fields_ = [
     ('z', c_double),
 ]
 
-PrimaryInfo = struct__PrimaryInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 371
+PrimaryInfo = struct__PrimaryInfo # /tmp/tmpu80Elu/image.h: 467
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 380
+# /tmp/tmpu80Elu/image.h: 476
 class struct__ChromaticityInfo(Structure):
     pass
 
@@ -1752,9 +1744,9 @@ struct__ChromaticityInfo._fields_ = [
     ('white_point', PrimaryInfo),
 ]
 
-ChromaticityInfo = struct__ChromaticityInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 380
+ChromaticityInfo = struct__ChromaticityInfo # /tmp/tmpu80Elu/image.h: 476
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 438
+# /tmp/tmpu80Elu/image.h: 534
 class struct__PixelPacket(Structure):
     pass
 
@@ -1771,9 +1763,9 @@ struct__PixelPacket._fields_ = [
     ('opacity', Quantum),
 ]
 
-PixelPacket = struct__PixelPacket # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 438
+PixelPacket = struct__PixelPacket # /tmp/tmpu80Elu/image.h: 534
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 447
+# /tmp/tmpu80Elu/image.h: 543
 class struct__DoublePixelPacket(Structure):
     pass
 
@@ -1790,9 +1782,9 @@ struct__DoublePixelPacket._fields_ = [
     ('opacity', c_double),
 ]
 
-DoublePixelPacket = struct__DoublePixelPacket # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 447
+DoublePixelPacket = struct__DoublePixelPacket # /tmp/tmpu80Elu/image.h: 543
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 459
+# /tmp/tmpu80Elu/image.h: 555
 class struct__ErrorInfo(Structure):
     pass
 
@@ -1807,9 +1799,9 @@ struct__ErrorInfo._fields_ = [
     ('normalized_maximum_error', c_double),
 ]
 
-ErrorInfo = struct__ErrorInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 459
+ErrorInfo = struct__ErrorInfo # /tmp/tmpu80Elu/image.h: 555
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 472
+# /tmp/tmpu80Elu/image.h: 568
 class struct__FrameInfo(Structure):
     pass
 
@@ -1830,11 +1822,11 @@ struct__FrameInfo._fields_ = [
     ('outer_bevel', c_long),
 ]
 
-FrameInfo = struct__FrameInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 472
+FrameInfo = struct__FrameInfo # /tmp/tmpu80Elu/image.h: 568
 
-IndexPacket = Quantum # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 474
+IndexPacket = Quantum # /tmp/tmpu80Elu/image.h: 570
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 483
+# /tmp/tmpu80Elu/image.h: 579
 class struct__LongPixelPacket(Structure):
     pass
 
@@ -1851,9 +1843,9 @@ struct__LongPixelPacket._fields_ = [
     ('opacity', c_ulong),
 ]
 
-LongPixelPacket = struct__LongPixelPacket # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 483
+LongPixelPacket = struct__LongPixelPacket # /tmp/tmpu80Elu/image.h: 579
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 519
+# /tmp/tmpu80Elu/image.h: 615
 class struct__MontageInfo(Structure):
     pass
 
@@ -1896,9 +1888,9 @@ struct__MontageInfo._fields_ = [
     ('signature', c_ulong),
 ]
 
-MontageInfo = struct__MontageInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 519
+MontageInfo = struct__MontageInfo # /tmp/tmpu80Elu/image.h: 615
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 531
+# /tmp/tmpu80Elu/image.h: 627
 class struct__ProfileInfo(Structure):
     pass
 
@@ -1913,9 +1905,9 @@ struct__ProfileInfo._fields_ = [
     ('info', POINTER(c_ubyte)),
 ]
 
-ProfileInfo = struct__ProfileInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 531
+ProfileInfo = struct__ProfileInfo # /tmp/tmpu80Elu/image.h: 627
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 542
+# /tmp/tmpu80Elu/image.h: 638
 class struct__RectangleInfo(Structure):
     pass
 
@@ -1932,9 +1924,9 @@ struct__RectangleInfo._fields_ = [
     ('y', c_long),
 ]
 
-RectangleInfo = struct__RectangleInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 542
+RectangleInfo = struct__RectangleInfo # /tmp/tmpu80Elu/image.h: 638
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 551
+# /tmp/tmpu80Elu/image.h: 647
 class struct__SegmentInfo(Structure):
     pass
 
@@ -1951,7 +1943,7 @@ struct__SegmentInfo._fields_ = [
     ('y2', c_double),
 ]
 
-SegmentInfo = struct__SegmentInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 551
+SegmentInfo = struct__SegmentInfo # /tmp/tmpu80Elu/image.h: 647
 
 struct__Image.__slots__ = [
     'storage_class',
@@ -2090,9 +2082,9 @@ struct__Image._fields_ = [
     ('signature', c_ulong),
 ]
 
-Image = struct__Image # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 760
+Image = struct__Image # /tmp/tmpu80Elu/image.h: 856
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 880
+# /tmp/tmpu80Elu/image.h: 976
 class struct__ImageInfo(Structure):
     pass
 
@@ -2199,51 +2191,51 @@ struct__ImageInfo._fields_ = [
     ('signature', c_ulong),
 ]
 
-ImageInfo = struct__ImageInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 880
+ImageInfo = struct__ImageInfo # /tmp/tmpu80Elu/image.h: 976
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 887
+# /tmp/tmpu80Elu/image.h: 983
 if hasattr(_libs['GraphicsMagick'], 'CatchImageException'):
     CatchImageException = _libs['GraphicsMagick'].CatchImageException
     CatchImageException.argtypes = [POINTER(Image)]
     CatchImageException.restype = ExceptionType
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 890
+# /tmp/tmpu80Elu/image.h: 986
 if hasattr(_libs['GraphicsMagick'], 'AllocateImage'):
     AllocateImage = _libs['GraphicsMagick'].AllocateImage
     AllocateImage.argtypes = [POINTER(ImageInfo)]
     AllocateImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 890
+# /tmp/tmpu80Elu/image.h: 986
 if hasattr(_libs['GraphicsMagick'], 'AppendImages'):
     AppendImages = _libs['GraphicsMagick'].AppendImages
     AppendImages.argtypes = [POINTER(Image), c_uint, POINTER(ExceptionInfo)]
     AppendImages.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 890
+# /tmp/tmpu80Elu/image.h: 986
 if hasattr(_libs['GraphicsMagick'], 'CloneImage'):
     CloneImage = _libs['GraphicsMagick'].CloneImage
     CloneImage.argtypes = [POINTER(Image), c_ulong, c_ulong, c_uint, POINTER(ExceptionInfo)]
     CloneImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 890
+# /tmp/tmpu80Elu/image.h: 986
 if hasattr(_libs['GraphicsMagick'], 'GetImageClipMask'):
     GetImageClipMask = _libs['GraphicsMagick'].GetImageClipMask
     GetImageClipMask.argtypes = [POINTER(Image), POINTER(ExceptionInfo)]
     GetImageClipMask.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 890
+# /tmp/tmpu80Elu/image.h: 986
 if hasattr(_libs['GraphicsMagick'], 'ReferenceImage'):
     ReferenceImage = _libs['GraphicsMagick'].ReferenceImage
     ReferenceImage.argtypes = [POINTER(Image)]
     ReferenceImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 898
+# /tmp/tmpu80Elu/image.h: 994
 if hasattr(_libs['GraphicsMagick'], 'CloneImageInfo'):
     CloneImageInfo = _libs['GraphicsMagick'].CloneImageInfo
     CloneImageInfo.argtypes = [POINTER(ImageInfo)]
     CloneImageInfo.restype = POINTER(ImageInfo)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 901
+# /tmp/tmpu80Elu/image.h: 997
 if hasattr(_libs['GraphicsMagick'], 'AccessDefinition'):
     AccessDefinition = _libs['GraphicsMagick'].AccessDefinition
     AccessDefinition.argtypes = [POINTER(ImageInfo), String, String]
@@ -2253,165 +2245,165 @@ if hasattr(_libs['GraphicsMagick'], 'AccessDefinition'):
         AccessDefinition.restype = String
         AccessDefinition.errcheck = ReturnString
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 905
+# /tmp/tmpu80Elu/image.h: 1001
 if hasattr(_libs['GraphicsMagick'], 'GetImageGeometry'):
     GetImageGeometry = _libs['GraphicsMagick'].GetImageGeometry
     GetImageGeometry.argtypes = [POINTER(Image), String, c_uint, POINTER(RectangleInfo)]
     GetImageGeometry.restype = c_int
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 910
+# /tmp/tmpu80Elu/image.h: 1006
 if hasattr(_libs['GraphicsMagick'], 'IsTaintImage'):
     IsTaintImage = _libs['GraphicsMagick'].IsTaintImage
     IsTaintImage.argtypes = [POINTER(Image)]
     IsTaintImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 910
+# /tmp/tmpu80Elu/image.h: 1006
 if hasattr(_libs['GraphicsMagick'], 'IsSubimage'):
     IsSubimage = _libs['GraphicsMagick'].IsSubimage
     IsSubimage.argtypes = [String, c_uint]
     IsSubimage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'AddDefinitions'):
     AddDefinitions = _libs['GraphicsMagick'].AddDefinitions
     AddDefinitions.argtypes = [POINTER(ImageInfo), String, POINTER(ExceptionInfo)]
     AddDefinitions.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'AnimateImages'):
     AnimateImages = _libs['GraphicsMagick'].AnimateImages
     AnimateImages.argtypes = [POINTER(ImageInfo), POINTER(Image)]
     AnimateImages.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'ClipImage'):
     ClipImage = _libs['GraphicsMagick'].ClipImage
     ClipImage.argtypes = [POINTER(Image)]
     ClipImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'ClipPathImage'):
     ClipPathImage = _libs['GraphicsMagick'].ClipPathImage
     ClipPathImage.argtypes = [POINTER(Image), String, c_uint]
     ClipPathImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'DisplayImages'):
     DisplayImages = _libs['GraphicsMagick'].DisplayImages
     DisplayImages.argtypes = [POINTER(ImageInfo), POINTER(Image)]
     DisplayImages.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'RemoveDefinitions'):
     RemoveDefinitions = _libs['GraphicsMagick'].RemoveDefinitions
     RemoveDefinitions.argtypes = [POINTER(ImageInfo), String]
     RemoveDefinitions.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'SetImage'):
     SetImage = _libs['GraphicsMagick'].SetImage
     SetImage.argtypes = [POINTER(Image), Quantum]
     SetImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'SetImageClipMask'):
     SetImageClipMask = _libs['GraphicsMagick'].SetImageClipMask
     SetImageClipMask.argtypes = [POINTER(Image), POINTER(Image)]
     SetImageClipMask.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'SetImageDepth'):
     SetImageDepth = _libs['GraphicsMagick'].SetImageDepth
     SetImageDepth.argtypes = [POINTER(Image), c_ulong]
     SetImageDepth.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'SetImageInfo'):
     SetImageInfo = _libs['GraphicsMagick'].SetImageInfo
     SetImageInfo.argtypes = [POINTER(ImageInfo), c_uint, POINTER(ExceptionInfo)]
     SetImageInfo.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'SetImageType'):
     SetImageType = _libs['GraphicsMagick'].SetImageType
     SetImageType.argtypes = [POINTER(Image), ImageType]
     SetImageType.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 915
+# /tmp/tmpu80Elu/image.h: 1011
 if hasattr(_libs['GraphicsMagick'], 'SyncImage'):
     SyncImage = _libs['GraphicsMagick'].SyncImage
     SyncImage.argtypes = [POINTER(Image)]
     SyncImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 930
+# /tmp/tmpu80Elu/image.h: 1026
 if hasattr(_libs['GraphicsMagick'], 'AllocateNextImage'):
     AllocateNextImage = _libs['GraphicsMagick'].AllocateNextImage
     AllocateNextImage.argtypes = [POINTER(ImageInfo), POINTER(Image)]
     AllocateNextImage.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 930
+# /tmp/tmpu80Elu/image.h: 1026
 if hasattr(_libs['GraphicsMagick'], 'DestroyImage'):
     DestroyImage = _libs['GraphicsMagick'].DestroyImage
     DestroyImage.argtypes = [POINTER(Image)]
     DestroyImage.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 930
+# /tmp/tmpu80Elu/image.h: 1026
 if hasattr(_libs['GraphicsMagick'], 'DestroyImageInfo'):
     DestroyImageInfo = _libs['GraphicsMagick'].DestroyImageInfo
     DestroyImageInfo.argtypes = [POINTER(ImageInfo)]
     DestroyImageInfo.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 930
+# /tmp/tmpu80Elu/image.h: 1026
 if hasattr(_libs['GraphicsMagick'], 'GetImageException'):
     GetImageException = _libs['GraphicsMagick'].GetImageException
     GetImageException.argtypes = [POINTER(Image), POINTER(ExceptionInfo)]
     GetImageException.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 930
+# /tmp/tmpu80Elu/image.h: 1026
 if hasattr(_libs['GraphicsMagick'], 'GetImageInfo'):
     GetImageInfo = _libs['GraphicsMagick'].GetImageInfo
     GetImageInfo.argtypes = [POINTER(ImageInfo)]
     GetImageInfo.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 930
+# /tmp/tmpu80Elu/image.h: 1026
 if hasattr(_libs['GraphicsMagick'], 'ModifyImage'):
     ModifyImage = _libs['GraphicsMagick'].ModifyImage
     ModifyImage.argtypes = [POINTER(POINTER(Image)), POINTER(ExceptionInfo)]
     ModifyImage.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 930
+# /tmp/tmpu80Elu/image.h: 1026
 if hasattr(_libs['GraphicsMagick'], 'SetImageOpacity'):
     SetImageOpacity = _libs['GraphicsMagick'].SetImageOpacity
     SetImageOpacity.argtypes = [POINTER(Image), c_uint]
     SetImageOpacity.restype = None
 
-DecoderHandler = CFUNCTYPE(UNCHECKED(POINTER(Image)), POINTER(ImageInfo), POINTER(ExceptionInfo)) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 20
+DecoderHandler = CFUNCTYPE(UNCHECKED(POINTER(Image)), POINTER(ImageInfo), POINTER(ExceptionInfo)) # /tmp/tmpu80Elu/magick.h: 28
 
-EncoderHandler = CFUNCTYPE(UNCHECKED(c_uint), POINTER(ImageInfo), POINTER(Image)) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 23
+EncoderHandler = CFUNCTYPE(UNCHECKED(c_uint), POINTER(ImageInfo), POINTER(Image)) # /tmp/tmpu80Elu/magick.h: 31
 
-MagickHandler = CFUNCTYPE(UNCHECKED(c_uint), POINTER(c_ubyte), c_size_t) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 23
+MagickHandler = CFUNCTYPE(UNCHECKED(c_uint), POINTER(c_ubyte), c_size_t) # /tmp/tmpu80Elu/magick.h: 31
 
-enum_anon_29 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 34
+enum_anon_29 = c_int # /tmp/tmpu80Elu/magick.h: 42
 
-UnstableCoderClass = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 34
+UnstableCoderClass = 0 # /tmp/tmpu80Elu/magick.h: 42
 
-StableCoderClass = (UnstableCoderClass + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 34
+StableCoderClass = (UnstableCoderClass + 1) # /tmp/tmpu80Elu/magick.h: 42
 
-PrimaryCoderClass = (StableCoderClass + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 34
+PrimaryCoderClass = (StableCoderClass + 1) # /tmp/tmpu80Elu/magick.h: 42
 
-CoderClass = enum_anon_29 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 34
+CoderClass = enum_anon_29 # /tmp/tmpu80Elu/magick.h: 42
 
-enum_anon_30 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 44
+enum_anon_30 = c_int # /tmp/tmpu80Elu/magick.h: 52
 
-HintExtensionTreatment = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 44
+HintExtensionTreatment = 0 # /tmp/tmpu80Elu/magick.h: 52
 
-ObeyExtensionTreatment = (HintExtensionTreatment + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 44
+ObeyExtensionTreatment = (HintExtensionTreatment + 1) # /tmp/tmpu80Elu/magick.h: 52
 
-IgnoreExtensionTreatment = (ObeyExtensionTreatment + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 44
+IgnoreExtensionTreatment = (ObeyExtensionTreatment + 1) # /tmp/tmpu80Elu/magick.h: 52
 
-ExtensionTreatment = enum_anon_30 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 44
+ExtensionTreatment = enum_anon_30 # /tmp/tmpu80Elu/magick.h: 52
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 46
+# /tmp/tmpu80Elu/magick.h: 54
 class struct__MagickInfo(Structure):
     pass
 
@@ -2460,9 +2452,9 @@ struct__MagickInfo._fields_ = [
     ('signature', c_ulong),
 ]
 
-MagickInfo = struct__MagickInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 95
+MagickInfo = struct__MagickInfo # /tmp/tmpu80Elu/magick.h: 103
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 101
+# /tmp/tmpu80Elu/magick.h: 109
 if hasattr(_libs['GraphicsMagick'], 'MagickToMime'):
     MagickToMime = _libs['GraphicsMagick'].MagickToMime
     MagickToMime.argtypes = [String]
@@ -2472,7 +2464,7 @@ if hasattr(_libs['GraphicsMagick'], 'MagickToMime'):
         MagickToMime.restype = String
         MagickToMime.errcheck = ReturnString
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 104
+# /tmp/tmpu80Elu/magick.h: 112
 if hasattr(_libs['GraphicsMagick'], 'GetImageMagick'):
     GetImageMagick = _libs['GraphicsMagick'].GetImageMagick
     GetImageMagick.argtypes = [POINTER(c_ubyte), c_size_t]
@@ -2482,135 +2474,135 @@ if hasattr(_libs['GraphicsMagick'], 'GetImageMagick'):
         GetImageMagick.restype = String
         GetImageMagick.errcheck = ReturnString
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 107
+# /tmp/tmpu80Elu/magick.h: 115
 if hasattr(_libs['GraphicsMagick'], 'IsMagickConflict'):
     IsMagickConflict = _libs['GraphicsMagick'].IsMagickConflict
     IsMagickConflict.argtypes = [String]
     IsMagickConflict.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 110
+# /tmp/tmpu80Elu/magick.h: 118
 if hasattr(_libs['GraphicsMagick'], 'ListModuleMap'):
     ListModuleMap = _libs['GraphicsMagick'].ListModuleMap
     ListModuleMap.argtypes = [POINTER(FILE), POINTER(ExceptionInfo)]
     ListModuleMap.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 110
+# /tmp/tmpu80Elu/magick.h: 118
 if hasattr(_libs['GraphicsMagick'], 'ListMagickInfo'):
     ListMagickInfo = _libs['GraphicsMagick'].ListMagickInfo
     ListMagickInfo.argtypes = [POINTER(FILE), POINTER(ExceptionInfo)]
     ListMagickInfo.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 110
+# /tmp/tmpu80Elu/magick.h: 118
 if hasattr(_libs['GraphicsMagick'], 'UnregisterMagickInfo'):
     UnregisterMagickInfo = _libs['GraphicsMagick'].UnregisterMagickInfo
     UnregisterMagickInfo.argtypes = [String]
     UnregisterMagickInfo.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 115
+# /tmp/tmpu80Elu/magick.h: 123
 if hasattr(_libs['GraphicsMagick'], 'DestroyMagick'):
     DestroyMagick = _libs['GraphicsMagick'].DestroyMagick
     DestroyMagick.argtypes = []
     DestroyMagick.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 115
+# /tmp/tmpu80Elu/magick.h: 123
 if hasattr(_libs['GraphicsMagick'], 'InitializeMagick'):
     InitializeMagick = _libs['GraphicsMagick'].InitializeMagick
     InitializeMagick.argtypes = [String]
     InitializeMagick.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 119
+# /tmp/tmpu80Elu/magick.h: 127
 if hasattr(_libs['GraphicsMagick'], 'GetMagickInfo'):
     GetMagickInfo = _libs['GraphicsMagick'].GetMagickInfo
     GetMagickInfo.argtypes = [String, POINTER(ExceptionInfo)]
     GetMagickInfo.restype = POINTER(MagickInfo)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 122
+# /tmp/tmpu80Elu/magick.h: 130
 if hasattr(_libs['GraphicsMagick'], 'GetMagickInfoArray'):
     GetMagickInfoArray = _libs['GraphicsMagick'].GetMagickInfoArray
     GetMagickInfoArray.argtypes = [POINTER(ExceptionInfo)]
     GetMagickInfoArray.restype = POINTER(POINTER(MagickInfo))
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 125
+# /tmp/tmpu80Elu/magick.h: 133
 if hasattr(_libs['GraphicsMagick'], 'RegisterMagickInfo'):
     RegisterMagickInfo = _libs['GraphicsMagick'].RegisterMagickInfo
     RegisterMagickInfo.argtypes = [POINTER(MagickInfo)]
     RegisterMagickInfo.restype = POINTER(MagickInfo)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 125
+# /tmp/tmpu80Elu/magick.h: 133
 if hasattr(_libs['GraphicsMagick'], 'SetMagickInfo'):
     SetMagickInfo = _libs['GraphicsMagick'].SetMagickInfo
     SetMagickInfo.argtypes = [String]
     SetMagickInfo.restype = POINTER(MagickInfo)
 
-enum_anon_31 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+enum_anon_31 = c_int # /tmp/tmpu80Elu/constitute.h: 54
 
-UndefinedQuantum = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+UndefinedQuantum = 0 # /tmp/tmpu80Elu/constitute.h: 54
 
-IndexQuantum = (UndefinedQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+IndexQuantum = (UndefinedQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-GrayQuantum = (IndexQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+GrayQuantum = (IndexQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-IndexAlphaQuantum = (GrayQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+IndexAlphaQuantum = (GrayQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-GrayAlphaQuantum = (IndexAlphaQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+GrayAlphaQuantum = (IndexAlphaQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-RedQuantum = (GrayAlphaQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+RedQuantum = (GrayAlphaQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-CyanQuantum = (RedQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+CyanQuantum = (RedQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-GreenQuantum = (CyanQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+GreenQuantum = (CyanQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-YellowQuantum = (GreenQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+YellowQuantum = (GreenQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-BlueQuantum = (YellowQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+BlueQuantum = (YellowQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-MagentaQuantum = (BlueQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+MagentaQuantum = (BlueQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-AlphaQuantum = (MagentaQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+AlphaQuantum = (MagentaQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-BlackQuantum = (AlphaQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+BlackQuantum = (AlphaQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-RGBQuantum = (BlackQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+RGBQuantum = (BlackQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-RGBAQuantum = (RGBQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+RGBAQuantum = (RGBQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-CMYKQuantum = (RGBAQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+CMYKQuantum = (RGBAQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-CMYKAQuantum = (CMYKQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+CMYKAQuantum = (CMYKQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-CIEYQuantum = (CMYKAQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+CIEYQuantum = (CMYKAQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-CIEXYZQuantum = (CIEYQuantum + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+CIEXYZQuantum = (CIEYQuantum + 1) # /tmp/tmpu80Elu/constitute.h: 54
 
-QuantumType = enum_anon_31 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 46
+QuantumType = enum_anon_31 # /tmp/tmpu80Elu/constitute.h: 54
 
-enum_anon_32 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 56
+enum_anon_32 = c_int # /tmp/tmpu80Elu/constitute.h: 64
 
-UndefinedQuantumSampleType = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 56
+UndefinedQuantumSampleType = 0 # /tmp/tmpu80Elu/constitute.h: 64
 
-UnsignedQuantumSampleType = (UndefinedQuantumSampleType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 56
+UnsignedQuantumSampleType = (UndefinedQuantumSampleType + 1) # /tmp/tmpu80Elu/constitute.h: 64
 
-FloatQuantumSampleType = (UnsignedQuantumSampleType + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 56
+FloatQuantumSampleType = (UnsignedQuantumSampleType + 1) # /tmp/tmpu80Elu/constitute.h: 64
 
-QuantumSampleType = enum_anon_32 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 56
+QuantumSampleType = enum_anon_32 # /tmp/tmpu80Elu/constitute.h: 64
 
-enum_anon_33 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 69
+enum_anon_33 = c_int # /tmp/tmpu80Elu/constitute.h: 77
 
-CharPixel = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 69
+CharPixel = 0 # /tmp/tmpu80Elu/constitute.h: 77
 
-ShortPixel = (CharPixel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 69
+ShortPixel = (CharPixel + 1) # /tmp/tmpu80Elu/constitute.h: 77
 
-IntegerPixel = (ShortPixel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 69
+IntegerPixel = (ShortPixel + 1) # /tmp/tmpu80Elu/constitute.h: 77
 
-LongPixel = (IntegerPixel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 69
+LongPixel = (IntegerPixel + 1) # /tmp/tmpu80Elu/constitute.h: 77
 
-FloatPixel = (LongPixel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 69
+FloatPixel = (LongPixel + 1) # /tmp/tmpu80Elu/constitute.h: 77
 
-DoublePixel = (FloatPixel + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 69
+DoublePixel = (FloatPixel + 1) # /tmp/tmpu80Elu/constitute.h: 77
 
-StorageType = enum_anon_33 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 69
+StorageType = enum_anon_33 # /tmp/tmpu80Elu/constitute.h: 77
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 97
+# /tmp/tmpu80Elu/constitute.h: 105
 class struct__ExportPixelAreaOptions(Structure):
     pass
 
@@ -2635,9 +2627,9 @@ struct__ExportPixelAreaOptions._fields_ = [
     ('signature', c_ulong),
 ]
 
-ExportPixelAreaOptions = struct__ExportPixelAreaOptions # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 97
+ExportPixelAreaOptions = struct__ExportPixelAreaOptions # /tmp/tmpu80Elu/constitute.h: 105
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 107
+# /tmp/tmpu80Elu/constitute.h: 115
 class struct__ExportPixelAreaInfo(Structure):
     pass
 
@@ -2648,9 +2640,9 @@ struct__ExportPixelAreaInfo._fields_ = [
     ('bytes_exported', c_size_t),
 ]
 
-ExportPixelAreaInfo = struct__ExportPixelAreaInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 107
+ExportPixelAreaInfo = struct__ExportPixelAreaInfo # /tmp/tmpu80Elu/constitute.h: 115
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 129
+# /tmp/tmpu80Elu/constitute.h: 137
 class struct__ImportPixelAreaOptions(Structure):
     pass
 
@@ -2671,9 +2663,9 @@ struct__ImportPixelAreaOptions._fields_ = [
     ('signature', c_ulong),
 ]
 
-ImportPixelAreaOptions = struct__ImportPixelAreaOptions # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 129
+ImportPixelAreaOptions = struct__ImportPixelAreaOptions # /tmp/tmpu80Elu/constitute.h: 137
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 139
+# /tmp/tmpu80Elu/constitute.h: 147
 class struct__ImportPixelAreaInfo(Structure):
     pass
 
@@ -2684,9 +2676,9 @@ struct__ImportPixelAreaInfo._fields_ = [
     ('bytes_imported', c_size_t),
 ]
 
-ImportPixelAreaInfo = struct__ImportPixelAreaInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 139
+ImportPixelAreaInfo = struct__ImportPixelAreaInfo # /tmp/tmpu80Elu/constitute.h: 147
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 142
+# /tmp/tmpu80Elu/constitute.h: 150
 if hasattr(_libs['GraphicsMagick'], 'StorageTypeToString'):
     StorageTypeToString = _libs['GraphicsMagick'].StorageTypeToString
     StorageTypeToString.argtypes = [StorageType]
@@ -2696,7 +2688,7 @@ if hasattr(_libs['GraphicsMagick'], 'StorageTypeToString'):
         StorageTypeToString.restype = String
         StorageTypeToString.errcheck = ReturnString
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 142
+# /tmp/tmpu80Elu/constitute.h: 150
 if hasattr(_libs['GraphicsMagick'], 'QuantumSampleTypeToString'):
     QuantumSampleTypeToString = _libs['GraphicsMagick'].QuantumSampleTypeToString
     QuantumSampleTypeToString.argtypes = [QuantumSampleType]
@@ -2706,7 +2698,7 @@ if hasattr(_libs['GraphicsMagick'], 'QuantumSampleTypeToString'):
         QuantumSampleTypeToString.restype = String
         QuantumSampleTypeToString.errcheck = ReturnString
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 142
+# /tmp/tmpu80Elu/constitute.h: 150
 if hasattr(_libs['GraphicsMagick'], 'QuantumTypeToString'):
     QuantumTypeToString = _libs['GraphicsMagick'].QuantumTypeToString
     QuantumTypeToString.argtypes = [QuantumType]
@@ -2716,139 +2708,139 @@ if hasattr(_libs['GraphicsMagick'], 'QuantumTypeToString'):
         QuantumTypeToString.restype = String
         QuantumTypeToString.errcheck = ReturnString
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 147
+# /tmp/tmpu80Elu/constitute.h: 155
 if hasattr(_libs['GraphicsMagick'], 'ConstituteImage'):
     ConstituteImage = _libs['GraphicsMagick'].ConstituteImage
     ConstituteImage.argtypes = [c_ulong, c_ulong, String, StorageType, POINTER(None), POINTER(ExceptionInfo)]
     ConstituteImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 147
+# /tmp/tmpu80Elu/constitute.h: 155
 if hasattr(_libs['GraphicsMagick'], 'ConstituteTextureImage'):
     ConstituteTextureImage = _libs['GraphicsMagick'].ConstituteTextureImage
     ConstituteTextureImage.argtypes = [c_ulong, c_ulong, POINTER(Image), POINTER(ExceptionInfo)]
     ConstituteTextureImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 147
+# /tmp/tmpu80Elu/constitute.h: 155
 if hasattr(_libs['GraphicsMagick'], 'PingImage'):
     PingImage = _libs['GraphicsMagick'].PingImage
     PingImage.argtypes = [POINTER(ImageInfo), POINTER(ExceptionInfo)]
     PingImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 147
+# /tmp/tmpu80Elu/constitute.h: 155
 if hasattr(_libs['GraphicsMagick'], 'ReadImage'):
     ReadImage = _libs['GraphicsMagick'].ReadImage
     ReadImage.argtypes = [POINTER(ImageInfo), POINTER(ExceptionInfo)]
     ReadImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 147
+# /tmp/tmpu80Elu/constitute.h: 155
 if hasattr(_libs['GraphicsMagick'], 'ReadInlineImage'):
     ReadInlineImage = _libs['GraphicsMagick'].ReadInlineImage
     ReadInlineImage.argtypes = [POINTER(ImageInfo), String, POINTER(ExceptionInfo)]
     ReadInlineImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 158
+# /tmp/tmpu80Elu/constitute.h: 166
 if hasattr(_libs['GraphicsMagick'], 'DispatchImage'):
     DispatchImage = _libs['GraphicsMagick'].DispatchImage
     DispatchImage.argtypes = [POINTER(Image), c_long, c_long, c_ulong, c_ulong, String, StorageType, POINTER(None), POINTER(ExceptionInfo)]
     DispatchImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 158
+# /tmp/tmpu80Elu/constitute.h: 166
 if hasattr(_libs['GraphicsMagick'], 'ExportImagePixelArea'):
     ExportImagePixelArea = _libs['GraphicsMagick'].ExportImagePixelArea
     ExportImagePixelArea.argtypes = [POINTER(Image), QuantumType, c_uint, POINTER(c_ubyte), POINTER(ExportPixelAreaOptions), POINTER(ExportPixelAreaInfo)]
     ExportImagePixelArea.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 158
+# /tmp/tmpu80Elu/constitute.h: 166
 if hasattr(_libs['GraphicsMagick'], 'ExportViewPixelArea'):
     ExportViewPixelArea = _libs['GraphicsMagick'].ExportViewPixelArea
     ExportViewPixelArea.argtypes = [POINTER(ViewInfo), QuantumType, c_uint, POINTER(c_ubyte), POINTER(ExportPixelAreaOptions), POINTER(ExportPixelAreaInfo)]
     ExportViewPixelArea.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 169
+# /tmp/tmpu80Elu/constitute.h: 177
 if hasattr(_libs['GraphicsMagick'], 'ImportImagePixelArea'):
     ImportImagePixelArea = _libs['GraphicsMagick'].ImportImagePixelArea
     ImportImagePixelArea.argtypes = [POINTER(Image), QuantumType, c_uint, POINTER(c_ubyte), POINTER(ImportPixelAreaOptions), POINTER(ImportPixelAreaInfo)]
     ImportImagePixelArea.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 169
+# /tmp/tmpu80Elu/constitute.h: 177
 if hasattr(_libs['GraphicsMagick'], 'ImportViewPixelArea'):
     ImportViewPixelArea = _libs['GraphicsMagick'].ImportViewPixelArea
     ImportViewPixelArea.argtypes = [POINTER(ViewInfo), QuantumType, c_uint, POINTER(c_ubyte), POINTER(ImportPixelAreaOptions), POINTER(ImportPixelAreaInfo)]
     ImportViewPixelArea.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 169
+# /tmp/tmpu80Elu/constitute.h: 177
 if hasattr(_libs['GraphicsMagick'], 'WriteImage'):
     WriteImage = _libs['GraphicsMagick'].WriteImage
     WriteImage.argtypes = [POINTER(ImageInfo), POINTER(Image)]
     WriteImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 169
+# /tmp/tmpu80Elu/constitute.h: 177
 if hasattr(_libs['GraphicsMagick'], 'WriteImages'):
     WriteImages = _libs['GraphicsMagick'].WriteImages
     WriteImages.argtypes = [POINTER(ImageInfo), POINTER(Image), String, POINTER(ExceptionInfo)]
     WriteImages.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 180
+# /tmp/tmpu80Elu/constitute.h: 188
 if hasattr(_libs['GraphicsMagick'], 'ExportPixelAreaOptionsInit'):
     ExportPixelAreaOptionsInit = _libs['GraphicsMagick'].ExportPixelAreaOptionsInit
     ExportPixelAreaOptionsInit.argtypes = [POINTER(ExportPixelAreaOptions)]
     ExportPixelAreaOptionsInit.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 180
+# /tmp/tmpu80Elu/constitute.h: 188
 if hasattr(_libs['GraphicsMagick'], 'ImportPixelAreaOptionsInit'):
     ImportPixelAreaOptionsInit = _libs['GraphicsMagick'].ImportPixelAreaOptionsInit
     ImportPixelAreaOptionsInit.argtypes = [POINTER(ImportPixelAreaOptions)]
     ImportPixelAreaOptionsInit.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 184
+# /tmp/tmpu80Elu/constitute.h: 192
 if hasattr(_libs['GraphicsMagick'], 'MagickFindRawImageMinMax'):
     MagickFindRawImageMinMax = _libs['GraphicsMagick'].MagickFindRawImageMinMax
     MagickFindRawImageMinMax.argtypes = [POINTER(Image), EndianType, c_ulong, c_ulong, StorageType, c_uint, POINTER(None), POINTER(c_double), POINTER(c_double)]
     MagickFindRawImageMinMax.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/resize.h: 21
+# /tmp/tmpu80Elu/resize.h: 29
 if hasattr(_libs['GraphicsMagick'], 'MagnifyImage'):
     MagnifyImage = _libs['GraphicsMagick'].MagnifyImage
     MagnifyImage.argtypes = [POINTER(Image), POINTER(ExceptionInfo)]
     MagnifyImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/resize.h: 21
+# /tmp/tmpu80Elu/resize.h: 29
 if hasattr(_libs['GraphicsMagick'], 'MinifyImage'):
     MinifyImage = _libs['GraphicsMagick'].MinifyImage
     MinifyImage.argtypes = [POINTER(Image), POINTER(ExceptionInfo)]
     MinifyImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/resize.h: 21
+# /tmp/tmpu80Elu/resize.h: 29
 if hasattr(_libs['GraphicsMagick'], 'ResizeImage'):
     ResizeImage = _libs['GraphicsMagick'].ResizeImage
     ResizeImage.argtypes = [POINTER(Image), c_ulong, c_ulong, FilterTypes, c_double, POINTER(ExceptionInfo)]
     ResizeImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/resize.h: 21
+# /tmp/tmpu80Elu/resize.h: 29
 if hasattr(_libs['GraphicsMagick'], 'SampleImage'):
     SampleImage = _libs['GraphicsMagick'].SampleImage
     SampleImage.argtypes = [POINTER(Image), c_ulong, c_ulong, POINTER(ExceptionInfo)]
     SampleImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/resize.h: 21
+# /tmp/tmpu80Elu/resize.h: 29
 if hasattr(_libs['GraphicsMagick'], 'ScaleImage'):
     ScaleImage = _libs['GraphicsMagick'].ScaleImage
     ScaleImage.argtypes = [POINTER(Image), c_ulong, c_ulong, POINTER(ExceptionInfo)]
     ScaleImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/resize.h: 21
+# /tmp/tmpu80Elu/resize.h: 29
 if hasattr(_libs['GraphicsMagick'], 'ThumbnailImage'):
     ThumbnailImage = _libs['GraphicsMagick'].ThumbnailImage
     ThumbnailImage.argtypes = [POINTER(Image), c_ulong, c_ulong, POINTER(ExceptionInfo)]
     ThumbnailImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/resize.h: 21
+# /tmp/tmpu80Elu/resize.h: 29
 if hasattr(_libs['GraphicsMagick'], 'ZoomImage'):
     ZoomImage = _libs['GraphicsMagick'].ZoomImage
     ZoomImage.argtypes = [POINTER(Image), c_ulong, c_ulong, POINTER(ExceptionInfo)]
     ZoomImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/delegate.h: 21
+# /tmp/tmpu80Elu/delegate.h: 29
 class struct__DelegateInfo(Structure):
     pass
 
@@ -2875,9 +2867,9 @@ struct__DelegateInfo._fields_ = [
     ('next', POINTER(struct__DelegateInfo)),
 ]
 
-DelegateInfo = struct__DelegateInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/delegate.h: 42
+DelegateInfo = struct__DelegateInfo # /tmp/tmpu80Elu/delegate.h: 50
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/delegate.h: 48
+# /tmp/tmpu80Elu/delegate.h: 56
 if hasattr(_libs['GraphicsMagick'], 'GetDelegateCommand'):
     GetDelegateCommand = _libs['GraphicsMagick'].GetDelegateCommand
     GetDelegateCommand.argtypes = [POINTER(ImageInfo), POINTER(Image), String, String, POINTER(ExceptionInfo)]
@@ -2887,703 +2879,693 @@ if hasattr(_libs['GraphicsMagick'], 'GetDelegateCommand'):
         GetDelegateCommand.restype = String
         GetDelegateCommand.errcheck = ReturnString
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/delegate.h: 53
+# /tmp/tmpu80Elu/delegate.h: 61
 if hasattr(_libs['GraphicsMagick'], 'GetDelegateInfo'):
     GetDelegateInfo = _libs['GraphicsMagick'].GetDelegateInfo
     GetDelegateInfo.argtypes = [String, String, POINTER(ExceptionInfo)]
     GetDelegateInfo.restype = POINTER(DelegateInfo)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/delegate.h: 53
+# /tmp/tmpu80Elu/delegate.h: 61
 if hasattr(_libs['GraphicsMagick'], 'GetPostscriptDelegateInfo'):
     GetPostscriptDelegateInfo = _libs['GraphicsMagick'].GetPostscriptDelegateInfo
     GetPostscriptDelegateInfo.argtypes = [POINTER(ImageInfo), POINTER(c_uint), POINTER(ExceptionInfo)]
     GetPostscriptDelegateInfo.restype = POINTER(DelegateInfo)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/delegate.h: 59
+# /tmp/tmpu80Elu/delegate.h: 67
 if hasattr(_libs['GraphicsMagick'], 'SetDelegateInfo'):
     SetDelegateInfo = _libs['GraphicsMagick'].SetDelegateInfo
     SetDelegateInfo.argtypes = [POINTER(DelegateInfo)]
     SetDelegateInfo.restype = POINTER(DelegateInfo)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/delegate.h: 62
+# /tmp/tmpu80Elu/delegate.h: 70
 if hasattr(_libs['GraphicsMagick'], 'InvokePostscriptDelegate'):
     InvokePostscriptDelegate = _libs['GraphicsMagick'].InvokePostscriptDelegate
     InvokePostscriptDelegate.argtypes = [c_uint, String, POINTER(ExceptionInfo)]
     InvokePostscriptDelegate.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/delegate.h: 62
+# /tmp/tmpu80Elu/delegate.h: 70
 if hasattr(_libs['GraphicsMagick'], 'InvokeDelegate'):
     InvokeDelegate = _libs['GraphicsMagick'].InvokeDelegate
     InvokeDelegate.argtypes = [POINTER(ImageInfo), POINTER(Image), String, String, POINTER(ExceptionInfo)]
     InvokeDelegate.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/delegate.h: 62
+# /tmp/tmpu80Elu/delegate.h: 70
 if hasattr(_libs['GraphicsMagick'], 'ListDelegateInfo'):
     ListDelegateInfo = _libs['GraphicsMagick'].ListDelegateInfo
     ListDelegateInfo.argtypes = [POINTER(FILE), POINTER(ExceptionInfo)]
     ListDelegateInfo.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'AdaptiveThresholdImage'):
     AdaptiveThresholdImage = _libs['GraphicsMagick'].AdaptiveThresholdImage
     AdaptiveThresholdImage.argtypes = [POINTER(Image), c_ulong, c_ulong, c_double, POINTER(ExceptionInfo)]
     AdaptiveThresholdImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'AddNoiseImage'):
     AddNoiseImage = _libs['GraphicsMagick'].AddNoiseImage
     AddNoiseImage.argtypes = [POINTER(Image), NoiseType, POINTER(ExceptionInfo)]
     AddNoiseImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'AddNoiseImageChannel'):
     AddNoiseImageChannel = _libs['GraphicsMagick'].AddNoiseImageChannel
     AddNoiseImageChannel.argtypes = [POINTER(Image), ChannelType, NoiseType, POINTER(ExceptionInfo)]
     AddNoiseImageChannel.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'BlurImage'):
     BlurImage = _libs['GraphicsMagick'].BlurImage
     BlurImage.argtypes = [POINTER(Image), c_double, c_double, POINTER(ExceptionInfo)]
     BlurImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'BlurImageChannel'):
     BlurImageChannel = _libs['GraphicsMagick'].BlurImageChannel
     BlurImageChannel.argtypes = [POINTER(Image), ChannelType, c_double, c_double, POINTER(ExceptionInfo)]
     BlurImageChannel.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'ConvolveImage'):
     ConvolveImage = _libs['GraphicsMagick'].ConvolveImage
     ConvolveImage.argtypes = [POINTER(Image), c_uint, POINTER(c_double), POINTER(ExceptionInfo)]
     ConvolveImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'DespeckleImage'):
     DespeckleImage = _libs['GraphicsMagick'].DespeckleImage
     DespeckleImage.argtypes = [POINTER(Image), POINTER(ExceptionInfo)]
     DespeckleImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'EdgeImage'):
     EdgeImage = _libs['GraphicsMagick'].EdgeImage
     EdgeImage.argtypes = [POINTER(Image), c_double, POINTER(ExceptionInfo)]
     EdgeImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'EmbossImage'):
     EmbossImage = _libs['GraphicsMagick'].EmbossImage
     EmbossImage.argtypes = [POINTER(Image), c_double, c_double, POINTER(ExceptionInfo)]
     EmbossImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'EnhanceImage'):
     EnhanceImage = _libs['GraphicsMagick'].EnhanceImage
     EnhanceImage.argtypes = [POINTER(Image), POINTER(ExceptionInfo)]
     EnhanceImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'GaussianBlurImage'):
     GaussianBlurImage = _libs['GraphicsMagick'].GaussianBlurImage
     GaussianBlurImage.argtypes = [POINTER(Image), c_double, c_double, POINTER(ExceptionInfo)]
     GaussianBlurImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'GaussianBlurImageChannel'):
     GaussianBlurImageChannel = _libs['GraphicsMagick'].GaussianBlurImageChannel
     GaussianBlurImageChannel.argtypes = [POINTER(Image), ChannelType, c_double, c_double, POINTER(ExceptionInfo)]
     GaussianBlurImageChannel.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'MedianFilterImage'):
     MedianFilterImage = _libs['GraphicsMagick'].MedianFilterImage
     MedianFilterImage.argtypes = [POINTER(Image), c_double, POINTER(ExceptionInfo)]
     MedianFilterImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'MotionBlurImage'):
     MotionBlurImage = _libs['GraphicsMagick'].MotionBlurImage
     MotionBlurImage.argtypes = [POINTER(Image), c_double, c_double, c_double, POINTER(ExceptionInfo)]
     MotionBlurImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'ReduceNoiseImage'):
     ReduceNoiseImage = _libs['GraphicsMagick'].ReduceNoiseImage
     ReduceNoiseImage.argtypes = [POINTER(Image), c_double, POINTER(ExceptionInfo)]
     ReduceNoiseImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'ShadeImage'):
     ShadeImage = _libs['GraphicsMagick'].ShadeImage
     ShadeImage.argtypes = [POINTER(Image), c_uint, c_double, c_double, POINTER(ExceptionInfo)]
     ShadeImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'SharpenImage'):
     SharpenImage = _libs['GraphicsMagick'].SharpenImage
     SharpenImage.argtypes = [POINTER(Image), c_double, c_double, POINTER(ExceptionInfo)]
     SharpenImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'SharpenImageChannel'):
     SharpenImageChannel = _libs['GraphicsMagick'].SharpenImageChannel
     SharpenImageChannel.argtypes = [POINTER(Image), ChannelType, c_double, c_double, POINTER(ExceptionInfo)]
     SharpenImageChannel.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'SpreadImage'):
     SpreadImage = _libs['GraphicsMagick'].SpreadImage
     SpreadImage.argtypes = [POINTER(Image), c_uint, POINTER(ExceptionInfo)]
     SpreadImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'UnsharpMaskImage'):
     UnsharpMaskImage = _libs['GraphicsMagick'].UnsharpMaskImage
     UnsharpMaskImage.argtypes = [POINTER(Image), c_double, c_double, c_double, c_double, POINTER(ExceptionInfo)]
     UnsharpMaskImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 19
+# /tmp/tmpu80Elu/effect.h: 27
 if hasattr(_libs['GraphicsMagick'], 'UnsharpMaskImageChannel'):
     UnsharpMaskImageChannel = _libs['GraphicsMagick'].UnsharpMaskImageChannel
     UnsharpMaskImageChannel.argtypes = [POINTER(Image), ChannelType, c_double, c_double, c_double, c_double, POINTER(ExceptionInfo)]
     UnsharpMaskImageChannel.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 54
+# /tmp/tmpu80Elu/effect.h: 62
 if hasattr(_libs['GraphicsMagick'], 'BlackThresholdImage'):
     BlackThresholdImage = _libs['GraphicsMagick'].BlackThresholdImage
     BlackThresholdImage.argtypes = [POINTER(Image), String]
     BlackThresholdImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 54
+# /tmp/tmpu80Elu/effect.h: 62
 if hasattr(_libs['GraphicsMagick'], 'ChannelThresholdImage'):
     ChannelThresholdImage = _libs['GraphicsMagick'].ChannelThresholdImage
     ChannelThresholdImage.argtypes = [POINTER(Image), String]
     ChannelThresholdImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 54
+# /tmp/tmpu80Elu/effect.h: 62
 if hasattr(_libs['GraphicsMagick'], 'RandomChannelThresholdImage'):
     RandomChannelThresholdImage = _libs['GraphicsMagick'].RandomChannelThresholdImage
     RandomChannelThresholdImage.argtypes = [POINTER(Image), String, String, POINTER(ExceptionInfo)]
     RandomChannelThresholdImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 54
+# /tmp/tmpu80Elu/effect.h: 62
 if hasattr(_libs['GraphicsMagick'], 'ThresholdImage'):
     ThresholdImage = _libs['GraphicsMagick'].ThresholdImage
     ThresholdImage.argtypes = [POINTER(Image), c_double]
     ThresholdImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/effect.h: 54
+# /tmp/tmpu80Elu/effect.h: 62
 if hasattr(_libs['GraphicsMagick'], 'WhiteThresholdImage'):
     WhiteThresholdImage = _libs['GraphicsMagick'].WhiteThresholdImage
     WhiteThresholdImage.argtypes = [POINTER(Image), String]
     WhiteThresholdImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/enhance.h: 19
+# /tmp/tmpu80Elu/enhance.h: 27
 if hasattr(_libs['GraphicsMagick'], 'ContrastImage'):
     ContrastImage = _libs['GraphicsMagick'].ContrastImage
     ContrastImage.argtypes = [POINTER(Image), c_uint]
     ContrastImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/enhance.h: 19
+# /tmp/tmpu80Elu/enhance.h: 27
 if hasattr(_libs['GraphicsMagick'], 'EqualizeImage'):
     EqualizeImage = _libs['GraphicsMagick'].EqualizeImage
     EqualizeImage.argtypes = [POINTER(Image)]
     EqualizeImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/enhance.h: 19
+# /tmp/tmpu80Elu/enhance.h: 27
 if hasattr(_libs['GraphicsMagick'], 'GammaImage'):
     GammaImage = _libs['GraphicsMagick'].GammaImage
     GammaImage.argtypes = [POINTER(Image), String]
     GammaImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/enhance.h: 19
+# /tmp/tmpu80Elu/enhance.h: 27
 if hasattr(_libs['GraphicsMagick'], 'LevelImage'):
     LevelImage = _libs['GraphicsMagick'].LevelImage
     LevelImage.argtypes = [POINTER(Image), String]
     LevelImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/enhance.h: 19
+# /tmp/tmpu80Elu/enhance.h: 27
 if hasattr(_libs['GraphicsMagick'], 'LevelImageChannel'):
     LevelImageChannel = _libs['GraphicsMagick'].LevelImageChannel
     LevelImageChannel.argtypes = [POINTER(Image), ChannelType, c_double, c_double, c_double]
     LevelImageChannel.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/enhance.h: 19
+# /tmp/tmpu80Elu/enhance.h: 27
 if hasattr(_libs['GraphicsMagick'], 'ModulateImage'):
     ModulateImage = _libs['GraphicsMagick'].ModulateImage
     ModulateImage.argtypes = [POINTER(Image), String]
     ModulateImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/enhance.h: 19
+# /tmp/tmpu80Elu/enhance.h: 27
 if hasattr(_libs['GraphicsMagick'], 'NegateImage'):
     NegateImage = _libs['GraphicsMagick'].NegateImage
     NegateImage.argtypes = [POINTER(Image), c_uint]
     NegateImage.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/enhance.h: 19
+# /tmp/tmpu80Elu/enhance.h: 27
 if hasattr(_libs['GraphicsMagick'], 'NormalizeImage'):
     NormalizeImage = _libs['GraphicsMagick'].NormalizeImage
     NormalizeImage.argtypes = [POINTER(Image)]
     NormalizeImage.restype = c_uint
 
-magick_uint8_t = c_ubyte # gmagick_hdrs/magick/magick_types.h: 68
+enum_anon_34 = c_int # /tmp/tmpu80Elu/pixel_cache.h: 39
 
-magick_uint16_t = c_ushort # gmagick_hdrs/magick/magick_types.h: 71
+UndefinedVirtualPixelMethod = 0 # /tmp/tmpu80Elu/pixel_cache.h: 39
 
-magick_uint32_t = c_uint # gmagick_hdrs/magick/magick_types.h: 75
+ConstantVirtualPixelMethod = (UndefinedVirtualPixelMethod + 1) # /tmp/tmpu80Elu/pixel_cache.h: 39
 
-magick_int64_t = c_long # gmagick_hdrs/magick/magick_types.h: 78
+EdgeVirtualPixelMethod = (ConstantVirtualPixelMethod + 1) # /tmp/tmpu80Elu/pixel_cache.h: 39
 
-magick_off_t = magick_int64_t # gmagick_hdrs/magick/magick_types.h: 92
+MirrorVirtualPixelMethod = (EdgeVirtualPixelMethod + 1) # /tmp/tmpu80Elu/pixel_cache.h: 39
 
-enum_anon_34 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 34
+TileVirtualPixelMethod = (MirrorVirtualPixelMethod + 1) # /tmp/tmpu80Elu/pixel_cache.h: 39
 
-UndefinedVirtualPixelMethod = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 34
+VirtualPixelMethod = enum_anon_34 # /tmp/tmpu80Elu/pixel_cache.h: 39
 
-ConstantVirtualPixelMethod = (UndefinedVirtualPixelMethod + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 34
+Cache = _CacheInfoPtr_ # /tmp/tmpu80Elu/pixel_cache.h: 44
 
-EdgeVirtualPixelMethod = (ConstantVirtualPixelMethod + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 34
-
-MirrorVirtualPixelMethod = (EdgeVirtualPixelMethod + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 34
-
-TileVirtualPixelMethod = (MirrorVirtualPixelMethod + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 34
-
-VirtualPixelMethod = enum_anon_34 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 34
-
-Cache = _CacheInfoPtr_ # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 39
-
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 51
+# /tmp/tmpu80Elu/pixel_cache.h: 56
 if hasattr(_libs['GraphicsMagick'], 'AcquireImagePixels'):
     AcquireImagePixels = _libs['GraphicsMagick'].AcquireImagePixels
     AcquireImagePixels.argtypes = [POINTER(Image), c_long, c_long, c_ulong, c_ulong, POINTER(ExceptionInfo)]
     AcquireImagePixels.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 61
+# /tmp/tmpu80Elu/pixel_cache.h: 66
 if hasattr(_libs['GraphicsMagick'], 'AccessImmutableIndexes'):
     AccessImmutableIndexes = _libs['GraphicsMagick'].AccessImmutableIndexes
     AccessImmutableIndexes.argtypes = [POINTER(Image)]
     AccessImmutableIndexes.restype = POINTER(IndexPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 69
+# /tmp/tmpu80Elu/pixel_cache.h: 74
 if hasattr(_libs['GraphicsMagick'], 'AcquireOnePixel'):
     AcquireOnePixel = _libs['GraphicsMagick'].AcquireOnePixel
     AcquireOnePixel.argtypes = [POINTER(Image), c_long, c_long, POINTER(ExceptionInfo)]
     AcquireOnePixel.restype = PixelPacket
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 78
+# /tmp/tmpu80Elu/pixel_cache.h: 83
 if hasattr(_libs['GraphicsMagick'], 'GetImagePixels'):
     GetImagePixels = _libs['GraphicsMagick'].GetImagePixels
     GetImagePixels.argtypes = [POINTER(Image), c_long, c_long, c_ulong, c_ulong]
     GetImagePixels.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 81
+# /tmp/tmpu80Elu/pixel_cache.h: 86
 if hasattr(_libs['GraphicsMagick'], 'GetImagePixelsEx'):
     GetImagePixelsEx = _libs['GraphicsMagick'].GetImagePixelsEx
     GetImagePixelsEx.argtypes = [POINTER(Image), c_long, c_long, c_ulong, c_ulong, POINTER(ExceptionInfo)]
     GetImagePixelsEx.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 90
+# /tmp/tmpu80Elu/pixel_cache.h: 95
 if hasattr(_libs['GraphicsMagick'], 'GetImageVirtualPixelMethod'):
     GetImageVirtualPixelMethod = _libs['GraphicsMagick'].GetImageVirtualPixelMethod
     GetImageVirtualPixelMethod.argtypes = [POINTER(Image)]
     GetImageVirtualPixelMethod.restype = VirtualPixelMethod
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 97
+# /tmp/tmpu80Elu/pixel_cache.h: 102
 if hasattr(_libs['GraphicsMagick'], 'GetPixels'):
     GetPixels = _libs['GraphicsMagick'].GetPixels
     GetPixels.argtypes = [POINTER(Image)]
     GetPixels.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 99
+# /tmp/tmpu80Elu/pixel_cache.h: 104
 if hasattr(_libs['GraphicsMagick'], 'AccessMutablePixels'):
     AccessMutablePixels = _libs['GraphicsMagick'].AccessMutablePixels
     AccessMutablePixels.argtypes = [POINTER(Image)]
     AccessMutablePixels.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 107
+# /tmp/tmpu80Elu/pixel_cache.h: 112
 if hasattr(_libs['GraphicsMagick'], 'GetIndexes'):
     GetIndexes = _libs['GraphicsMagick'].GetIndexes
     GetIndexes.argtypes = [POINTER(Image)]
     GetIndexes.restype = POINTER(IndexPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 109
+# /tmp/tmpu80Elu/pixel_cache.h: 114
 if hasattr(_libs['GraphicsMagick'], 'AccessMutableIndexes'):
     AccessMutableIndexes = _libs['GraphicsMagick'].AccessMutableIndexes
     AccessMutableIndexes.argtypes = [POINTER(Image)]
     AccessMutableIndexes.restype = POINTER(IndexPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 119
+# /tmp/tmpu80Elu/pixel_cache.h: 124
 if hasattr(_libs['GraphicsMagick'], 'GetOnePixel'):
     GetOnePixel = _libs['GraphicsMagick'].GetOnePixel
     GetOnePixel.argtypes = [POINTER(Image), c_long, c_long]
     GetOnePixel.restype = PixelPacket
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 126
+# /tmp/tmpu80Elu/pixel_cache.h: 131
 if hasattr(_libs['GraphicsMagick'], 'GetPixelCacheArea'):
     GetPixelCacheArea = _libs['GraphicsMagick'].GetPixelCacheArea
     GetPixelCacheArea.argtypes = [POINTER(Image)]
     GetPixelCacheArea.restype = magick_off_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 133
+# /tmp/tmpu80Elu/pixel_cache.h: 138
 if hasattr(_libs['GraphicsMagick'], 'SetImagePixels'):
     SetImagePixels = _libs['GraphicsMagick'].SetImagePixels
     SetImagePixels.argtypes = [POINTER(Image), c_long, c_long, c_ulong, c_ulong]
     SetImagePixels.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 136
+# /tmp/tmpu80Elu/pixel_cache.h: 141
 if hasattr(_libs['GraphicsMagick'], 'SetImagePixelsEx'):
     SetImagePixelsEx = _libs['GraphicsMagick'].SetImagePixelsEx
     SetImagePixelsEx.argtypes = [POINTER(Image), c_long, c_long, c_ulong, c_ulong, POINTER(ExceptionInfo)]
     SetImagePixelsEx.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 145
+# /tmp/tmpu80Elu/pixel_cache.h: 150
 if hasattr(_libs['GraphicsMagick'], 'SetImageVirtualPixelMethod'):
     SetImageVirtualPixelMethod = _libs['GraphicsMagick'].SetImageVirtualPixelMethod
     SetImageVirtualPixelMethod.argtypes = [POINTER(Image), VirtualPixelMethod]
     SetImageVirtualPixelMethod.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 153
+# /tmp/tmpu80Elu/pixel_cache.h: 158
 if hasattr(_libs['GraphicsMagick'], 'SyncImagePixels'):
     SyncImagePixels = _libs['GraphicsMagick'].SyncImagePixels
     SyncImagePixels.argtypes = [POINTER(Image)]
     SyncImagePixels.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 155
+# /tmp/tmpu80Elu/pixel_cache.h: 160
 if hasattr(_libs['GraphicsMagick'], 'SyncImagePixelsEx'):
     SyncImagePixelsEx = _libs['GraphicsMagick'].SyncImagePixelsEx
     SyncImagePixelsEx.argtypes = [POINTER(Image), POINTER(ExceptionInfo)]
     SyncImagePixelsEx.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 167
+# /tmp/tmpu80Elu/pixel_cache.h: 172
 if hasattr(_libs['GraphicsMagick'], 'OpenCacheView'):
     OpenCacheView = _libs['GraphicsMagick'].OpenCacheView
     OpenCacheView.argtypes = [POINTER(Image)]
     OpenCacheView.restype = POINTER(ViewInfo)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 173
+# /tmp/tmpu80Elu/pixel_cache.h: 178
 if hasattr(_libs['GraphicsMagick'], 'CloseCacheView'):
     CloseCacheView = _libs['GraphicsMagick'].CloseCacheView
     CloseCacheView.argtypes = [POINTER(ViewInfo)]
     CloseCacheView.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 182
+# /tmp/tmpu80Elu/pixel_cache.h: 187
 if hasattr(_libs['GraphicsMagick'], 'AccessCacheViewPixels'):
     AccessCacheViewPixels = _libs['GraphicsMagick'].AccessCacheViewPixels
     AccessCacheViewPixels.argtypes = [POINTER(ViewInfo)]
     AccessCacheViewPixels.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 189
+# /tmp/tmpu80Elu/pixel_cache.h: 194
 if hasattr(_libs['GraphicsMagick'], 'AcquireCacheViewIndexes'):
     AcquireCacheViewIndexes = _libs['GraphicsMagick'].AcquireCacheViewIndexes
     AcquireCacheViewIndexes.argtypes = [POINTER(ViewInfo)]
     AcquireCacheViewIndexes.restype = POINTER(IndexPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 196
+# /tmp/tmpu80Elu/pixel_cache.h: 201
 if hasattr(_libs['GraphicsMagick'], 'AcquireCacheViewPixels'):
     AcquireCacheViewPixels = _libs['GraphicsMagick'].AcquireCacheViewPixels
     AcquireCacheViewPixels.argtypes = [POINTER(ViewInfo), c_long, c_long, c_ulong, c_ulong, POINTER(ExceptionInfo)]
     AcquireCacheViewPixels.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 208
+# /tmp/tmpu80Elu/pixel_cache.h: 213
 if hasattr(_libs['GraphicsMagick'], 'AcquireOneCacheViewPixel'):
     AcquireOneCacheViewPixel = _libs['GraphicsMagick'].AcquireOneCacheViewPixel
     AcquireOneCacheViewPixel.argtypes = [POINTER(ViewInfo), POINTER(PixelPacket), c_long, c_long, POINTER(ExceptionInfo)]
     AcquireOneCacheViewPixel.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 216
+# /tmp/tmpu80Elu/pixel_cache.h: 221
 if hasattr(_libs['GraphicsMagick'], 'GetCacheViewArea'):
     GetCacheViewArea = _libs['GraphicsMagick'].GetCacheViewArea
     GetCacheViewArea.argtypes = [POINTER(ViewInfo)]
     GetCacheViewArea.restype = magick_off_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 221
+# /tmp/tmpu80Elu/pixel_cache.h: 226
 if hasattr(_libs['GraphicsMagick'], 'GetCacheViewImage'):
     GetCacheViewImage = _libs['GraphicsMagick'].GetCacheViewImage
     GetCacheViewImage.argtypes = [POINTER(ViewInfo)]
     GetCacheViewImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 228
+# /tmp/tmpu80Elu/pixel_cache.h: 233
 if hasattr(_libs['GraphicsMagick'], 'GetCacheViewIndexes'):
     GetCacheViewIndexes = _libs['GraphicsMagick'].GetCacheViewIndexes
     GetCacheViewIndexes.argtypes = [POINTER(ViewInfo)]
     GetCacheViewIndexes.restype = POINTER(IndexPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 235
+# /tmp/tmpu80Elu/pixel_cache.h: 240
 if hasattr(_libs['GraphicsMagick'], 'GetCacheViewPixels'):
     GetCacheViewPixels = _libs['GraphicsMagick'].GetCacheViewPixels
     GetCacheViewPixels.argtypes = [POINTER(ViewInfo), c_long, c_long, c_ulong, c_ulong, POINTER(ExceptionInfo)]
     GetCacheViewPixels.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 243
+# /tmp/tmpu80Elu/pixel_cache.h: 248
 if hasattr(_libs['GraphicsMagick'], 'GetCacheViewRegion'):
     GetCacheViewRegion = _libs['GraphicsMagick'].GetCacheViewRegion
     GetCacheViewRegion.argtypes = [POINTER(ViewInfo)]
     GetCacheViewRegion.restype = RectangleInfo
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 251
+# /tmp/tmpu80Elu/pixel_cache.h: 256
 if hasattr(_libs['GraphicsMagick'], 'SetCacheViewPixels'):
     SetCacheViewPixels = _libs['GraphicsMagick'].SetCacheViewPixels
     SetCacheViewPixels.argtypes = [POINTER(ViewInfo), c_long, c_long, c_ulong, c_ulong, POINTER(ExceptionInfo)]
     SetCacheViewPixels.restype = POINTER(PixelPacket)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/pixel_cache.h: 259
+# /tmp/tmpu80Elu/pixel_cache.h: 264
 if hasattr(_libs['GraphicsMagick'], 'SyncCacheViewPixels'):
     SyncCacheViewPixels = _libs['GraphicsMagick'].SyncCacheViewPixels
     SyncCacheViewPixels.argtypes = [POINTER(ViewInfo), POINTER(ExceptionInfo)]
     SyncCacheViewPixels.restype = c_uint
 
-BlobInfo = struct__BlobInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 29
+BlobInfo = struct__BlobInfo # /tmp/tmpu80Elu/blob.h: 37
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 41
+# /tmp/tmpu80Elu/blob.h: 49
 if hasattr(_libs['GraphicsMagick'], 'CloneBlobInfo'):
     CloneBlobInfo = _libs['GraphicsMagick'].CloneBlobInfo
     CloneBlobInfo.argtypes = [POINTER(BlobInfo)]
     CloneBlobInfo.restype = POINTER(BlobInfo)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 47
+# /tmp/tmpu80Elu/blob.h: 55
 if hasattr(_libs['GraphicsMagick'], 'ReferenceBlob'):
     ReferenceBlob = _libs['GraphicsMagick'].ReferenceBlob
     ReferenceBlob.argtypes = [POINTER(BlobInfo)]
     ReferenceBlob.restype = POINTER(BlobInfo)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 52
+# /tmp/tmpu80Elu/blob.h: 60
 if hasattr(_libs['GraphicsMagick'], 'DestroyBlobInfo'):
     DestroyBlobInfo = _libs['GraphicsMagick'].DestroyBlobInfo
     DestroyBlobInfo.argtypes = [POINTER(BlobInfo)]
     DestroyBlobInfo.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 58
+# /tmp/tmpu80Elu/blob.h: 66
 if hasattr(_libs['GraphicsMagick'], 'DetachBlob'):
     DetachBlob = _libs['GraphicsMagick'].DetachBlob
     DetachBlob.argtypes = [POINTER(BlobInfo)]
     DetachBlob.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 63
+# /tmp/tmpu80Elu/blob.h: 71
 if hasattr(_libs['GraphicsMagick'], 'GetBlobInfo'):
     GetBlobInfo = _libs['GraphicsMagick'].GetBlobInfo
     GetBlobInfo.argtypes = [POINTER(BlobInfo)]
     GetBlobInfo.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 68
+# /tmp/tmpu80Elu/blob.h: 76
 if hasattr(_libs['GraphicsMagick'], 'AttachBlob'):
     AttachBlob = _libs['GraphicsMagick'].AttachBlob
     AttachBlob.argtypes = [POINTER(BlobInfo), POINTER(None), c_size_t]
     AttachBlob.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 81
+# /tmp/tmpu80Elu/blob.h: 89
 if hasattr(_libs['GraphicsMagick'], 'DestroyBlob'):
     DestroyBlob = _libs['GraphicsMagick'].DestroyBlob
     DestroyBlob.argtypes = [POINTER(Image)]
     DestroyBlob.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 93
+# /tmp/tmpu80Elu/blob.h: 101
 if hasattr(_libs['GraphicsMagick'], 'BlobToImage'):
     BlobToImage = _libs['GraphicsMagick'].BlobToImage
     BlobToImage.argtypes = [POINTER(ImageInfo), POINTER(None), c_size_t, POINTER(ExceptionInfo)]
     BlobToImage.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 103
+# /tmp/tmpu80Elu/blob.h: 111
 if hasattr(_libs['GraphicsMagick'], 'PingBlob'):
     PingBlob = _libs['GraphicsMagick'].PingBlob
     PingBlob.argtypes = [POINTER(ImageInfo), POINTER(None), c_size_t, POINTER(ExceptionInfo)]
     PingBlob.restype = POINTER(Image)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 112
+# /tmp/tmpu80Elu/blob.h: 120
 if hasattr(_libs['GraphicsMagick'], 'ImageToBlob'):
     ImageToBlob = _libs['GraphicsMagick'].ImageToBlob
     ImageToBlob.argtypes = [POINTER(ImageInfo), POINTER(Image), POINTER(c_size_t), POINTER(ExceptionInfo)]
     ImageToBlob.restype = POINTER(None)
 
-enum_anon_35 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 133
+enum_anon_35 = c_int # /tmp/tmpu80Elu/blob.h: 141
 
-UndefinedBlobMode = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 133
+UndefinedBlobMode = 0 # /tmp/tmpu80Elu/blob.h: 141
 
-ReadBlobMode = (UndefinedBlobMode + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 133
+ReadBlobMode = (UndefinedBlobMode + 1) # /tmp/tmpu80Elu/blob.h: 141
 
-ReadBinaryBlobMode = (ReadBlobMode + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 133
+ReadBinaryBlobMode = (ReadBlobMode + 1) # /tmp/tmpu80Elu/blob.h: 141
 
-WriteBlobMode = (ReadBinaryBlobMode + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 133
+WriteBlobMode = (ReadBinaryBlobMode + 1) # /tmp/tmpu80Elu/blob.h: 141
 
-WriteBinaryBlobMode = (WriteBlobMode + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 133
+WriteBinaryBlobMode = (WriteBlobMode + 1) # /tmp/tmpu80Elu/blob.h: 141
 
-BlobMode = enum_anon_35 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 133
+BlobMode = enum_anon_35 # /tmp/tmpu80Elu/blob.h: 141
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 139
+# /tmp/tmpu80Elu/blob.h: 147
 if hasattr(_libs['GraphicsMagick'], 'OpenBlob'):
     OpenBlob = _libs['GraphicsMagick'].OpenBlob
     OpenBlob.argtypes = [POINTER(ImageInfo), POINTER(Image), BlobMode, POINTER(ExceptionInfo)]
     OpenBlob.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 147
+# /tmp/tmpu80Elu/blob.h: 155
 if hasattr(_libs['GraphicsMagick'], 'CloseBlob'):
     CloseBlob = _libs['GraphicsMagick'].CloseBlob
     CloseBlob.argtypes = [POINTER(Image)]
     CloseBlob.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 153
+# /tmp/tmpu80Elu/blob.h: 161
 if hasattr(_libs['GraphicsMagick'], 'ReadBlob'):
     ReadBlob = _libs['GraphicsMagick'].ReadBlob
     ReadBlob.argtypes = [POINTER(Image), c_size_t, POINTER(None)]
     ReadBlob.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 161
+# /tmp/tmpu80Elu/blob.h: 169
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobZC'):
     ReadBlobZC = _libs['GraphicsMagick'].ReadBlobZC
     ReadBlobZC.argtypes = [POINTER(Image), c_size_t, POINTER(POINTER(None))]
     ReadBlobZC.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 168
+# /tmp/tmpu80Elu/blob.h: 176
 if hasattr(_libs['GraphicsMagick'], 'WriteBlob'):
     WriteBlob = _libs['GraphicsMagick'].WriteBlob
     WriteBlob.argtypes = [POINTER(Image), c_size_t, POINTER(None)]
     WriteBlob.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 175
+# /tmp/tmpu80Elu/blob.h: 183
 if hasattr(_libs['GraphicsMagick'], 'SeekBlob'):
     SeekBlob = _libs['GraphicsMagick'].SeekBlob
     SeekBlob.argtypes = [POINTER(Image), magick_off_t, c_int]
     SeekBlob.restype = magick_off_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 183
+# /tmp/tmpu80Elu/blob.h: 191
 if hasattr(_libs['GraphicsMagick'], 'TellBlob'):
     TellBlob = _libs['GraphicsMagick'].TellBlob
     TellBlob.argtypes = [POINTER(Image)]
     TellBlob.restype = magick_off_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 188
+# /tmp/tmpu80Elu/blob.h: 196
 if hasattr(_libs['GraphicsMagick'], 'EOFBlob'):
     EOFBlob = _libs['GraphicsMagick'].EOFBlob
     EOFBlob.argtypes = [POINTER(Image)]
     EOFBlob.restype = c_int
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 194
+# /tmp/tmpu80Elu/blob.h: 202
 if hasattr(_libs['GraphicsMagick'], 'GetBlobStatus'):
     GetBlobStatus = _libs['GraphicsMagick'].GetBlobStatus
     GetBlobStatus.argtypes = [POINTER(Image)]
     GetBlobStatus.restype = c_int
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 200
+# /tmp/tmpu80Elu/blob.h: 208
 if hasattr(_libs['GraphicsMagick'], 'GetBlobSize'):
     GetBlobSize = _libs['GraphicsMagick'].GetBlobSize
     GetBlobSize.argtypes = [POINTER(Image)]
     GetBlobSize.restype = magick_off_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 206
+# /tmp/tmpu80Elu/blob.h: 214
 if hasattr(_libs['GraphicsMagick'], 'GetBlobFileHandle'):
     GetBlobFileHandle = _libs['GraphicsMagick'].GetBlobFileHandle
     GetBlobFileHandle.argtypes = [POINTER(Image)]
     GetBlobFileHandle.restype = POINTER(FILE)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 213
+# /tmp/tmpu80Elu/blob.h: 221
 if hasattr(_libs['GraphicsMagick'], 'GetBlobStreamData'):
     GetBlobStreamData = _libs['GraphicsMagick'].GetBlobStreamData
     GetBlobStreamData.argtypes = [POINTER(Image)]
     GetBlobStreamData.restype = POINTER(c_ubyte)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 226
+# /tmp/tmpu80Elu/blob.h: 234
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobByte'):
     ReadBlobByte = _libs['GraphicsMagick'].ReadBlobByte
     ReadBlobByte.argtypes = [POINTER(Image)]
     ReadBlobByte.restype = c_int
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 232
+# /tmp/tmpu80Elu/blob.h: 240
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobLSBShort'):
     ReadBlobLSBShort = _libs['GraphicsMagick'].ReadBlobLSBShort
     ReadBlobLSBShort.argtypes = [POINTER(Image)]
     ReadBlobLSBShort.restype = magick_uint16_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 238
+# /tmp/tmpu80Elu/blob.h: 246
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobLSBShorts'):
     ReadBlobLSBShorts = _libs['GraphicsMagick'].ReadBlobLSBShorts
     ReadBlobLSBShorts.argtypes = [POINTER(Image), c_size_t, POINTER(magick_uint16_t)]
     ReadBlobLSBShorts.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 245
+# /tmp/tmpu80Elu/blob.h: 253
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobMSBShort'):
     ReadBlobMSBShort = _libs['GraphicsMagick'].ReadBlobMSBShort
     ReadBlobMSBShort.argtypes = [POINTER(Image)]
     ReadBlobMSBShort.restype = magick_uint16_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 251
+# /tmp/tmpu80Elu/blob.h: 259
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobMSBShorts'):
     ReadBlobMSBShorts = _libs['GraphicsMagick'].ReadBlobMSBShorts
     ReadBlobMSBShorts.argtypes = [POINTER(Image), c_size_t, POINTER(magick_uint16_t)]
     ReadBlobMSBShorts.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 257
+# /tmp/tmpu80Elu/blob.h: 265
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobLSBLong'):
     ReadBlobLSBLong = _libs['GraphicsMagick'].ReadBlobLSBLong
     ReadBlobLSBLong.argtypes = [POINTER(Image)]
     ReadBlobLSBLong.restype = magick_uint32_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 263
+# /tmp/tmpu80Elu/blob.h: 271
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobLSBLongs'):
     ReadBlobLSBLongs = _libs['GraphicsMagick'].ReadBlobLSBLongs
     ReadBlobLSBLongs.argtypes = [POINTER(Image), c_size_t, POINTER(magick_uint32_t)]
     ReadBlobLSBLongs.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 269
+# /tmp/tmpu80Elu/blob.h: 277
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobMSBLong'):
     ReadBlobMSBLong = _libs['GraphicsMagick'].ReadBlobMSBLong
     ReadBlobMSBLong.argtypes = [POINTER(Image)]
     ReadBlobMSBLong.restype = magick_uint32_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 274
+# /tmp/tmpu80Elu/blob.h: 282
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobMSBLongs'):
     ReadBlobMSBLongs = _libs['GraphicsMagick'].ReadBlobMSBLongs
     ReadBlobMSBLongs.argtypes = [POINTER(Image), c_size_t, POINTER(magick_uint32_t)]
     ReadBlobMSBLongs.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 280
+# /tmp/tmpu80Elu/blob.h: 288
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobLSBFloat'):
     ReadBlobLSBFloat = _libs['GraphicsMagick'].ReadBlobLSBFloat
     ReadBlobLSBFloat.argtypes = [POINTER(Image)]
     ReadBlobLSBFloat.restype = c_float
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 286
+# /tmp/tmpu80Elu/blob.h: 294
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobLSBFloats'):
     ReadBlobLSBFloats = _libs['GraphicsMagick'].ReadBlobLSBFloats
     ReadBlobLSBFloats.argtypes = [POINTER(Image), c_size_t, POINTER(c_float)]
     ReadBlobLSBFloats.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 292
+# /tmp/tmpu80Elu/blob.h: 300
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobMSBFloat'):
     ReadBlobMSBFloat = _libs['GraphicsMagick'].ReadBlobMSBFloat
     ReadBlobMSBFloat.argtypes = [POINTER(Image)]
     ReadBlobMSBFloat.restype = c_float
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 298
+# /tmp/tmpu80Elu/blob.h: 306
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobMSBFloats'):
     ReadBlobMSBFloats = _libs['GraphicsMagick'].ReadBlobMSBFloats
     ReadBlobMSBFloats.argtypes = [POINTER(Image), c_size_t, POINTER(c_float)]
     ReadBlobMSBFloats.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 304
+# /tmp/tmpu80Elu/blob.h: 312
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobLSBDouble'):
     ReadBlobLSBDouble = _libs['GraphicsMagick'].ReadBlobLSBDouble
     ReadBlobLSBDouble.argtypes = [POINTER(Image)]
     ReadBlobLSBDouble.restype = c_double
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 310
+# /tmp/tmpu80Elu/blob.h: 318
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobLSBDoubles'):
     ReadBlobLSBDoubles = _libs['GraphicsMagick'].ReadBlobLSBDoubles
     ReadBlobLSBDoubles.argtypes = [POINTER(Image), c_size_t, POINTER(c_double)]
     ReadBlobLSBDoubles.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 316
+# /tmp/tmpu80Elu/blob.h: 324
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobMSBDouble'):
     ReadBlobMSBDouble = _libs['GraphicsMagick'].ReadBlobMSBDouble
     ReadBlobMSBDouble.argtypes = [POINTER(Image)]
     ReadBlobMSBDouble.restype = c_double
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 321
+# /tmp/tmpu80Elu/blob.h: 329
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobMSBDoubles'):
     ReadBlobMSBDoubles = _libs['GraphicsMagick'].ReadBlobMSBDoubles
     ReadBlobMSBDoubles.argtypes = [POINTER(Image), c_size_t, POINTER(c_double)]
     ReadBlobMSBDoubles.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 328
+# /tmp/tmpu80Elu/blob.h: 336
 if hasattr(_libs['GraphicsMagick'], 'ReadBlobString'):
     ReadBlobString = _libs['GraphicsMagick'].ReadBlobString
     ReadBlobString.argtypes = [POINTER(Image), String]
@@ -3593,131 +3575,131 @@ if hasattr(_libs['GraphicsMagick'], 'ReadBlobString'):
         ReadBlobString.restype = String
         ReadBlobString.errcheck = ReturnString
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 334
+# /tmp/tmpu80Elu/blob.h: 342
 if hasattr(_libs['GraphicsMagick'], 'WriteBlobByte'):
     WriteBlobByte = _libs['GraphicsMagick'].WriteBlobByte
     WriteBlobByte.argtypes = [POINTER(Image), magick_uint8_t]
     WriteBlobByte.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 340
+# /tmp/tmpu80Elu/blob.h: 348
 if hasattr(_libs['GraphicsMagick'], 'WriteBlobFile'):
     WriteBlobFile = _libs['GraphicsMagick'].WriteBlobFile
     WriteBlobFile.argtypes = [POINTER(Image), String]
     WriteBlobFile.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 346
+# /tmp/tmpu80Elu/blob.h: 354
 if hasattr(_libs['GraphicsMagick'], 'WriteBlobLSBShort'):
     WriteBlobLSBShort = _libs['GraphicsMagick'].WriteBlobLSBShort
     WriteBlobLSBShort.argtypes = [POINTER(Image), magick_uint16_t]
     WriteBlobLSBShort.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 352
+# /tmp/tmpu80Elu/blob.h: 360
 if hasattr(_libs['GraphicsMagick'], 'WriteBlobLSBLong'):
     WriteBlobLSBLong = _libs['GraphicsMagick'].WriteBlobLSBLong
     WriteBlobLSBLong.argtypes = [POINTER(Image), magick_uint32_t]
     WriteBlobLSBLong.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 360
+# /tmp/tmpu80Elu/blob.h: 368
 if hasattr(_libs['GraphicsMagick'], 'WriteBlobMSBLong'):
     WriteBlobMSBLong = _libs['GraphicsMagick'].WriteBlobMSBLong
     WriteBlobMSBLong.argtypes = [POINTER(Image), magick_uint32_t]
     WriteBlobMSBLong.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 366
+# /tmp/tmpu80Elu/blob.h: 374
 if hasattr(_libs['GraphicsMagick'], 'WriteBlobMSBShort'):
     WriteBlobMSBShort = _libs['GraphicsMagick'].WriteBlobMSBShort
     WriteBlobMSBShort.argtypes = [POINTER(Image), magick_uint16_t]
     WriteBlobMSBShort.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 373
+# /tmp/tmpu80Elu/blob.h: 381
 if hasattr(_libs['GraphicsMagick'], 'WriteBlobString'):
     WriteBlobString = _libs['GraphicsMagick'].WriteBlobString
     WriteBlobString.argtypes = [POINTER(Image), String]
     WriteBlobString.restype = c_size_t
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 386
+# /tmp/tmpu80Elu/blob.h: 394
 if hasattr(_libs['GraphicsMagick'], 'BlobIsSeekable'):
     BlobIsSeekable = _libs['GraphicsMagick'].BlobIsSeekable
     BlobIsSeekable.argtypes = [POINTER(Image)]
     BlobIsSeekable.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 391
+# /tmp/tmpu80Elu/blob.h: 399
 if hasattr(_libs['GraphicsMagick'], 'SetBlobClosable'):
     SetBlobClosable = _libs['GraphicsMagick'].SetBlobClosable
     SetBlobClosable.argtypes = [POINTER(Image), c_uint]
     SetBlobClosable.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 397
+# /tmp/tmpu80Elu/blob.h: 405
 if hasattr(_libs['GraphicsMagick'], 'SetBlobTemporary'):
     SetBlobTemporary = _libs['GraphicsMagick'].SetBlobTemporary
     SetBlobTemporary.argtypes = [POINTER(Image), c_uint]
     SetBlobTemporary.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 404
+# /tmp/tmpu80Elu/blob.h: 412
 if hasattr(_libs['GraphicsMagick'], 'GetBlobTemporary'):
     GetBlobTemporary = _libs['GraphicsMagick'].GetBlobTemporary
     GetBlobTemporary.argtypes = [POINTER(Image)]
     GetBlobTemporary.restype = c_uint
 
-enum_anon_36 = c_int # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 420
+enum_anon_36 = c_int # /tmp/tmpu80Elu/blob.h: 428
 
-ReadMode = 0 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 420
+ReadMode = 0 # /tmp/tmpu80Elu/blob.h: 428
 
-WriteMode = (ReadMode + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 420
+WriteMode = (ReadMode + 1) # /tmp/tmpu80Elu/blob.h: 428
 
-IOMode = (WriteMode + 1) # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 420
+IOMode = (WriteMode + 1) # /tmp/tmpu80Elu/blob.h: 428
 
-MapMode = enum_anon_36 # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 420
+MapMode = enum_anon_36 # /tmp/tmpu80Elu/blob.h: 428
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 425
+# /tmp/tmpu80Elu/blob.h: 433
 if hasattr(_libs['GraphicsMagick'], 'UnmapBlob'):
     UnmapBlob = _libs['GraphicsMagick'].UnmapBlob
     UnmapBlob.argtypes = [POINTER(None), c_size_t]
     UnmapBlob.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 431
+# /tmp/tmpu80Elu/blob.h: 439
 if hasattr(_libs['GraphicsMagick'], 'MapBlob'):
     MapBlob = _libs['GraphicsMagick'].MapBlob
     MapBlob.argtypes = [c_int, MapMode, magick_off_t, c_size_t]
     MapBlob.restype = POINTER(None)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 445
+# /tmp/tmpu80Elu/blob.h: 453
 if hasattr(_libs['GraphicsMagick'], 'BlobToFile'):
     BlobToFile = _libs['GraphicsMagick'].BlobToFile
     BlobToFile.argtypes = [String, POINTER(None), c_size_t, POINTER(ExceptionInfo)]
     BlobToFile.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 453
+# /tmp/tmpu80Elu/blob.h: 461
 if hasattr(_libs['GraphicsMagick'], 'FileToBlob'):
     FileToBlob = _libs['GraphicsMagick'].FileToBlob
     FileToBlob.argtypes = [String, POINTER(c_size_t), POINTER(ExceptionInfo)]
     FileToBlob.restype = POINTER(None)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 466
+# /tmp/tmpu80Elu/blob.h: 474
 if hasattr(_libs['GraphicsMagick'], 'BlobReserveSize'):
     BlobReserveSize = _libs['GraphicsMagick'].BlobReserveSize
     BlobReserveSize.argtypes = [POINTER(Image), magick_off_t]
     BlobReserveSize.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 472
+# /tmp/tmpu80Elu/blob.h: 480
 if hasattr(_libs['GraphicsMagick'], 'ImageToFile'):
     ImageToFile = _libs['GraphicsMagick'].ImageToFile
     ImageToFile.argtypes = [POINTER(Image), String, POINTER(ExceptionInfo)]
     ImageToFile.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 480
+# /tmp/tmpu80Elu/blob.h: 488
 if hasattr(_libs['GraphicsMagick'], 'GetConfigureBlob'):
     GetConfigureBlob = _libs['GraphicsMagick'].GetConfigureBlob
     GetConfigureBlob.argtypes = [String, String, POINTER(c_size_t), POINTER(ExceptionInfo)]
     GetConfigureBlob.restype = POINTER(None)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 489
+# /tmp/tmpu80Elu/blob.h: 497
 if hasattr(_libs['GraphicsMagick'], 'MSBOrderLong'):
     MSBOrderLong = _libs['GraphicsMagick'].MSBOrderLong
     MSBOrderLong.argtypes = [POINTER(c_ubyte), c_size_t]
     MSBOrderLong.restype = None
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 496
+# /tmp/tmpu80Elu/blob.h: 504
 if hasattr(_libs['GraphicsMagick'], 'MSBOrderShort'):
     MSBOrderShort = _libs['GraphicsMagick'].MSBOrderShort
     MSBOrderShort.argtypes = [POINTER(c_ubyte), c_size_t]
@@ -3738,187 +3720,281 @@ struct__ImageAttribute._fields_ = [
     ('next', POINTER(struct__ImageAttribute)),
 ]
 
-ImageAttribute = struct__ImageAttribute # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 32
+ImageAttribute = struct__ImageAttribute # /tmp/tmpu80Elu/attribute.h: 40
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 38
+# /tmp/tmpu80Elu/attribute.h: 46
 if hasattr(_libs['GraphicsMagick'], 'GetImageAttribute'):
     GetImageAttribute = _libs['GraphicsMagick'].GetImageAttribute
     GetImageAttribute.argtypes = [POINTER(Image), String]
     GetImageAttribute.restype = POINTER(ImageAttribute)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 38
+# /tmp/tmpu80Elu/attribute.h: 46
 if hasattr(_libs['GraphicsMagick'], 'GetImageClippingPathAttribute'):
     GetImageClippingPathAttribute = _libs['GraphicsMagick'].GetImageClippingPathAttribute
     GetImageClippingPathAttribute.argtypes = [POINTER(Image)]
     GetImageClippingPathAttribute.restype = POINTER(ImageAttribute)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 38
+# /tmp/tmpu80Elu/attribute.h: 46
 if hasattr(_libs['GraphicsMagick'], 'GetImageInfoAttribute'):
     GetImageInfoAttribute = _libs['GraphicsMagick'].GetImageInfoAttribute
     GetImageInfoAttribute.argtypes = [POINTER(ImageInfo), POINTER(Image), String]
     GetImageInfoAttribute.restype = POINTER(ImageAttribute)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 43
+# /tmp/tmpu80Elu/attribute.h: 51
 if hasattr(_libs['GraphicsMagick'], 'CloneImageAttributes'):
     CloneImageAttributes = _libs['GraphicsMagick'].CloneImageAttributes
     CloneImageAttributes.argtypes = [POINTER(Image), POINTER(Image)]
     CloneImageAttributes.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 43
+# /tmp/tmpu80Elu/attribute.h: 51
 if hasattr(_libs['GraphicsMagick'], 'SetImageAttribute'):
     SetImageAttribute = _libs['GraphicsMagick'].SetImageAttribute
     SetImageAttribute.argtypes = [POINTER(Image), String, String]
     SetImageAttribute.restype = c_uint
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 47
+# /tmp/tmpu80Elu/attribute.h: 55
 if hasattr(_libs['GraphicsMagick'], 'DestroyImageAttributes'):
     DestroyImageAttributes = _libs['GraphicsMagick'].DestroyImageAttributes
     DestroyImageAttributes.argtypes = [POINTER(Image)]
     DestroyImageAttributes.restype = None
 
-# gmagick_hdrs/magick/magick_config.h: 22
+# gm_headers/magick/magick_config.h: 22
 try:
     MaxRGB = 255
 except:
     pass
 
-# gmagick_hdrs/magick/magick_config.h: 23
+# gm_headers/magick/magick_config.h: 23
 try:
     MaxRGBFloat = 255.0
 except:
     pass
 
-# gmagick_hdrs/magick/magick_config.h: 24
+# gm_headers/magick/magick_config.h: 24
 try:
     MaxRGBDouble = 255.0
 except:
     pass
 
-# gmagick_hdrs/magick/common.h: 101
+# gm_headers/magick/common.h: 101
 try:
     MagickFalse = 0
 except:
     pass
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 38
+# /tmp/tmpu80Elu/image.h: 45
 def MaxValueGivenBits(bits):
     return ((1L << (bits - 1)) + ((1L << (bits - 1)) - 1))
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 41
+# /tmp/tmpu80Elu/image.h: 48
+try:
+    MaxColormapSize = 256
+except:
+    pass
+
+# /tmp/tmpu80Elu/image.h: 49
+try:
+    MaxMap = 255
+except:
+    pass
+
+# /tmp/tmpu80Elu/image.h: 50
+try:
+    MaxMapFloat = 255.0
+except:
+    pass
+
+# /tmp/tmpu80Elu/image.h: 51
+try:
+    MaxMapDouble = 255.0
+except:
+    pass
+
+# /tmp/tmpu80Elu/image.h: 52
+try:
+    MaxRGB = 255
+except:
+    pass
+
+# /tmp/tmpu80Elu/image.h: 53
+try:
+    MaxRGBFloat = 255.0
+except:
+    pass
+
+# /tmp/tmpu80Elu/image.h: 54
+try:
+    MaxRGBDouble = 255.0
+except:
+    pass
+
+# /tmp/tmpu80Elu/image.h: 55
+def ScaleCharToMap(value):
+    return value
+
+# /tmp/tmpu80Elu/image.h: 56
+def ScaleCharToQuantum(value):
+    return value
+
+# /tmp/tmpu80Elu/image.h: 57
+def ScaleLongToQuantum(value):
+    return (value / 16843009L)
+
+# /tmp/tmpu80Elu/image.h: 58
+def ScaleMapToChar(value):
+    return value
+
+# /tmp/tmpu80Elu/image.h: 59
+def ScaleMapToQuantum(value):
+    return value
+
+# /tmp/tmpu80Elu/image.h: 60
+def ScaleQuantum(quantum):
+    return quantum
+
+# /tmp/tmpu80Elu/image.h: 61
+def ScaleQuantumToChar(quantum):
+    return quantum
+
+# /tmp/tmpu80Elu/image.h: 62
+def ScaleQuantumToLong(quantum):
+    return (16843009L * quantum)
+
+# /tmp/tmpu80Elu/image.h: 63
+def ScaleQuantumToMap(quantum):
+    return quantum
+
+# /tmp/tmpu80Elu/image.h: 64
+def ScaleQuantumToShort(quantum):
+    return (257 * quantum)
+
+# /tmp/tmpu80Elu/image.h: 65
+def ScaleShortToQuantum(value):
+    return (value / 257)
+
+# /tmp/tmpu80Elu/image.h: 66
+def ScaleToQuantum(value):
+    return value
+
+# /tmp/tmpu80Elu/image.h: 67
+def ScaleQuantumToIndex(value):
+    return value
+
+# /tmp/tmpu80Elu/image.h: 137
 try:
     OpaqueOpacity = 0L
 except:
     pass
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 42
+# /tmp/tmpu80Elu/image.h: 138
 try:
     TransparentOpacity = MaxRGB
 except:
     pass
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 43
+# /tmp/tmpu80Elu/image.h: 139
 def RoundDoubleToQuantum(value):
     return (value < 0.0) and 0 or (value > MaxRGBDouble) and MaxRGB or (value + 0.5)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 45
+# /tmp/tmpu80Elu/image.h: 141
 def RoundFloatToQuantum(value):
     return (value < 0.0) and 0 or (value > MaxRGBFloat) and MaxRGB or (value + 0.5)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 47
+# /tmp/tmpu80Elu/image.h: 143
 def ConstrainToRange(min, max, value):
     return (value < min) and min or (value > max) and max or value
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 49
+# /tmp/tmpu80Elu/image.h: 145
 def ConstrainToQuantum(value):
     return (ConstrainToRange (0, MaxRGB, value))
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 50
+# /tmp/tmpu80Elu/image.h: 146
 def ScaleAnyToQuantum(x, max_value):
     return (((MaxRGBDouble * x) / max_value) + 0.5)
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 52
+# /tmp/tmpu80Elu/image.h: 148
 def MagickBoolToString(value):
     return (value != MagickFalse) and 'True' or 'False'
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 58
+# /tmp/tmpu80Elu/image.h: 154
 def MagickChannelEnabled(channels, channel):
     return ((channels == AllChannels) or (channels == channel))
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 63
+# /tmp/tmpu80Elu/image.h: 159
 try:
     RunlengthEncodedCompression = RLECompression
 except:
     pass
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 64
+# /tmp/tmpu80Elu/image.h: 160
 def RoundSignedToQuantum(value):
     return (RoundDoubleToQuantum (value))
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 65
+# /tmp/tmpu80Elu/image.h: 161
 def RoundToQuantum(value):
     return (RoundDoubleToQuantum (value))
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 431
+# /tmp/tmpu80Elu/image.h: 527
 try:
     MAGICK_PIXELS_BGRA = 1
 except:
     pass
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/resize.h: 18
+# /tmp/tmpu80Elu/resize.h: 26
 try:
     DefaultResizeFilter = LanczosFilter
 except:
     pass
 
-# /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/blob.h: 24
+# /tmp/tmpu80Elu/blob.h: 32
 try:
     MinBlobExtent = 32768L
 except:
     pass
 
-_Image = struct__Image # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 553
+_Image = struct__Image # /tmp/tmpu80Elu/image.h: 649
 
-_ImageAttribute = struct__ImageAttribute # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/attribute.h: 20
+_ImageAttribute = struct__ImageAttribute # /tmp/tmpu80Elu/attribute.h: 28
 
-_ExceptionInfo = struct__ExceptionInfo # gmagick_hdrs/magick/error.h: 230
+_ExceptionInfo = struct__ExceptionInfo # gm_headers/magick/error.h: 226
 
-_AffineMatrix = struct__AffineMatrix # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 363
+_AffineMatrix = struct__AffineMatrix # /tmp/tmpu80Elu/image.h: 459
 
-_PrimaryInfo = struct__PrimaryInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 371
+_PrimaryInfo = struct__PrimaryInfo # /tmp/tmpu80Elu/image.h: 467
 
-_ChromaticityInfo = struct__ChromaticityInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 380
+_ChromaticityInfo = struct__ChromaticityInfo # /tmp/tmpu80Elu/image.h: 476
 
-_PixelPacket = struct__PixelPacket # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 438
+_PixelPacket = struct__PixelPacket # /tmp/tmpu80Elu/image.h: 534
 
-_DoublePixelPacket = struct__DoublePixelPacket # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 447
+_DoublePixelPacket = struct__DoublePixelPacket # /tmp/tmpu80Elu/image.h: 543
 
-_ErrorInfo = struct__ErrorInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 459
+_ErrorInfo = struct__ErrorInfo # /tmp/tmpu80Elu/image.h: 555
 
-_FrameInfo = struct__FrameInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 472
+_FrameInfo = struct__FrameInfo # /tmp/tmpu80Elu/image.h: 568
 
-_LongPixelPacket = struct__LongPixelPacket # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 483
+_LongPixelPacket = struct__LongPixelPacket # /tmp/tmpu80Elu/image.h: 579
 
-_MontageInfo = struct__MontageInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 519
+_MontageInfo = struct__MontageInfo # /tmp/tmpu80Elu/image.h: 615
 
-_ProfileInfo = struct__ProfileInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 531
+_ProfileInfo = struct__ProfileInfo # /tmp/tmpu80Elu/image.h: 627
 
-_RectangleInfo = struct__RectangleInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 542
+_RectangleInfo = struct__RectangleInfo # /tmp/tmpu80Elu/image.h: 638
 
-_SegmentInfo = struct__SegmentInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 551
+_SegmentInfo = struct__SegmentInfo # /tmp/tmpu80Elu/image.h: 647
 
-_ImageInfo = struct__ImageInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/image.h: 880
+_ImageInfo = struct__ImageInfo # /tmp/tmpu80Elu/image.h: 976
 
-_MagickInfo = struct__MagickInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/magick.h: 46
+_MagickInfo = struct__MagickInfo # /tmp/tmpu80Elu/magick.h: 54
 
-_ExportPixelAreaOptions = struct__ExportPixelAreaOptions # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 97
+_ExportPixelAreaOptions = struct__ExportPixelAreaOptions # /tmp/tmpu80Elu/constitute.h: 105
 
-_ExportPixelAreaInfo = struct__ExportPixelAreaInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 107
+_ExportPixelAreaInfo = struct__ExportPixelAreaInfo # /tmp/tmpu80Elu/constitute.h: 115
 
-_ImportPixelAreaOptions = struct__ImportPixelAreaOptions # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 129
+_ImportPixelAreaOptions = struct__ImportPixelAreaOptions # /tmp/tmpu80Elu/constitute.h: 137
 
-_ImportPixelAreaInfo = struct__ImportPixelAreaInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/constitute.h: 139
+_ImportPixelAreaInfo = struct__ImportPixelAreaInfo # /tmp/tmpu80Elu/constitute.h: 147
 
-_DelegateInfo = struct__DelegateInfo # /home/rainman/Dropbox/pygm-light/gmagick_hdrs/magick/delegate.h: 21
+_DelegateInfo = struct__DelegateInfo # /tmp/tmpu80Elu/delegate.h: 29
 
 # No inserted files
 
