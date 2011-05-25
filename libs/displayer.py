@@ -34,14 +34,19 @@ import math
 import pygame.locals as pyg
 
 import sys, ctypes
-import gm_wrap
 
 from displayer_renderer import Renderer
 import detect_rows
 
-gm_wrap.InitializeMagick(sys.argv[0]);
-exception = ctypes.pointer(gm_wrap.ExceptionInfo())
-gm_wrap.GetExceptionInfo(exception)
+gm_wrap = None # to be supplied from main script
+
+def init_gm(gm_wrap_module):
+    global gm_wrap, exception
+    gm_wrap = gm_wrap_module
+    gm_wrap.InitializeMagick(sys.argv[0]);
+    exception = ctypes.pointer(gm_wrap.ExceptionInfo())
+    gm_wrap.GetExceptionInfo(exception)
+    
 
 class FakeImage:
     def __init__(self, strdata, size):
@@ -72,6 +77,7 @@ def row_merger(rows, scr_hei):
 
 class DisplayerApp:
     def __init__(self, comix, callback=None, denoise_jpeg=True, ignore_small_rows=True):
+        assert gm_wrap!=None, "GraphicsMagick not loaded"
         pygame.font.init()
         try:
             font = pygame.font.Font('libs/DejaVuSansCondensed-Bold.ttf', 18)

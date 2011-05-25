@@ -8,7 +8,18 @@ import gtk
 
 
 from libs.comic_book import ComicBook
-from libs.displayer import DisplayerApp
+import libs.displayer
+
+import sys, os
+
+if sys.platform=="win32":
+    os.chdir("gm_windows")
+    import gm_windows.gm_wrap as gm_wrap
+    os.chdir("..")
+else:
+    import libs.gm_wrap as gm_wrap
+
+libs.displayer.init_gm(gm_wrap)
 
 class ComicPlayer:
 
@@ -56,7 +67,7 @@ class ComicPlayer:
         self.comic_info.set_text("\"%s\", %s pages" % (self.comix.pretty_name, num))
         
     def play(self, widget, data=None):
-        dapp = DisplayerApp(self.comix, denoise_jpeg=self.denoise_jpeg.get_active())
+        dapp = libs.displayer.DisplayerApp(self.comix, denoise_jpeg=self.denoise_jpeg.get_active())
         dapp.run()
         
 
