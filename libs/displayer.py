@@ -72,12 +72,16 @@ def row_merger(rows, scr_hei):
 
 class DisplayerApp:
     def __init__(self, comix, callback=None, denoise_jpeg=True, ignore_small_rows=True):
-        pygame.display.init()
         pygame.font.init()
+        try:
+            font = pygame.font.Font('libs/DejaVuSansCondensed-Bold.ttf', 18)
+        except IOError:
+            font = pygame.font.Font('freesansbold.ttf', 18)
+        pygame.display.init()
         pygame.display.set_mode((0,0), pyg.HWSURFACE|pyg.DOUBLEBUF|pyg.FULLSCREEN)
         scrdim = pygame.display.get_surface().get_size()
         pygame.display.set_caption('page player')
-        self.renderer = Renderer(pygame.display.get_surface(), pygame.font.Font('freesansbold.ttf', 18))
+        self.renderer = Renderer(pygame.display.get_surface(), font)
         self.renderer.scrdim = scrdim
         self.clock = pygame.time.Clock()
 
