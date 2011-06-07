@@ -1,4 +1,8 @@
-=== Comic Player v 0.3 - brief manual ===
+=== Comic Player v 0.4a - brief manual ===
+
+WARNING
+=======
+This documentation is outdated. Development in progress
 
 
 QUICK INTRO

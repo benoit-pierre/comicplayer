@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-# example helloworld.py
-
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -10,16 +8,17 @@ import gtk
 from libs.comic_book import ComicBook
 import libs.displayer
 
-import sys, os
+import sys, os, os.path
 
 if sys.platform=="win32":
-    os.chdir("gm_windows")
-    import gm_windows.gm_wrap as gm_wrap
+    os.environ["MAGICK_CODER_MODULE_PATH"]="gm_win"
+    import gm_win.gm_wrap as gm_wrap
+    os.chdir("gm_win")
+    libs.displayer.init_gm(gm_wrap)
     os.chdir("..")
 else:
     import libs.gm_wrap as gm_wrap
-
-libs.displayer.init_gm(gm_wrap)
+    libs.displayer.init_gm(gm_wrap)
 
 class ComicPlayer:
 
@@ -144,3 +143,8 @@ class ComicPlayer:
 if __name__ == "__main__":
     app = ComicPlayer()
     app.main()
+
+
+
+
+

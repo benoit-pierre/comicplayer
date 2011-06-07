@@ -28,12 +28,14 @@
 #   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import pygame
-import pygame.key
-import math
-
 import pygame.locals as pyg
+try:
+    import pygame._view # required for cx_freeze to work
+except ImportError:
+    pass
 
-import sys, ctypes
+import math
+import sys, os, ctypes
 
 from displayer_renderer import Renderer
 import detect_rows
@@ -43,7 +45,7 @@ gm_wrap = None # to be supplied from main script
 def init_gm(gm_wrap_module):
     global gm_wrap, exception
     gm_wrap = gm_wrap_module
-    gm_wrap.InitializeMagick(sys.argv[0]);
+    gm_wrap.InitializeMagick(sys.argv[0])
     exception = ctypes.pointer(gm_wrap.ExceptionInfo())
     gm_wrap.GetExceptionInfo(exception)
     
@@ -80,7 +82,7 @@ class DisplayerApp:
         assert gm_wrap!=None, "GraphicsMagick not loaded"
         pygame.font.init()
         try:
-            font = pygame.font.Font('libs/DejaVuSansCondensed-Bold.ttf', 18)
+            font = pygame.font.Font('resources'+os.sep+'DejaVuSansCondensed-Bold.ttf', 18)
         except IOError:
             font = pygame.font.Font('freesansbold.ttf', 18)
         pygame.display.init()
@@ -118,7 +120,8 @@ class DisplayerApp:
         
         ext = name.lower().split(".")[-1]
         if ext in ["jpg","jpeg"] and self.denoise_jpeg:
-            quality = int(gm_wrap.GetImageAttribute(image, "JPEG-Quality").contents.value)
+            data = gm_wrap.GetImageAttribute(image, "JPEG-Quality")
+            quality = int(data.contents.value)
             if quality<85:
                 image = gm_wrap.EnhanceImage(image, exception)
         gm_wrap.NormalizeImage(image, exception)
@@ -403,3 +406,5 @@ if __name__=="__main__":
         debug_scripts = False
     if debug_scripts:
         debug_scripts.go()
+
+

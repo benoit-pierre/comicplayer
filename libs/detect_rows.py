@@ -1,6 +1,9 @@
 import math
-import pyximport; pyximport.install()
-import detect_rows_fastcore
+try:
+    import detect_rows_fastcore
+except ImportError:
+    import pyximport; pyximport.install()
+    import detect_rows_fastcore
 
 def get_filled_lines(image, target_color, tolerance):
     res = []
@@ -53,4 +56,5 @@ def get_ranges(image, target_color, tolerance, min_row_ratio, ignore_small_rows=
         return [(0,image.size[1], True)]
 
     return res
+
 
