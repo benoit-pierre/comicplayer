@@ -2,3 +2,4 @@ syntax: glob
 *.pyc
 libs/prev*.png
 libs/debug_scripts.py
+building_on_windows/dist

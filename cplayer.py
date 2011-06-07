@@ -12,8 +12,8 @@ import sys, os, os.path
 
 if sys.platform=="win32":
     os.environ["MAGICK_CODER_MODULE_PATH"]="gm_win"
-    import gm_win.gm_wrap as gm_wrap
     os.chdir("gm_win")
+    import gm_win.gm_wrap as gm_wrap
     libs.displayer.init_gm(gm_wrap)
     os.chdir("..")
 else:
