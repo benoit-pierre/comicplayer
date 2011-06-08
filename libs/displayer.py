@@ -137,7 +137,7 @@ class DisplayerApp:
         
 
         pseudo_pil_page = FakeImage(buffer.raw, (page.get_width(), page.get_height()))
-        rngs = detect_rows.get_ranges(pseudo_pil_page, 255, 50, 0.1, ignore_small_rows=self.ignore_small_rows)
+        rngs = detect_rows.get_ranges(pseudo_pil_page, 255, 50, 0.05, ignore_small_rows=self.ignore_small_rows)
 
         
         self.renderer.page = page
