@@ -107,7 +107,7 @@ class ComicPlayer:
         self.comic_info = gtk.Label("No comic loaded")
         vbox.pack_start(self.comic_info, expand=False, padding=8)
 
-        self.btn_play = gtk.Button("Watch comic")
+        self.btn_play = gtk.Button("Read comic in fullscreen mode")
         self.btn_play.connect("clicked", self.play, None)
         self.btn_play.set_sensitive(False)
         vbox.pack_start(self.btn_play, expand=False)
