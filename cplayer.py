@@ -11,11 +11,16 @@ import libs.displayer
 import sys, os, os.path
 
 if sys.platform=="win32":
-    os.environ["MAGICK_CODER_MODULE_PATH"]="gm_win"
-    os.chdir("gm_win")
-    import gm_win.gm_wrap as gm_wrap
+    running_from_source = True
+    os.environ["MAGICK_CODER_MODULE_PATH"]="."
+    try:
+        os.chdir("building_on_windows\\dlls")
+    except OSError:
+        running_from_source = False
+    import libs.gm_wrap_win as gm_wrap
     libs.displayer.init_gm(gm_wrap)
-    os.chdir("..")
+    if running_from_source:
+        os.chdir("..")
 else:
     import libs.gm_wrap as gm_wrap
     libs.displayer.init_gm(gm_wrap)
