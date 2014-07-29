@@ -360,7 +360,7 @@ class DisplayerApp:
                         self.flip_page(+20)
                     else:
                         self.flip_page(+1)
-                elif event.key == pyg.K_UP:
+                elif event.key == pyg.K_UP or event.key == pyg.K_BACKSPACE:
                     self.navigate_row(-1)
                 elif event.key == pyg.K_DOWN or event.key == pyg.K_SPACE:
                     self.navigate_row(+1)
