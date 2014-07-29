@@ -82,6 +82,9 @@ def row_merger(rows, scr_hei):
     yield old
 
 class DisplayerApp:
+
+    CURSOR_HIDE = pygame.USEREVENT
+
     def __init__(self, comix, callback=None, denoise_jpeg=True, ignore_small_rows=True):
         assert gm_wrap!=None, "GraphicsMagick not loaded"
         pygame.font.init()
@@ -97,6 +100,7 @@ class DisplayerApp:
         self.renderer = Renderer(pygame.display.get_surface(), font)
         self.renderer.scrdim = scrdim
         self.clock = pygame.time.Clock()
+        pygame.time.set_timer(self.CURSOR_HIDE, 2000)
 
         self.comix = comix
         self.denoise_jpeg = denoise_jpeg
@@ -327,6 +331,12 @@ class DisplayerApp:
     def process_event(self, event):
         if event.type == pyg.QUIT:
             self.quit()
+        elif event.type == self.CURSOR_HIDE:
+            pygame.mouse.set_visible(False)
+            pygame.time.set_timer(self.CURSOR_HIDE, 0)
+        elif event.type == pyg.MOUSEMOTION:
+            pygame.mouse.set_visible(True)
+            pygame.time.set_timer(self.CURSOR_HIDE, 2000)
         elif event.type == pyg.VIDEOEXPOSE:
             self.force_redraw = True
         elif event.type == pyg.KEYDOWN:
