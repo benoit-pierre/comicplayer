@@ -102,6 +102,7 @@ class DisplayerApp:
         self.clock = pygame.time.Clock()
         pygame.time.set_timer(self.CURSOR_HIDE, 2000)
 
+        self.disable_animations = True
         self.comix = comix
         self.denoise_jpeg = denoise_jpeg
         self.ignore_small_rows = ignore_small_rows
@@ -239,6 +240,8 @@ class DisplayerApp:
             self.state = "change_row"
 
     def shifted_page(self, forward = False):
+        if self.disable_animations:
+            return self.pos
         x0,y0,x1,y1 = self.pos
         w,h = self.renderer.scrdim
         ch = self.renderer.page.get_height()
@@ -355,6 +358,8 @@ class DisplayerApp:
             if event.key == pyg.K_F1:
                 self.show_help()
                 self.force_redraw = False
+            if event.key == pyg.K_F2:
+                self.disable_animations = not self.disable_animations
             if self.state not in ['leaving_page']:
                 if event.key == pyg.K_LEFT:
                     if event.mod & pyg.KMOD_SHIFT:
@@ -378,9 +383,13 @@ class DisplayerApp:
     def update_screen(self, msec):
         if self.state=='help':
             return
-        if self.states[self.state]["motion"] or self.force_redraw or len(self.renderer.textimages)>0:
-            if self.states[self.state]["motion"]:
+        motion = self.states[self.state]["motion"]
+        if motion or self.force_redraw or len(self.renderer.textimages)>0:
+            if motion:
                 self.progress += 0.0035*msec
+                if self.disable_animations:
+                    self.progress = 1
+                    motion = False
                 
                 target_pos = self.states[self.state]["target"](self)
                 if self.progress>=1:
@@ -406,7 +415,7 @@ class DisplayerApp:
                     ti[1] = 255+255*2*ti[2]
             self.renderer.textimages = [ti for ti in self.renderer.textimages if ti[1]>0]
             
-            self.renderer.render(self.pos, self.states[self.state]["motion"])
+            self.renderer.render(self.pos, motion)
     
     def loop(self, events): 
         msec = self.clock.tick(50)
