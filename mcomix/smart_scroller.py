@@ -184,6 +184,7 @@ class SmartScroller(object):
         bg = image_tools.get_most_common_edge_colour(pixbuf)
         bg = tuple([c * 255 / 65535 for c in bg[0:3]])
         bg_luminance = (bg[0] * 299 + bg[1] * 587 + bg[2] * 114) / 1000
+        self._bg = bg
 
         # Load image.
         im = image_tools.pixbuf_to_pil(pixbuf)
@@ -299,18 +300,8 @@ class SmartScroller(object):
 
         x = bbox.x - left_width / 2
         y = bbox.y - left_height / 2
+        w = bbox.w + left_width
+        h = bbox.h + left_height
 
-        if x < 0:
-            x = 0
-        elif self._image_width >= self._view_width and x + self._view_width > self._image_width:
-            x = self._image_width - self._view_width
-        if y < 0:
-            y = 0
-        elif self._image_height >= self._view_height and y + self._view_height > self._image_height:
-            y = self._image_height - self._view_height
-
-        self._view_x = x
-        self._view_y = y
-
-        return (self._view_x, self._view_y)
+        return (x, y, w, h)
 
