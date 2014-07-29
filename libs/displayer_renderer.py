@@ -76,7 +76,7 @@ class Renderer:
      
         shift = (a*wx+bX, a*wy+bY)
         
-        ww, wh = wxe-wx, wye-wy
+        ww, wh = wxe-wx+1, wye-wy+1
         rect = (wx, wy, ww, wh)
         dims = (int(round(ww*a)), int(round(wh*a)))
         
