@@ -10,97 +10,12 @@ import PIL.Image as Image
 import PIL.ImageEnhance as ImageEnhance
 import PIL.ImageOps as ImageOps
 
-from mcomix.preferences import prefs
-
 # File formats supported by PyGTK (sorted list of extensions)
 _supported_formats = sorted(
     [ extension.lower() for extlist in
         itertools.imap(operator.itemgetter("extensions"),
                        gtk.gdk.pixbuf_get_formats())
         for extension in extlist])
-
-def fit_pixbuf_to_rectangle(src, rect, rotation):
-
-    if rotation in (90, 270):
-        rect = (rect[1], rect[0])
-
-    if src.get_has_alpha():
-        if prefs['checkered bg for transparent images']:
-            src = src.composite_color_simple(rect[0], rect[1],
-                prefs['scaling quality'], 255, 8, 0x777777, 0x999999)
-        else:
-            src = src.composite_color_simple(rect[0], rect[1],
-                prefs['scaling quality'], 255, 1024, 0xFFFFFF, 0xFFFFFF)
-    elif rect[0] != src.get_width() or rect[1] != src.get_height():
-        src = src.scale_simple(rect[0], rect[1], prefs['scaling quality'])
-
-    if rotation == 90:
-        src = src.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
-    elif rotation == 180:
-        src = src.rotate_simple(gtk.gdk.PIXBUF_ROTATE_UPSIDEDOWN)
-    elif rotation == 270:
-        src = src.rotate_simple(gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE)
-    return src
-
-def fit_in_rectangle(src, width, height, scale_up=False, rotation=0):
-    """Scale (and return) a pixbuf so that it fits in a rectangle with
-    dimensions <width> x <height>. A negative <width> or <height>
-    means an unbounded dimension - both cannot be negative.
-
-    If <rotation> is 90, 180 or 270 we rotate <src> first so that the
-    rotated pixbuf is fitted in the rectangle.
-
-    Unless <scale_up> is True we don't stretch images smaller than the
-    given rectangle.
-
-    If <src> has an alpha channel it gets a checkboard background.
-    """
-    # "Unbounded" really means "bounded to 10000 px" - for simplicity.
-    # MComix would probably choke on larger images anyway.
-    if width < 0:
-        width = 100000
-    elif height < 0:
-        height = 100000
-    width = max(width, 1)
-    height = max(height, 1)
-
-    if rotation in (90, 270):
-        width, height = height, width
-
-    src_width = src.get_width()
-    src_height = src.get_height()
-
-    if not scale_up and src_width <= width and src_height <= height:
-        if src.get_has_alpha():
-            if prefs['checkered bg for transparent images']:
-                src = src.composite_color_simple(src_width, src_height,
-                    prefs['scaling quality'], 255, 8, 0x777777, 0x999999)
-            else:
-                src = src.composite_color_simple(src_width, src_height,
-                    prefs['scaling quality'], 255, 1024, 0xFFFFFF, 0xFFFFFF)
-    else:
-        if float(src_width) / width > float(src_height) / height:
-            height = int(max(src_height * width / src_width, 1))
-        else:
-            width = int(max(src_width * height / src_height, 1))
-
-        if src.get_has_alpha():
-            if prefs['checkered bg for transparent images']:
-                src = src.composite_color_simple(width, height,
-                    prefs['scaling quality'], 255, 8, 0x777777, 0x999999)
-            else:
-                src = src.composite_color_simple(width, height,
-                    prefs['scaling quality'], 255, 1024, 0xFFFFFF, 0xFFFFFF)
-        elif width != src_width or height != src_height:
-            src = src.scale_simple(width, height, prefs['scaling quality'])
-
-    if rotation == 90:
-        src = src.rotate_simple(gtk.gdk.PIXBUF_ROTATE_CLOCKWISE)
-    elif rotation == 180:
-        src = src.rotate_simple(gtk.gdk.PIXBUF_ROTATE_UPSIDEDOWN)
-    elif rotation == 270:
-        src = src.rotate_simple(gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE)
-    return src
 
 
 def add_border(pixbuf, thickness, colour=0x000000FF):
@@ -259,14 +174,6 @@ def load_pixbuf(path):
         return pil_to_pixbuf(pil_img)
     else:
         return gtk.gdk.pixbuf_new_from_file(path)
-
-def load_pixbuf_size(path, width, height):
-    """ Loads a pixbuf from a given image file and scale it to fit
-    inside (width, height). """
-    try:
-        return fit_in_rectangle(load_pixbuf(path), width, height)
-    except:
-        return None
 
 def load_pixbuf_data(imgdata):
     """ Loads a pixbuf from the data passed in <imgdata>. """
