@@ -129,10 +129,15 @@ class DisplayerApp:
         zoom = 'widen 5:4'
 
         width, height = image.size
+
+        page_ratio = float(width) / height
+        if page_ratio > 1.0:
+            width, height = height, width
+            screen_width, screen_height = screen_height, screen_width
+
         if 'widen 5:4' == zoom:
             # widen to occupy 5:4 ratio zone on screen
-            scr_hei = screen_height
-            width_5_4 = scr_hei * 5 / 4
+            width_5_4 = screen_height * 5 / 4
             multiplier = 1.0*width_5_4 / width
             width2 = width_5_4
             height2 = int(math.floor(height * multiplier))
@@ -141,8 +146,13 @@ class DisplayerApp:
             width2 = screen_width
             height2 = int(math.floor(1.0 * height * width2 / width))
         else:
-            # Keep image native resolution
+            # Keep image native resolution.
             width2, height2 = width, height
+
+        if page_ratio > 1.0:
+            width, height = height, width
+            width2, height2 = height2, width2
+            screen_width, screen_height = screen_height, screen_width
 
         # Don't upscale.
         if width2 > width or height2 > height:
