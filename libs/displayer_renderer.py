@@ -44,6 +44,10 @@ class Renderer:
         self.font = font
         self.scrdim = self.screen.get_width(), self.screen.get_height()
         self.textimages = []
+        self.bg = (0, 0, 0)
+
+    def set_background_color(self, rgb):
+        self.bg = rgb
         
     def zoomed_comic(self, spotlight, fast=False):
         pageW, pageH = self.page.get_width(), self.page.get_height()
@@ -111,7 +115,7 @@ class Renderer:
             marg_x = (self.scrdim[0]-wid)//2
             marg_y = (self.scrdim[1]-hei)//2
             shift = marg_x-pos[0], marg_y-pos[1]
-        self.screen.fill((0,0,0))
+        self.screen.fill(self.bg)
         if page!=None:
             self.screen.blit(page, shift)
         self.show_texts()
@@ -127,7 +131,7 @@ class Renderer:
         marg_x = (scrdim[0]-wid)//2
         marg_y = (scrdim[1]-hei)//2
         page.set_alpha(255)
-        self.screen.fill((0,0,0))
+        self.screen.fill(self.bg)
         self.screen.blit(page, (marg_x, marg_y))
         self.show_texts()
         pygame.display.flip()
