@@ -37,7 +37,7 @@ from ConfigParser import RawConfigParser
 
 from PIL import Image
 
-img_extensions = ['jpg', 'gif', 'png']
+img_extensions = ['jpeg', 'jpg', 'gif', 'png']
 
 class UnsupportedFileTypeError:
     pass
