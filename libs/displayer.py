@@ -173,7 +173,6 @@ class DisplayerApp:
         self.progress = 0.0
         self.pos = self.oid2pos(0)
         self.src_pos = self.oid2pos(0)
-        self.add_msg(self.comix.get_filename(page_id))
         
     def oid2pos(self, oid):
         row = self.rows[oid]
@@ -304,7 +303,6 @@ class DisplayerApp:
     }
     
     def quit(self):
-        self.add_msg("QUITTING...", color=(255,64,80), ttl=4)
         self.running = False
         return        
         
@@ -395,7 +393,6 @@ class DisplayerApp:
             
             
     def run(self):
-        self.add_msg("Press F1 for help", color=(255,64,80), ttl=4)
         while self.running: 
             self.loop(pygame.event.get())
         pygame.quit()
