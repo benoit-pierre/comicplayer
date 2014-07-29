@@ -31,6 +31,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 
 
 from libs.comic_book import ComicBook
@@ -98,8 +99,8 @@ class ComicPlayer:
         num = len(self.comix.filenames)
         self.comic_info.set_text("\"%s\", %s pages" % (self.comix.pretty_name, num))
         
-    def play(self, widget, data=None):
-        dapp = libs.displayer.DisplayerApp(self.comix, denoise_jpeg=self.denoise_jpeg.get_active())
+    def play(self, widget, data=None, callback=None):
+        dapp = libs.displayer.DisplayerApp(self.comix, callback=callback, denoise_jpeg=self.denoise_jpeg.get_active())
         dapp.run()
         
 
@@ -157,6 +158,15 @@ class ComicPlayer:
         self.ignore_small_rows.set_active(True)
         vbox.pack_start(self.ignore_small_rows, expand=False)
 
+        if len(sys.argv) > 1:
+            for n, path in enumerate(sys.argv[1:]):
+                self.comix = ComicBook(path)
+                if n + 2 == len(sys.argv):
+                    callback = lambda: gobject.idle_add(gtk.main_quit)
+                else:
+                    callback = None
+                self.play(None, callback=callback)
+            return
 
         self.btn_open_dir.show()
         self.btn_open_file.show()
