@@ -35,7 +35,7 @@ import StringIO
 
 from ConfigParser import RawConfigParser
 
-import Image
+from PIL import Image
 
 img_extensions = ['jpg', 'gif', 'png']
 
