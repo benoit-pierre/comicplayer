@@ -37,6 +37,10 @@ except ImportError:
 import math
 import sys, os, ctypes
 
+from mcomix import image_tools, smart_scroller
+
+from PIL import Image
+
 from displayer_renderer import Renderer
 import detect_rows
 
@@ -89,6 +93,7 @@ class DisplayerApp:
         pygame.display.set_mode((0,0), pyg.HWSURFACE|pyg.DOUBLEBUF|pyg.FULLSCREEN)
         scrdim = pygame.display.get_surface().get_size()
         pygame.display.set_caption('page player')
+        self.scroller = smart_scroller.SmartScroller()
         self.renderer = Renderer(pygame.display.get_surface(), font)
         self.renderer.scrdim = scrdim
         self.clock = pygame.time.Clock()
@@ -109,64 +114,75 @@ class DisplayerApp:
         fil = self.comix.get_file(page_id)
         fil_data = fil.read()
         
-        # widen to occupy 5:4 ratio zone on screen
-        scr_hei = self.renderer.scrdim[1]
-        width_5_4 = scr_hei * 5 / 4
-        
-        image_info = gm_wrap.CloneImageInfo(None)
-        image_info.contents.filename = name
+        pixbuf = image_tools.load_pixbuf_data(fil_data)
+        image = image_tools.pixbuf_to_pil(pixbuf)
 
-        image = gm_wrap.BlobToImage(image_info, fil_data, len(fil_data), exception)
-        
-        ext = name.lower().split(".")[-1]
-        if ext in ["jpg","jpeg"] and self.denoise_jpeg:
-            data = gm_wrap.GetImageAttribute(image, "JPEG-Quality")
-            quality = int(data.contents.value)
-            if quality<85:
-                image = gm_wrap.EnhanceImage(image, exception)
-        gm_wrap.NormalizeImage(image, exception)
-        width = image.contents.columns
-        height = image.contents.rows
-        multiplier = 1.0*width_5_4 / width
-        height2 = int(math.floor(height * multiplier))
-        resized_image = gm_wrap.ResizeImage(image, width_5_4, height2, gm_wrap.LanczosFilter, 1, exception)
-        gm_wrap.DestroyImage(image)
-        image = resized_image
-        
-        buffer = ctypes.create_string_buffer(width_5_4 * height2 * 3)
-        gm_wrap.DispatchImage(image, 0, 0, width_5_4, height2, "RGB", gm_wrap.CharPixel, buffer, exception )
-        gm_wrap.DestroyImage(image)
-        page = pygame.image.frombuffer(buffer.raw, (width_5_4, height2), "RGB")
-        
+        screen_width, screen_height = self.renderer.scrdim
 
-        pseudo_pil_page = FakeImage(buffer.raw, (page.get_width(), page.get_height()))
-        rngs = detect_rows.get_ranges(pseudo_pil_page, 255, 50, 0.05, ignore_small_rows=self.ignore_small_rows)
+        zoom = '1:1'
+        zoom = 'width'
+        zoom = 'widen 5:4'
 
+        width, height = image.size
+        if 'widen 5:4' == zoom:
+            # widen to occupy 5:4 ratio zone on screen
+            scr_hei = screen_height
+            width_5_4 = scr_hei * 5 / 4
+            multiplier = 1.0*width_5_4 / width
+            width2 = width_5_4
+            height2 = int(math.floor(height * multiplier))
+        elif 'width' == zoom:
+            # Match screen size.
+            width2 = screen_width
+            height2 = int(math.floor(1.0 * height * width2 / width))
+        else:
+            # Keep image native resolution
+            width2, height2 = width, height
+
+        # Don't upscale.
+        if width2 > width or height2 > height:
+            width2, height2 = width, height
+        elif width2 != width or height2 != height:
+            image = image.resize((width2, height2), Image.ANTIALIAS)
+            pixbuf = image_tools.pil_to_pixbuf(image)
+
+        page = pygame.image.fromstring(image.tostring(), (width2, height2), "RGB")
         
         self.renderer.page = page
         self.renderer.zoom_cache = {}
         
-        hei = 1.0 * page.get_height()
-        
-        # convert detected rows into navigation rows
-        rows = []
-        scr_hei = self.renderer.scrdim[1]
-        for r in row_merger(rngs, scr_hei):
-            start, end, scrollable = r
-            hei = end-start
-            if hei>scr_hei:
-                if scrollable or hei>scr_hei*1.5:
-                    # very wide "row", split into small steps
-                    overlap = 2 * scr_hei / 3
-                    steps_num = int(math.ceil(1.0*hei/overlap))
-                    step_hei = (hei-scr_hei) // (steps_num-1)
-                    for i in xrange(steps_num):
-                        rows.append((start+(step_hei*i), start+(step_hei*i)+scr_hei))
+        self.scroller.setup_image(pixbuf)
+
+        self.renderer.set_background_color(self.scroller._bg)
+
+        if False:
+            rows = []
+            for f in self.scroller._frames:
+                pos = (row.rect.x,
+                       row.rect.y,
+                       row.rect.x + row.rect.w - 1,
+                       row.rect.y + row.rect.h - 1)
+                rows.append(pos)
+        else:
+            rows = []
+            fn = 0
+            while fn < len(self.scroller._frames):
+                f = self.scroller._frames[fn]
+                w = max(f.rect.w, screen_width)
+                h = max(f.rect.h, screen_height)
+                self.scroller._view_x = 0
+                self.scroller._view_y = 0
+                self.scroller._view_width = w
+                self.scroller._view_height = h
+                pos = self.scroller.scroll(to_frame=fn)
+                x, y, w, h = pos
+                rows.append((x, y, x + w - 1, y + h - 1))
+                if w > screen_width or \
+                   h > screen_height:
+                    fn += 1
                 else:
-                    # somewhat wide row, zoom to fit onscreen
-                    rows.append((start, end))
-            else:        
-                rows.append(((start+end-scr_hei)/2, (start+end+scr_hei)/2))
+                    fn = self.scroller._current_frames[1] + 1
+
         
         self.rows = rows
         self.row_id = 0
@@ -175,9 +191,7 @@ class DisplayerApp:
         self.src_pos = self.oid2pos(0)
         
     def oid2pos(self, oid):
-        row = self.rows[oid]
-        pwid = self.renderer.page.get_width()
-        return [0, row[0], pwid, row[1]]
+        return self.rows[oid]
         
         
     def zoom(self):
