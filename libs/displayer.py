@@ -85,7 +85,8 @@ class DisplayerApp:
 
     CURSOR_HIDE = pygame.USEREVENT
 
-    ZOOM_1_1, ZOOM_WIDTH, ZOOM_WIDEN_5_4 = xrange(3)
+    VIEW_1_1, VIEW_WIDTH, VIEW_WIDEN_5_4 = xrange(3)
+    ZOOM_IN, ZOOM_OFF, ZOOM_OUT = xrange(3)
 
     def __init__(self, comix, callback=None, denoise_jpeg=True, ignore_small_rows=True):
         assert gm_wrap!=None, "GraphicsMagick not loaded"
@@ -105,7 +106,9 @@ class DisplayerApp:
         self.clock = pygame.time.Clock()
         pygame.time.set_timer(self.CURSOR_HIDE, 2000)
 
-        self.current_zoom = self.ZOOM_WIDEN_5_4
+        self.view_mode = self.VIEW_WIDEN_5_4
+        self.zoom_mode = self.ZOOM_OFF
+        self.zoom_lock = self.ZOOM_OFF
         self.disable_animations = True
         self.border_width = 16
         self.comix = comix
@@ -136,13 +139,13 @@ class DisplayerApp:
             width, height = height, width
             screen_width, screen_height = screen_height, screen_width
 
-        if self.ZOOM_WIDEN_5_4 == self.current_zoom:
+        if self.VIEW_WIDEN_5_4 == self.view_mode:
             # widen to occupy 5:4 ratio zone on screen
             width_5_4 = (screen_height - 2 * self.border_width) * 5 / 4
             multiplier = 1.0*width_5_4 / width
             width2 = width_5_4
             height2 = int(math.floor(height * multiplier))
-        elif self.ZOOM_WIDTH == self.current_zoom:
+        elif self.VIEW_WIDTH == self.view_mode:
             # Match screen size.
             width2 = screen_width
             height2 = int(math.floor(1.0 * height * width2 / width))
@@ -168,8 +171,23 @@ class DisplayerApp:
         self.renderer.zoom_cache = {}
         
         self.scroller.setup_image(pixbuf)
+        self.original_frames = self.scroller._frames
 
         self.renderer.set_background_color(self.scroller._bg)
+
+        self.find_rows()
+
+        if row_id is None:
+            self.row_id = 0
+        else:
+            self.row_id = row_id
+        self.progress = 0.0
+        self.pos = self.oid2pos(self.row_id)
+        self.src_pos = self.oid2pos(self.row_id)
+
+    def find_rows(self, frame_number=0):
+
+        screen_width, screen_height = self.renderer.scrdim
 
         if False:
             rows = []
@@ -179,59 +197,77 @@ class DisplayerApp:
                        row.rect.x + row.rect.w - 1,
                        row.rect.y + row.rect.h - 1)
                 rows.append(pos)
-        else:
-            rows = []
-            fn = 0
-            while fn < len(self.scroller._frames):
-                f = self.scroller._frames[fn]
-                w = max(f.rect.w, screen_width - 2 * self.border_width)
-                h = max(f.rect.h, screen_height - 2 * self.border_width)
-                self.scroller._view_x = 0
-                self.scroller._view_y = 0
-                self.scroller._view_width = w
-                self.scroller._view_height = h
-                pos = self.scroller.scroll(to_frame=fn)
-                x, y, w, h = pos
-                x -= self.border_width
-                y -= self.border_width
-                w += 2 * self.border_width
-                h += 2 * self.border_width
-                rows.append((x, y, x + w - 1, y + h - 1))
-                if w > screen_width or \
-                   h > screen_height:
-                    fn += 1
-                else:
-                    fn = self.scroller._current_frames[1] + 1
+            self.rows = rows
+            return
 
+        view_width = screen_width - 2 * self.border_width
+        view_height = screen_height - 2 * self.border_width
+        if self.zoom_mode == self.ZOOM_IN:
+            self.scroller.setup_view(0, 0, view_width, view_height)
+        else:
+            self.scroller._frames = self.original_frames
+            self.scroller._view_x = 0
+            self.scroller._view_y = 0
+
+        rows = []
+        fn = 0
+        while fn < len(self.scroller._frames):
+            f = self.scroller._frames[fn]
+            if frame_number == f.number:
+                self.row_id = len(rows)
+                frame_number = None
+            if self.zoom_mode != self.ZOOM_IN:
+                self.scroller._view_width = max(f.rect.w, view_width)
+                self.scroller._view_height = max(f.rect.h, view_height)
+            pos = self.scroller.scroll(to_frame=fn)
+            x, y, w, h = pos
+            x -= self.border_width
+            y -= self.border_width
+            w += 2 * self.border_width
+            h += 2 * self.border_width
+            rows.append((x, y, x + w - 1, y + h - 1))
+            if w > screen_width or \
+               h > screen_height:
+                fn += 1
+            else:
+                fn = self.scroller._current_frames[1] + 1
         
         self.rows = rows
-        if row_id is None:
-            self.row_id = 0
-        else:
-            self.row_id = row_id
-        self.progress = 0.0
-        self.pos = self.oid2pos(self.row_id)
-        self.src_pos = self.oid2pos(self.row_id)
 
     def reload_page(self):
         self.load_page(self.comic_id, row_id=self.row_id)
         self.force_redraw = True
         
     def oid2pos(self, oid):
+        if self.zoom_mode == self.ZOOM_OUT:
+            return (0, 0, self.renderer.page.get_width(), self.renderer.page.get_height())
         return self.rows[oid]
         
         
-    def zoom(self):
+    def zoom_out(self):
+        self.zoom_mode = self.ZOOM_OUT
         self.src_pos = self.pos
         self.state = 'zooming'
         self.progress = 0.0
         
+    def zoom_in(self):
+        self.zoom_mode = self.ZOOM_IN
+        f = self.scroller._frames[self.row_id]
+        self.find_rows(frame_number=f.number)
+        self.state = 'zooming'
+        self.progress = 0.0
+        self.src_pos = self.pos
+
     def unzoom(self):
+        self.zoom_mode = self.ZOOM_OFF
+        f = self.scroller._frames[self.row_id]
+        self.find_rows(frame_number=f.number)
         self.src_pos = self.pos
         self.state = 'change_row'
         self.progress = 0.0
        
     def flip_page(self, delta, rowwise = False):
+        self.zoom_mode = self.zoom_lock
         nci = self.comic_id
         nci += delta
         if nci<0:
@@ -246,6 +282,9 @@ class DisplayerApp:
             self.state = "leaving_page"
 
     def navigate_row(self, delta, force=False):
+        if self.zoom_mode == self.ZOOM_OUT:
+            self.flip_page(delta)
+            return
         oid = self.row_id
         oid += delta
         if oid<0:
@@ -317,7 +356,7 @@ class DisplayerApp:
         },
         "zooming": {
             "motion": True,
-            "target": lambda self: (0, 0, self.renderer.page.get_width(), self.renderer.page.get_height()),
+            "target": lambda self: self.oid2pos(self.row_id),
             "changeto": "zoomed"
         },
         "leaving_page": {
@@ -373,11 +412,22 @@ class DisplayerApp:
         elif event.type == pyg.MOUSEBUTTONUP:
             if self.state == 'help':
                 return
-            if event.button == 2:
-                if self.state == 'zooming' or self.state == 'zoomed':
+            if event.button == 4:
+                if self.zoom_mode == self.ZOOM_IN:
                     self.unzoom()
                 else:
-                    self.zoom()
+                    self.zoom_in()
+            if event.button == 2:
+                if self.zoom_lock == self.ZOOM_OFF:
+                    self.zoom_lock = self.zoom_mode
+                else:
+                    self.zoom_lock = self.ZOOM_OFF
+                    self.unzoom()
+            if event.button == 5:
+                if self.zoom_mode == self.ZOOM_OUT:
+                    self.unzoom()
+                else:
+                    self.zoom_out()
             if self.state not in ['leaving_page']:
                 if event.button == 3:
                     self.navigate_row(-1)
@@ -395,21 +445,23 @@ class DisplayerApp:
                 self.toggle_fullscreen()
                 self.reload_page()
             elif event.key == pyg.K_w:
-                self.current_zoom = self.ZOOM_WIDTH
+                self.view_mode = self.VIEW_WIDTH
                 self.reload_page()
             elif event.key == pyg.K_a:
-                self.current_zoom = self.ZOOM_1_1
+                self.view_mode = self.VIEW_1_1
                 self.reload_page()
             elif event.key == pyg.K_s:
-                self.current_zoom = self.ZOOM_WIDEN_5_4
+                self.view_mode = self.VIEW_WIDEN_5_4
                 self.reload_page()
             elif event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
                 self.quit()
             if event.key == pyg.K_RETURN:
-                if self.state == 'zooming' or self.state == 'zoomed':
+                if self.zoom_mode == self.ZOOM_OFF:
+                    self.zoom_out()
+                elif self.zoom_mode == self.ZOOM_OUT:
+                    self.zoom_in()
+                elif self.zoom_mode == self.ZOOM_IN:
                     self.unzoom()
-                else:
-                    self.zoom()
             if event.key == pyg.K_F1:
                 self.show_help()
                 self.force_redraw = False
