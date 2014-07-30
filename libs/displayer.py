@@ -107,6 +107,7 @@ class DisplayerApp:
 
         self.current_zoom = self.ZOOM_WIDEN_5_4
         self.disable_animations = True
+        self.border_width = 16
         self.comix = comix
         self.denoise_jpeg = denoise_jpeg
         self.ignore_small_rows = ignore_small_rows
@@ -137,7 +138,7 @@ class DisplayerApp:
 
         if self.ZOOM_WIDEN_5_4 == self.current_zoom:
             # widen to occupy 5:4 ratio zone on screen
-            width_5_4 = screen_height * 5 / 4
+            width_5_4 = (screen_height - 2 * self.border_width) * 5 / 4
             multiplier = 1.0*width_5_4 / width
             width2 = width_5_4
             height2 = int(math.floor(height * multiplier))
@@ -183,14 +184,18 @@ class DisplayerApp:
             fn = 0
             while fn < len(self.scroller._frames):
                 f = self.scroller._frames[fn]
-                w = max(f.rect.w, screen_width)
-                h = max(f.rect.h, screen_height)
+                w = max(f.rect.w, screen_width - 2 * self.border_width)
+                h = max(f.rect.h, screen_height - 2 * self.border_width)
                 self.scroller._view_x = 0
                 self.scroller._view_y = 0
                 self.scroller._view_width = w
                 self.scroller._view_height = h
                 pos = self.scroller.scroll(to_frame=fn)
                 x, y, w, h = pos
+                x -= self.border_width
+                y -= self.border_width
+                w += 2 * self.border_width
+                h += 2 * self.border_width
                 rows.append((x, y, x + w - 1, y + h - 1))
                 if w > screen_width or \
                    h > screen_height:
