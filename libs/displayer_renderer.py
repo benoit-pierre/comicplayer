@@ -40,11 +40,13 @@ class Renderer:
         self.fade = 6
         self.zoom_cache = {}
         self.brightness = 255
-        self.screen = screen
         self.font = font
-        self.scrdim = self.screen.get_width(), self.screen.get_height()
         self.textimages = []
         self.bg = (0, 0, 0)
+
+    def set_screen(self, screen):
+        self.screen = screen
+        self.scrdim = self.screen.get_width(), self.screen.get_height()
 
     def set_background_color(self, rgb):
         self.bg = rgb

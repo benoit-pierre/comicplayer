@@ -93,12 +93,13 @@ class DisplayerApp:
         except IOError:
             font = pygame.font.Font('freesansbold.ttf', 18)
         pygame.display.init()
-        pygame.display.set_mode((0,0), pyg.HWSURFACE|pyg.DOUBLEBUF|pyg.FULLSCREEN)
-        scrdim = pygame.display.get_surface().get_size()
-        pygame.display.set_caption('page player')
         self.scroller = smart_scroller.SmartScroller()
         self.renderer = Renderer(pygame.display.get_surface(), font)
-        self.renderer.scrdim = scrdim
+        disp_info = pygame.display.Info()
+        self.display_width = disp_info.current_w
+        self.display_height = disp_info.current_h
+        self.fullscreen = True
+        self.toggle_fullscreen()
         self.clock = pygame.time.Clock()
         pygame.time.set_timer(self.CURSOR_HIDE, 2000)
 
@@ -113,7 +114,7 @@ class DisplayerApp:
         self.running = True
         self.callback = callback
 
-    def load_page(self, page_id):
+    def load_page(self, page_id, row_id=None):
         self.comic_id = page_id 
         name = self.comix.get_filename(page_id)
         fil = self.comix.get_file(page_id)
@@ -200,10 +201,17 @@ class DisplayerApp:
 
         
         self.rows = rows
-        self.row_id = 0
+        if row_id is None:
+            self.row_id = 0
+        else:
+            self.row_id = row_id
         self.progress = 0.0
-        self.pos = self.oid2pos(0)
-        self.src_pos = self.oid2pos(0)
+        self.pos = self.oid2pos(self.row_id)
+        self.src_pos = self.oid2pos(self.row_id)
+
+    def reload_page(self):
+        self.load_page(self.comic_id, row_id=self.row_id)
+        self.force_redraw = True
         
     def oid2pos(self, oid):
         return self.rows[oid]
@@ -340,6 +348,14 @@ class DisplayerApp:
     def show_mode(self):
         pass
         # TODO: remove
+
+    def toggle_fullscreen(self):
+        self.fullscreen = not self.fullscreen
+        if self.fullscreen:
+            pygame.display.set_mode((self.display_width,self.display_height), pyg.HWSURFACE|pyg.DOUBLEBUF|pyg.FULLSCREEN)
+        else:
+            pygame.display.set_mode((1280,1024), pyg.HWSURFACE|pyg.DOUBLEBUF)
+        self.renderer.set_screen(pygame.display.get_surface())
     
     def process_event(self, event):
         if event.type == pyg.QUIT:
@@ -358,6 +374,9 @@ class DisplayerApp:
                     self.state = 'change_row'
                     self.progress = 1
                 return
+            elif event.key == pyg.K_f:
+                self.toggle_fullscreen()
+                self.reload_page()
             elif event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
                 self.quit()
             if event.key == pyg.K_RETURN:
