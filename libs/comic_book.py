@@ -199,7 +199,7 @@ class ZipComicBook(BaseComicBook):
         self.writable = False
         namelist = self.zf.namelist()
         self.has_segmentation = "panels.ini" in namelist
-        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:] in img_extensions]
+        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:].lower() in img_extensions]
         self.filenames.sort()
 
     def get_file_by_name(self, name):
@@ -224,7 +224,7 @@ class RarComicBook(BaseComicBook):
         rf = UnRAR2.RarFile(path)
         namelist = [f.filename for f in rf.infoiter()]
         self.has_segmentation = "panels.ini" in namelist
-        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:] in img_extensions]
+        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:].lower() in img_extensions]
         self.filenames.sort()
         del rf
         self.writable = False
@@ -250,7 +250,7 @@ class DirComicBook(BaseComicBook):
         mask = os.path.join(os.path.normpath(path), '*')
         namelist = [fn[len(mask)-1:] for fn in glob.glob(mask)]
         self.has_segmentation = "panels.ini" in namelist
-        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:] in img_extensions]
+        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:].lower() in img_extensions]
         self.filenames.sort()
 
     def get_file_by_name(self, name):
