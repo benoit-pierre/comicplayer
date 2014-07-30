@@ -365,6 +365,19 @@ class DisplayerApp:
         elif event.type == pyg.MOUSEMOTION:
             pygame.mouse.set_visible(True)
             pygame.time.set_timer(self.CURSOR_HIDE, 2000)
+        elif event.type == pyg.MOUSEBUTTONUP:
+            if self.state == 'help':
+                return
+            if event.button == 2:
+                if self.state == 'zooming' or self.state == 'zoomed':
+                    self.unzoom()
+                else:
+                    self.zoom()
+            if self.state not in ['leaving_page']:
+                if event.button == 3:
+                    self.navigate_row(-1)
+                elif event.button == 1:
+                    self.navigate_row(+1)
         elif event.type == pyg.VIDEOEXPOSE:
             self.force_redraw = True
         elif event.type == pyg.KEYDOWN:
