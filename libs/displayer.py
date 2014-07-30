@@ -456,6 +456,7 @@ class DisplayerApp:
                         self.pos = target_pos
                     self.state = self.states[self.state]["changeto"]
                     self.progress = 0
+                    motion = False
                 else:
                     if "onprogress" in self.states[self.state]:
                         self.states[self.state]["onprogress"](self)
