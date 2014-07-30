@@ -85,6 +85,8 @@ class DisplayerApp:
 
     CURSOR_HIDE = pygame.USEREVENT
 
+    ZOOM_1_1, ZOOM_WIDTH, ZOOM_WIDEN_5_4 = xrange(3)
+
     def __init__(self, comix, callback=None, denoise_jpeg=True, ignore_small_rows=True):
         assert gm_wrap!=None, "GraphicsMagick not loaded"
         pygame.font.init()
@@ -103,6 +105,7 @@ class DisplayerApp:
         self.clock = pygame.time.Clock()
         pygame.time.set_timer(self.CURSOR_HIDE, 2000)
 
+        self.current_zoom = self.ZOOM_WIDEN_5_4
         self.disable_animations = True
         self.comix = comix
         self.denoise_jpeg = denoise_jpeg
@@ -125,10 +128,6 @@ class DisplayerApp:
 
         screen_width, screen_height = self.renderer.scrdim
 
-        zoom = '1:1'
-        zoom = 'width'
-        zoom = 'widen 5:4'
-
         width, height = image.size
 
         page_ratio = float(width) / height
@@ -136,13 +135,13 @@ class DisplayerApp:
             width, height = height, width
             screen_width, screen_height = screen_height, screen_width
 
-        if 'widen 5:4' == zoom:
+        if self.ZOOM_WIDEN_5_4 == self.current_zoom:
             # widen to occupy 5:4 ratio zone on screen
             width_5_4 = screen_height * 5 / 4
             multiplier = 1.0*width_5_4 / width
             width2 = width_5_4
             height2 = int(math.floor(height * multiplier))
-        elif 'width' == zoom:
+        elif self.ZOOM_WIDTH == self.current_zoom:
             # Match screen size.
             width2 = screen_width
             height2 = int(math.floor(1.0 * height * width2 / width))
@@ -376,6 +375,15 @@ class DisplayerApp:
                 return
             elif event.key == pyg.K_f:
                 self.toggle_fullscreen()
+                self.reload_page()
+            elif event.key == pyg.K_w:
+                self.current_zoom = self.ZOOM_WIDTH
+                self.reload_page()
+            elif event.key == pyg.K_a:
+                self.current_zoom = self.ZOOM_1_1
+                self.reload_page()
+            elif event.key == pyg.K_s:
+                self.current_zoom = self.ZOOM_WIDEN_5_4
                 self.reload_page()
             elif event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
                 self.quit()
