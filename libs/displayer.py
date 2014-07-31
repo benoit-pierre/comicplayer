@@ -388,6 +388,33 @@ class DisplayerApp:
             "motion": False
         }
     }
+
+    input_bindings = {
+        'mouse1'     : ('navigate', +1),
+        'mouse3'     : ('navigate', -1),
+        'mouse2'     : ('lock_zoom', None),
+        'mouse4'     : ('set_zoom', 'in'),
+        'mouse5'     : ('set_zoom', 'out'),
+        'f'          : ('toggle_fullscreen', None),
+        'w'          : ('set_view', VIEW_WIDTH),
+        'a'          : ('set_view', VIEW_1_1),
+        's'          : ('set_view', VIEW_WIDEN_5_4),
+        'escape'     : ('quit', None),
+        'q'          : ('quit', None),
+        'return'     : ('toggle_zoom', None),
+        'f1'         : ('help', None),
+        'f2'         : ('toggle_animations', None),
+        'left'       : ('flip_page', -1),
+        'shift+left' : ('flip_page', -5),
+        'ctrl+left'  : ('flip_page', -20),
+        'right'      : ('flip_page', +1),
+        'shift+right': ('flip_page', +5),
+        'ctrl+right' : ('flip_page', +20),
+        'up'         : ('navigate', -1),
+        'down'       : ('navigate', +1),
+        'backspace'  : ('navigate', -1),
+        'space'      : ('navigate', +1),
+    }
     
     def quit(self):
         self.running = False
@@ -404,93 +431,87 @@ class DisplayerApp:
         else:
             pygame.display.set_mode((1280,1024), pyg.HWSURFACE|pyg.DOUBLEBUF)
         self.renderer.set_screen(pygame.display.get_surface())
-    
-    def process_event(self, event):
-        if event.type == pyg.QUIT:
+
+    def process_action(self, action, arg=None):
+        if self.state == 'help':
+            if action in ('help', 'quit'):
+                self.state = 'change_row'
+                self.progress = 1
+        elif action == 'quit':
             self.quit()
-        elif event.type == self.CURSOR_HIDE:
+        elif action == 'help':
+            self.show_help()
+            self.force_redraw = False
+        elif action == 'hide_cursor':
             pygame.mouse.set_visible(False)
             pygame.time.set_timer(self.CURSOR_HIDE, 0)
-        elif event.type == pyg.MOUSEMOTION:
+        elif action == 'show_cursor':
             pygame.mouse.set_visible(True)
             pygame.time.set_timer(self.CURSOR_HIDE, 2000)
-        elif event.type == pyg.MOUSEBUTTONUP:
-            if self.state == 'help':
-                return
-            if event.button == 4:
-                if self.zoom_mode == self.ZOOM_IN:
-                    self.unzoom()
-                else:
+        elif action == 'toggle_zoom':
+            if self.zoom_mode == self.ZOOM_OFF:
+                self.zoom_out()
+            elif self.zoom_mode == self.ZOOM_OUT:
+                self.zoom_in()
+            elif self.zoom_mode == self.ZOOM_IN:
+                self.unzoom()
+        elif action == 'lock_zoom':
+            if self.zoom_lock == self.ZOOM_OFF:
+                self.zoom_lock = self.zoom_mode
+            else:
+                self.zoom_lock = self.ZOOM_OFF
+                self.unzoom()
+        elif action == 'set_zoom':
+            if self.zoom_mode == self.ZOOM_OFF:
+                if arg == 'in':
                     self.zoom_in()
-            if event.button == 2:
-                if self.zoom_lock == self.ZOOM_OFF:
-                    self.zoom_lock = self.zoom_mode
-                else:
-                    self.zoom_lock = self.ZOOM_OFF
-                    self.unzoom()
-            if event.button == 5:
-                if self.zoom_mode == self.ZOOM_OUT:
-                    self.unzoom()
-                else:
+                elif arg == 'out':
                     self.zoom_out()
+            else:
+                self.unzoom()
+        elif action == 'navigate':
             if self.state not in ['leaving_page']:
-                if event.button == 3:
-                    self.navigate_row(-1)
-                elif event.button == 1:
-                    self.navigate_row(+1)
-        elif event.type == pyg.VIDEOEXPOSE:
+                self.navigate_row(arg)
+        elif action == 'toggle_fullscreen':
+            self.toggle_fullscreen()
+            self.reload_page()
+        elif action == 'set_view':
+            self.view_mode = arg
+            self.reload_page()
+        elif action == 'redraw':
             self.force_redraw = True
-        elif event.type == pyg.KEYDOWN:
-            if self.state == 'help':
-                if event.key in (pyg.K_F1, pyg.K_ESCAPE, pyg.K_q):
-                    self.state = 'change_row'
-                    self.progress = 1
-                return
-            elif event.key == pyg.K_f:
-                self.toggle_fullscreen()
-                self.reload_page()
-            elif event.key == pyg.K_w:
-                self.view_mode = self.VIEW_WIDTH
-                self.reload_page()
-            elif event.key == pyg.K_a:
-                self.view_mode = self.VIEW_1_1
-                self.reload_page()
-            elif event.key == pyg.K_s:
-                self.view_mode = self.VIEW_WIDEN_5_4
-                self.reload_page()
-            elif event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
-                self.quit()
-            if event.key == pyg.K_RETURN:
-                if self.zoom_mode == self.ZOOM_OFF:
-                    self.zoom_out()
-                elif self.zoom_mode == self.ZOOM_OUT:
-                    self.zoom_in()
-                elif self.zoom_mode == self.ZOOM_IN:
-                    self.unzoom()
-            if event.key == pyg.K_F1:
-                self.show_help()
-                self.force_redraw = False
-            if event.key == pyg.K_F2:
-                self.disable_animations = not self.disable_animations
+        elif action == 'toggle_animations':
+            self.disable_animations = not self.disable_animations
+        elif action == 'flip_page':
             if self.state not in ['leaving_page']:
-                if event.key == pyg.K_LEFT:
-                    if event.mod & pyg.KMOD_SHIFT:
-                        self.flip_page(-5)
-                    elif event.mod & pyg.KMOD_CTRL:
-                        self.flip_page(-20)
-                    else:
-                        self.flip_page(-1)
-                elif event.key == pyg.K_RIGHT:
-                    if event.mod & pyg.KMOD_SHIFT:
-                        self.flip_page(+5)
-                    elif event.mod & pyg.KMOD_CTRL:
-                        self.flip_page(+20)
-                    else:
-                        self.flip_page(+1)
-                elif event.key == pyg.K_UP or event.key == pyg.K_BACKSPACE:
-                    self.navigate_row(-1)
-                elif event.key == pyg.K_DOWN or event.key == pyg.K_SPACE:
-                    self.navigate_row(+1)
+                self.flip_page(arg)
+    
+    def process_event(self, event):
+        action, arg = None, None
+        if event.type == pyg.QUIT:
+            action = 'quit'
+        elif event.type == self.CURSOR_HIDE:
+            action = 'hide_cursor'
+        elif event.type == pyg.MOUSEMOTION:
+            action = 'show_cursor'
+        elif event.type == pyg.VIDEOEXPOSE:
+            action = 'redraw'
+        elif event.type == pyg.KEYDOWN:
+            input = pygame.key.name(event.key)
+            if event.mod & pyg.KMOD_SHIFT:
+                input = 'shift+' + input
+            if event.mod & pyg.KMOD_CTRL:
+                input = 'ctrl+' + input
+            if event.mod & pyg.KMOD_ALT:
+                input = 'alt+' + input
+            if input in self.input_bindings:
+                action, arg = self.input_bindings[input]
+        elif event.type == pyg.MOUSEBUTTONUP:
+            input = 'mouse%u' % event.button
+            if input in self.input_bindings:
+                action, arg = self.input_bindings[input]
+        if action is not None:
+            self.process_action(action, arg)
 
     def update_screen(self, msec):
         if self.state=='help':
