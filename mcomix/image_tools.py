@@ -1,41 +1,11 @@
 """image_tools.py - Various image manipulations."""
 
-import sys
-import os
 import operator
-import itertools
-import bisect
-import gtk
-import PIL.Image as Image
-import PIL.ImageEnhance as ImageEnhance
-import PIL.ImageOps as ImageOps
 
-# File formats supported by PyGTK (sorted list of extensions)
-_supported_formats = sorted(
-    [ extension.lower() for extlist in
-        itertools.imap(operator.itemgetter("extensions"),
-                       gtk.gdk.pixbuf_get_formats())
-        for extension in extlist])
-
-
-def add_border(pixbuf, thickness, colour=0x000000FF):
-    """Return a pixbuf from <pixbuf> with a <thickness> px border of
-    <colour> added.
-    """
-    canvas = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, True, 8,
-        pixbuf.get_width() + thickness * 2,
-        pixbuf.get_height() + thickness * 2)
-    canvas.fill(colour)
-    pixbuf.copy_area(0, 0, pixbuf.get_width(), pixbuf.get_height(),
-        canvas, thickness, thickness)
-    return canvas
-
-
-def get_most_common_edge_colour(pixbufs, edge=2):
+def get_most_common_edge_colour(image, edge=2):
     """Return the most commonly occurring pixel value along the four edges
-    of <pixbuf>. The return value is a sequence, (r, g, b), with 16 bit
-    values. If <pixbuf> is a tuple, the edges will be computed from
-    both the left and the right image.
+    of <image>. The return value is a sequence, (r, g, b), with 16 bit
+    values.
 
     Note: This could be done more cleanly with subpixbuf(), but that
     doesn't work as expected together with get_pixels().
@@ -99,176 +69,38 @@ def get_most_common_edge_colour(pixbufs, edge=2):
         # List is now sorted by color count, first color appears most often
         return colors_in_prominent_group[0][1]
 
-    def get_edge_pixbuf(pixbuf, side, edge):
-        """ Returns a pixbuf corresponding to the side passed in <side>.
+    def get_edge_pixbuf(image, side, edge):
+        """ Returns a image corresponding to the side passed in <side>.
         Valid sides are 'left', 'right', 'top', 'bottom'. """
-        width = pixbuf.get_width()
-        height = pixbuf.get_height()
+        width, height = image.size
         edge = min(edge, width, height)
 
-        subpix = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,
-                pixbuf.get_has_alpha(), 8, edge, height)
         if side == 'left':
-            pixbuf.copy_area(0, 0, edge, height, subpix, 0, 0)
+            box = (0, 0, edge, height)
         elif side == 'right':
-            pixbuf.copy_area(width - edge, 0, edge, height, subpix, 0, 0)
+            box = (width - edge, 0, width, height)
         elif side == 'top':
-            pixbuf.copy_area(0, 0, width, edge, subpix, 0, 0)
+            box = (0, 0, width, edge)
         elif side == 'bottom':
-            pixbuf.copy_area(0, height - edge, width, edge, subpix, 0, 0)
+            box = (0, height - edge, width, height)
         else:
             assert False, 'Invalid edge side'
 
+        subpix = image.crop(box)
+
         return subpix
 
-    if not pixbufs:
-        return (0, 0, 0)
-
-    if not isinstance(pixbufs, (tuple, list)):
-        left_edge = get_edge_pixbuf(pixbufs, 'left', edge)
-        right_edge = get_edge_pixbuf(pixbufs, 'right', edge)
-    else:
-        assert len(pixbufs) == 2, 'Expected two pages in list'
-        left_edge = get_edge_pixbuf(pixbufs[0], 'left', edge)
-        right_edge = get_edge_pixbuf(pixbufs[1], 'right', edge)
+    left_edge = get_edge_pixbuf(image, 'left', edge)
+    right_edge = get_edge_pixbuf(image, 'right', edge)
 
     # Find all edge colors. Color count is separate for all four edges
     ungrouped_colors = []
     for edge in (left_edge, right_edge):
-        im = pixbuf_to_pil(edge)
-        ungrouped_colors.extend(im.getcolors(im.size[0] * im.size[1]))
+        ungrouped_colors.extend(edge.getcolors(edge.size[0] * edge.size[1]))
 
     # Sum up colors from all edges
     ungrouped_colors.sort(key=operator.itemgetter(1))
     most_used = group_colors(ungrouped_colors)
     return [color * 257 for color in most_used]
-
-def pil_to_pixbuf(image):
-    """Return a pixbuf created from the PIL <image>."""
-    if image.mode.startswith('RGB'):
-        imagestr = image.tostring()
-        IS_RGBA = image.mode == 'RGBA'
-        return gtk.gdk.pixbuf_new_from_data(imagestr, gtk.gdk.COLORSPACE_RGB,
-            IS_RGBA, 8, image.size[0], image.size[1],
-            (IS_RGBA and 4 or 3) * image.size[0])
-    else:
-        imagestr = image.convert('RGB').tostring()
-        return gtk.gdk.pixbuf_new_from_data(imagestr, gtk.gdk.COLORSPACE_RGB,
-            False, 8, image.size[0], image.size[1],
-            3 * image.size[0])
-
-def pixbuf_to_pil(pixbuf):
-    """Return a PIL image created from <pixbuf>."""
-    dimensions = pixbuf.get_width(), pixbuf.get_height()
-    stride = pixbuf.get_rowstride()
-    pixels = pixbuf.get_pixels()
-    mode = pixbuf.get_has_alpha() and 'RGBA' or 'RGB'
-    return Image.frombuffer(mode, dimensions, pixels, 'raw', mode, stride, 1)
-
-def load_pixbuf(path):
-    """ Loads a pixbuf from a given image file. Works around GTK's
-    slowness on Win32 by using PIL for loading instead and
-    converting it afterwards. """
-    if sys.platform == 'win32' and gtk.gtk_version > (2, 18, 2):
-        pil_img = Image.open(path)
-        return pil_to_pixbuf(pil_img)
-    else:
-        return gtk.gdk.pixbuf_new_from_file(path)
-
-def load_pixbuf_data(imgdata):
-    """ Loads a pixbuf from the data passed in <imgdata>. """
-    loader = gtk.gdk.PixbufLoader()
-    loader.write(imgdata, len(imgdata))
-    loader.close()
-    return loader.get_pixbuf()
-
-def enhance(pixbuf, brightness=1.0, contrast=1.0, saturation=1.0,
-  sharpness=1.0, autocontrast=False):
-    """Return a modified pixbuf from <pixbuf> where the enhancement operations
-    corresponding to each argument has been performed. A value of 1.0 means
-    no change. If <autocontrast> is True it overrides the <contrast> value,
-    but only if the image mode is supported by ImageOps.autocontrast (i.e.
-    it is L or RGB.)
-    """
-    im = pixbuf_to_pil(pixbuf)
-    if brightness != 1.0:
-        im = ImageEnhance.Brightness(im).enhance(brightness)
-    if autocontrast and im.mode in ('L', 'RGB'):
-        im = ImageOps.autocontrast(im, cutoff=0.1)
-    elif contrast != 1.0:
-        im = ImageEnhance.Contrast(im).enhance(contrast)
-    if saturation != 1.0:
-        im = ImageEnhance.Color(im).enhance(saturation)
-    if sharpness != 1.0:
-        im = ImageEnhance.Sharpness(im).enhance(sharpness)
-    return pil_to_pixbuf(im)
-
-
-def get_implied_rotation(pixbuf):
-    """Return the implied rotation of the pixbuf, as given by the pixbuf's
-    orientation option (the value of which is based on EXIF data etc.).
-
-    The implied rotation is the angle (in degrees) that the raw pixbuf should
-    be rotated in order to be displayed "correctly". E.g. a photograph taken
-    by a camera that is held sideways might store this fact in its EXIF data,
-    and the pixbuf loader will set the orientation option correspondingly.
-    """
-    orientation = pixbuf.get_option('orientation')
-    if orientation == '3':
-        return 180
-    elif orientation == '6':
-        return 90
-    elif orientation == '8':
-        return 270
-    return 0
-
-def combine_pixbufs( pixbuf1, pixbuf2, are_in_manga_mode ):
-    if are_in_manga_mode:
-        r_source_pixbuf = pixbuf1
-        l_source_pixbuf = pixbuf2
-    else:
-        l_source_pixbuf = pixbuf1
-        r_source_pixbuf = pixbuf2
-
-    has_alpha = False
-
-    if l_source_pixbuf.get_property( 'has-alpha' ) or \
-       r_source_pixbuf.get_property( 'has-alpha' ):
-        has_alpha = True
-
-    bits_per_sample = 8
-
-    l_source_pixbuf_width = l_source_pixbuf.get_property( 'width' )
-    r_source_pixbuf_width = r_source_pixbuf.get_property( 'width' )
-
-    l_source_pixbuf_height = l_source_pixbuf.get_property( 'height' )
-    r_source_pixbuf_height = r_source_pixbuf.get_property( 'height' )
-
-    new_width = l_source_pixbuf_width + r_source_pixbuf_width
-
-    new_height = max( l_source_pixbuf_height, r_source_pixbuf_height )
-
-    new_pix_buf = gtk.gdk.Pixbuf( gtk.gdk.COLORSPACE_RGB, has_alpha,
-        bits_per_sample, new_width, new_height )
-
-    l_source_pixbuf.copy_area( 0, 0, l_source_pixbuf_width,
-                                     l_source_pixbuf_height,
-                                     new_pix_buf, 0, 0 )
-
-    r_source_pixbuf.copy_area( 0, 0, r_source_pixbuf_width,
-                                     r_source_pixbuf_height,
-                                     new_pix_buf, l_source_pixbuf_width, 0 )
-
-    return new_pix_buf
-
-def is_image_file(path):
-    """Return True if the file at <path> is an image file recognized by PyGTK.
-    """
-    ext = os.path.splitext(path)[1][1:].lower()
-    ext_index = bisect.bisect_left(_supported_formats, ext)
-    return ext_index != len(_supported_formats) and _supported_formats[ext_index] == ext
-
-def convert_rgb16list_to_rgba8int(c):
-    return 0x000000FF | (c[0] >> 8 << 24) | (c[1] >> 8 << 16) | (c[2] >> 8 << 8)
 
 # vim: expandtab:sw=4:ts=4
