@@ -8,7 +8,6 @@ import ctypes, ctypes.util
 import threading
 
 from mcomix import constants
-from mcomix import callback
 from mcomix import archive
 
 if sys.platform == 'win32':
@@ -252,19 +251,8 @@ class UnrarDll(archive.archive_base.BaseArchive):
             # Continue operation
             return 1
 
-    @callback.Callback
     def _password_required(self, event):
-        """ Asks the user for a password and sets <self._password>.
-        If <self._password> is None, no password has been requested yet.
-        If an empty string is set, assume that the user did not provide
-        a password. """
-
-        password = archive.ask_for_password()
-        if password is None:
-            password = ""
-
-        self._password = password
-        event.set()
+        raise Exception('password required!')
 
 class UnrarException(Exception):
     """ Exception class for UnrarDll. """
