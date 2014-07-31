@@ -36,7 +36,6 @@ except ImportError:
 
 import math
 import sys, os, ctypes
-import io
 
 from mcomix import image_tools, smart_scroller
 
@@ -130,8 +129,10 @@ class DisplayerApp:
         
         screen_width, screen_height = self.renderer.scrdim
 
-        image = Image.open(io.BytesIO(fil_data))
-        width, height = image.size
+        image_info = gm_wrap.CloneImageInfo(None)
+        image_info.contents.filename = name
+        image = gm_wrap.BlobToImage(image_info, fil_data, len(fil_data), exception)
+        width, height = image.contents.columns, image.contents.rows
 
         page_ratio = float(width) / height
         if page_ratio > 1.0:
@@ -161,8 +162,14 @@ class DisplayerApp:
         if width2 > width or height2 > height:
             width2, height2 = width, height
         elif width2 != width or height2 != height:
-            image = image.resize((width2, height2), Image.ANTIALIAS)
+            resized_image = gm_wrap.ResizeImage(image, width2, height2, gm_wrap.LanczosFilter, 1, exception)
+            gm_wrap.DestroyImage(image)
+            image = resized_image
 
+        buffer = ctypes.create_string_buffer(width2 * height2 * 3)
+        gm_wrap.DispatchImage(image, 0, 0, width2, height2, "RGB", gm_wrap.CharPixel, buffer, exception)
+        gm_wrap.DestroyImage(image)
+        image = Image.frombuffer('RGB', (width2, height2), buffer.raw, 'raw', 'RGB', 0, 1)
         
         page = pygame.image.fromstring(image.tostring(), (width2, height2), "RGB")
         self.renderer.page = page
