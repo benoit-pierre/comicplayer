@@ -413,6 +413,7 @@ class DisplayerApp:
         'down'       : ('navigate', +1),
         'backspace'  : ('navigate', -1),
         'space'      : ('navigate', +1),
+        'tab'        : ('show_info', None),
     }
     
     def quit(self):
@@ -484,6 +485,16 @@ class DisplayerApp:
         elif action == 'flip_page':
             if self.state not in ['leaving_page']:
                 self.flip_page(arg)
+        elif action == 'show_info':
+            msg = '%s - %u/%u - %s - %ux%u' % (
+                self.comix.pretty_name,
+                self.comic_id,
+                len(self.comix),
+                self.comix.get_filename(self.comic_id),
+                self.renderer.page.get_width(),
+                self.renderer.page.get_height(),
+            )
+            self.add_msg(msg, ttl=2)
     
     def process_event(self, event):
         action, arg = None, None
