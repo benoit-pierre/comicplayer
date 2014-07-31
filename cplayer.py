@@ -183,6 +183,9 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         for n, path in enumerate(sys.argv[1:]):
             comic = ComicBook(path)
+            if comic is None:
+                print >>sys.stderr, 'could not load %s' % path
+                continue
             try:
                 dapp = libs.displayer.DisplayerApp(comic)
                 dapp.run()
