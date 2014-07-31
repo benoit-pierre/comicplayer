@@ -338,15 +338,11 @@ class DisplayerApp:
         self.renderer.brightness = 255
         self.renderer.render(self.pos)
 
-    def add_msg(self, text, color=(128,255,160), ttl=1.5):
-        image_f = self.renderer.font.render(text, True, color)
-        image_b = self.renderer.font.render(text, True, (0,32,0))
-        base = pygame.Surface((image_f.get_width()+3, image_f.get_height()+3), 0, 32)
-        base.blit(image_b, (2,2))
-        base.blit(image_f, (0,0))
-        image = base
-        image.set_colorkey((0,0,0))
-        self.renderer.textimages.append([image,255,ttl])
+    def add_msg(self, text, ttl=1.5):
+        color = pygame.color.Color(*self.renderer.bg)
+        color.hsla = (color.hsla[0], color.hsla[1], 100 - color.hsla[2], color.hsla[3])
+        text = self.renderer.font.render(text, True, color, self.renderer.bg)
+        self.renderer.textimages.append([text,255,ttl])
         
     def show_help(self):
         self.state = 'help'
