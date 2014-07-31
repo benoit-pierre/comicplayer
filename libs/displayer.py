@@ -129,10 +129,13 @@ class DisplayerApp:
         height = image.contents.rows
         multiplier = 1.0*width_5_4 / width
         height2 = int(math.floor(height * multiplier))
-        image = gm_wrap.ResizeImage(image, width_5_4, height2, gm_wrap.LanczosFilter, 1, exception)
+        resized_image = gm_wrap.ResizeImage(image, width_5_4, height2, gm_wrap.LanczosFilter, 1, exception)
+        gm_wrap.DestroyImage(image)
+        image = resized_image
         
         buffer = ctypes.create_string_buffer(width_5_4 * height2 * 3)
         gm_wrap.DispatchImage(image, 0, 0, width_5_4, height2, "RGB", gm_wrap.CharPixel, buffer, exception )
+        gm_wrap.DestroyImage(image)
         page = pygame.image.frombuffer(buffer.raw, (width_5_4, height2), "RGB")
         
 
