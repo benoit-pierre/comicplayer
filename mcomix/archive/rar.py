@@ -4,7 +4,6 @@
 
 from mcomix import process
 from mcomix.archive import archive_base
-from mcomix.archive import rarfile
 
 # Filled on-demand by RarExecArchive
 _rar_executable = -1
@@ -45,9 +44,6 @@ class RarExecArchive(archive_base.ExternalExecutableArchive):
     def is_available():
         return bool(RarExecArchive._find_unrar_executable())
 
-if rarfile.UnrarDll.is_available():
-    RarArchive = rarfile.UnrarDll
-else:
-    RarArchive = RarExecArchive
+RarArchive = RarExecArchive
 
 # vim: expandtab:sw=4:ts=4
