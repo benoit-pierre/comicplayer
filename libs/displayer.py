@@ -442,7 +442,7 @@ class DisplayerApp:
             self.force_redraw = True
         elif event.type == pyg.KEYDOWN:
             if self.state == 'help':
-                if event.key == pyg.K_ESCAPE or event.key == pyg.K_q:
+                if event.key in (pyg.K_F1, pyg.K_ESCAPE, pyg.K_q):
                     self.state = 'change_row'
                     self.progress = 1
                 return
