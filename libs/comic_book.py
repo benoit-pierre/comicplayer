@@ -26,16 +26,21 @@
 #   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os, os.path
+import threading
+import tempfile
 import zipfile
+import shutil
 import glob
-
-import UnRAR2
 
 import StringIO
 
 from ConfigParser import RawConfigParser
 
 from PIL import Image
+
+from mcomix.archive_tools import get_recursive_archive_handler, archive_mime_type
+from mcomix.worker_thread import WorkerThread
+from mcomix.tools import alphanumeric_sort
 
 img_extensions = ['jpeg', 'jpg', 'gif', 'png']
 
@@ -72,12 +77,10 @@ def ComicBook(path):
         if os.path.isdir(path):
             return DirComicBook(path)
     else:
+        if archive_mime_type(path) is not None:
+            return MComixBook(unicode(path))
         ext = os.path.splitext(path)[1].lower()[1:]
-        if ext in ['zip','cbz']:
-            return ZipComicBook(path)
-        elif ext in ['rar','cbr']:
-            return RarComicBook(path)
-        elif ext in img_extensions:
+        if ext in img_extensions:
             return SingleFileComicBook(path)
         else:
             raise UnsupportedFileTypeError
@@ -86,6 +89,9 @@ def ComicBook(path):
 class BaseComicBook:
     def __init__(self, path):
         self.path = path
+
+    def close(self):
+        pass
         
     @property
     def pretty_name(self):
@@ -192,51 +198,6 @@ class BaseComicBook:
         self.has_segmentation = True
         return res
 
-class ZipComicBook(BaseComicBook):
-    def __init__(self, path):
-        BaseComicBook.__init__(self, path)
-        self.zf = zipfile.ZipFile(path, 'r', zipfile.ZIP_DEFLATED)
-        self.writable = False
-        namelist = self.zf.namelist()
-        self.has_segmentation = "panels.ini" in namelist
-        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:].lower() in img_extensions]
-        self.filenames.sort()
-
-    def get_file_by_name(self, name):
-        return StringIO.StringIO(self.zf.read(name))
-        
-    @staticmethod
-    def create_copy(path, comix2):
-        zf = zipfile.ZipFile(path, 'w', zipfile.ZIP_DEFLATED)
-        for i in range(len(comix2)):
-            zf.writestr(comix2.get_filename(i), comix2.get_file(i).read())
-        zf.close()
-        return ZipComicBook(path)
-        
-    def add_file(self, name, bytez):
-        self.zf.writestr(name, bytez)
-        self.zf.close()
-        self.zf = zipfile.ZipFile(self.path, 'a', zipfile.ZIP_DEFLATED)
-
-class RarComicBook(BaseComicBook):
-    def __init__(self, path):
-        BaseComicBook.__init__(self, path)
-        rf = UnRAR2.RarFile(path)
-        namelist = [f.filename for f in rf.infoiter()]
-        self.has_segmentation = "panels.ini" in namelist
-        self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:].lower() in img_extensions]
-        self.filenames.sort()
-        del rf
-        self.writable = False
-
-    def get_file_by_name(self, name):
-        rf = UnRAR2.RarFile(self.path)
-        res = None
-        loaded = rf.read_files(name)
-        res = StringIO.StringIO(loaded[0][1])
-        del rf
-        return res
-        
 class DirComicBook(BaseComicBook):
     def __init__(self, path):
         BaseComicBook.__init__(self, path)
@@ -251,7 +212,7 @@ class DirComicBook(BaseComicBook):
         namelist = [fn[len(mask)-1:] for fn in glob.glob(mask)]
         self.has_segmentation = "panels.ini" in namelist
         self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:].lower() in img_extensions]
-        self.filenames.sort()
+        alphanumeric_sort(self.filenames)
 
     def get_file_by_name(self, name):
         return open(os.path.join(self.path, name), 'rb')
@@ -296,6 +257,72 @@ class SingleFileComicBook(BaseComicBook):
         
     def add_file(self, name, bytez):
         open(self.filenames[0]+"_"+name, 'wb').write(bytez)
+
+class MComixBook(BaseComicBook):
+
+    def __init__(self, path):
+        BaseComicBook.__init__(self, path)
+        self.writable = False
+        self._tmpdir = tempfile.mkdtemp(prefix=u'comicplayer.')
+        self._archive = get_recursive_archive_handler(path, self._tmpdir)
+        self.filenames = []
+        for f in self._archive.list_contents():
+            ext = os.path.splitext(f)[1].lower()[1:]
+            if ext in img_extensions:
+                self.filenames.append(f)
+        alphanumeric_sort(self.filenames)
+        self._condition = threading.Condition()
+        self._extracted = set()
+        if self._archive.support_concurrent_extractions:
+            max_threads = 2
+        else:
+            max_threads = 1
+        self._extract_thread = WorkerThread(self._extract,
+                                            unique_orders=True,
+                                            max_threads=max_threads)
+        self._extract_all(0)
+
+    def close(self):
+        self._extract_thread.stop()
+        self._archive.close()
+        shutil.rmtree(self._tmpdir, True)
+
+    def _extract_all(self, priority_index):
+        self._extract_thread.clear_orders()
+        priority_files = []
+        for r in (
+            (priority_index, 2),
+            (priority_index - 1, 1),
+            (priority_index + 2, len(self.filenames))
+        ):
+          s, l = r
+          if s >= len(self.filenames):
+              continue
+          if s < 0:
+              l += s
+              s = 0
+          if l + s > len(self.filenames):
+              l = len(self.filenames) - s
+          if l <= 0:
+              continue
+          for name in self.filenames:
+              if not name in self._extracted:
+                  priority_files.append(name)
+        self._extract_thread.extend_orders(priority_files)
+
+    def _extract(self, name):
+        self._archive.extract(name, self._tmpdir)
+        with self._condition:
+            self._extracted.add(name)
+            self._condition.notify()
+
+    def get_file_by_name(self, name):
+        priority_index = self.filenames.index(name)
+        with self._condition:
+            self._extract_all(priority_index)
+            while not name in self._extracted:
+                self._condition.wait()
+        return open(os.path.join(self._tmpdir, name), 'rb')
 
 if __name__=="__main__":
     try:

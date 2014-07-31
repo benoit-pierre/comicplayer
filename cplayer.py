@@ -65,7 +65,7 @@ class ComicPlayer:
         filesel.run()
         self.path = filesel.get_filename()
         filesel.destroy()
-        self.comix = ComicBook(self.path)
+        self.load_comic(self.path)
         self.refresh_info()
         num = len(self.comix.filenames)
         self.btn_play.set_sensitive(num>0)
@@ -86,7 +86,7 @@ class ComicPlayer:
         filesel.run()
         self.path = filesel.get_filename()
         filesel.destroy()
-        self.comix = ComicBook(self.path)
+        self.load_comic(self.path)
         self.refresh_info()
         num = len(self.comix.filenames)
         self.btn_play.set_sensitive(num>0)
@@ -102,12 +102,22 @@ class ComicPlayer:
     def play(self, widget, data=None, callback=None):
         dapp = libs.displayer.DisplayerApp(self.comix, callback=callback, denoise_jpeg=self.denoise_jpeg.get_active())
         dapp.run()
-        
+
+    def load_comic(self, path):
+        self.close_comic()
+        self.comix = ComicBook(path)
+
+    def close_comic(self):
+        if self.comix is None:
+            return
+        self.comix.close()
+        self.comix = None
 
     def delete_event(self, widget, event, data=None):
         return False
 
-    def destroy(self, widget, data=None):
+    def destroy(self, widget=None, data=None):
+        self.close_comic()
         gtk.main_quit()
 
     def __init__(self):
@@ -158,14 +168,19 @@ class ComicPlayer:
         self.ignore_small_rows.set_active(True)
         vbox.pack_start(self.ignore_small_rows, expand=False)
 
+        self.comix = None
+
         if len(sys.argv) > 1:
             for n, path in enumerate(sys.argv[1:]):
-                self.comix = ComicBook(path)
+                self.load_comic(path)
                 if n + 2 == len(sys.argv):
-                    callback = lambda: gobject.idle_add(gtk.main_quit)
+                    callback = lambda: gobject.idle_add(self.destroy)
                 else:
                     callback = None
-                self.play(None, callback=callback)
+                try:
+                    self.play(None, callback=callback)
+                finally:
+                    self.close_comic()
             return
 
         self.btn_open_dir.show()
