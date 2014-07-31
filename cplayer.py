@@ -28,12 +28,6 @@
 #   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 #   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gobject
-
-
 from libs.comic_book import ComicBook
 import libs.displayer
 
@@ -170,19 +164,6 @@ class ComicPlayer:
 
         self.comix = None
 
-        if len(sys.argv) > 1:
-            for n, path in enumerate(sys.argv[1:]):
-                self.load_comic(path)
-                if n + 2 == len(sys.argv):
-                    callback = lambda: gobject.idle_add(self.destroy)
-                else:
-                    callback = None
-                try:
-                    self.play(None, callback=callback)
-                finally:
-                    self.close_comic()
-            return
-
         self.btn_open_dir.show()
         self.btn_open_file.show()
         self.btn_play.show()
@@ -199,8 +180,23 @@ class ComicPlayer:
         gtk.main()
 
 if __name__ == "__main__":
-    app = ComicPlayer()
-    app.main()
+    if len(sys.argv) > 1:
+        for n, path in enumerate(sys.argv[1:]):
+            comic = ComicBook(path)
+            try:
+                dapp = libs.displayer.DisplayerApp(comic)
+                dapp.run()
+            finally:
+                comic.close()
+    else:
+        import pygtk
+        pygtk.require('2.0')
+        import gtk
+        import gobject
+
+        gobject.threads_init()
+        app = ComicPlayer()
+        app.main()
 
 
 
