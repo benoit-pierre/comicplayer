@@ -36,6 +36,7 @@ except ImportError:
 
 import math
 import sys, os, ctypes
+import io
 
 from mcomix import image_tools, smart_scroller
 
@@ -127,11 +128,9 @@ class DisplayerApp:
         fil = self.comix.get_file(page_id)
         fil_data = fil.read()
         
-        pixbuf = image_tools.load_pixbuf_data(fil_data)
-        image = image_tools.pixbuf_to_pil(pixbuf)
-
         screen_width, screen_height = self.renderer.scrdim
 
+        image = Image.open(io.BytesIO(fil_data))
         width, height = image.size
 
         page_ratio = float(width) / height
@@ -163,14 +162,13 @@ class DisplayerApp:
             width2, height2 = width, height
         elif width2 != width or height2 != height:
             image = image.resize((width2, height2), Image.ANTIALIAS)
-            pixbuf = image_tools.pil_to_pixbuf(image)
 
-        page = pygame.image.fromstring(image.tostring(), (width2, height2), "RGB")
         
+        page = pygame.image.fromstring(image.tostring(), (width2, height2), "RGB")
         self.renderer.page = page
         self.renderer.zoom_cache = {}
         
-        self.scroller.setup_image(pixbuf)
+        self.scroller.setup_image(image)
         self.original_frames = self.scroller._frames
 
         self.renderer.set_background_color(self.scroller._bg)
