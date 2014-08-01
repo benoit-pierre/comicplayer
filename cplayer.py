@@ -33,6 +33,8 @@ import libs.displayer
 
 import sys, os, os.path
 
+from mcomix import log
+
 if sys.platform=="win32":
     running_from_source = True
     os.environ["MAGICK_CODER_MODULE_PATH"]="."
@@ -180,6 +182,9 @@ class ComicPlayer:
         gtk.main()
 
 if __name__ == "__main__":
+    if len(sys.argv) > 1 and '-d' == sys.argv[1]:
+        log.setLevel(log.DEBUG)
+        sys.argv.pop(0)
     if len(sys.argv) > 1:
         for n, path in enumerate(sys.argv[1:]):
             comic = ComicBook(path)
