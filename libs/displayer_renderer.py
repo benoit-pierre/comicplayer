@@ -48,7 +48,7 @@ class Renderer:
     def zoomed_comic(self, spotlight, fast=False):
         pageW, pageH = self.page.get_width(), self.page.get_height()
         centerX, centerY = (spotlight[2]+spotlight[0])/2, (spotlight[3]+spotlight[1])/2
-        spotW, spotH = spotlight[2]-spotlight[0], spotlight[3]-spotlight[1]
+        spotW, spotH = spotlight[2]-spotlight[0]+1, spotlight[3]-spotlight[1]+1
         spotAR = 1.0*spotW/spotH
         screenAR = 1.0*self.scrdim[0]/self.scrdim[1]
         
@@ -98,7 +98,7 @@ class Renderer:
     def render(self, pos, motion=False):
         sw, sh = self.scrdim
 
-        wid, hei = pos[2]-pos[0], pos[3]-pos[1]
+        wid, hei = pos[2]-pos[0]+1, pos[3]-pos[1]+1
         k = min(1.0*sw/wid, 1.0*sh/hei)
         if k<1:
             cw, ch = self.page.get_width(), self.page.get_height()
