@@ -88,7 +88,7 @@ class DisplayerApp:
     VIEW_1_1, VIEW_WIDTH, VIEW_WIDEN_5_4 = xrange(3)
     ZOOM_IN, ZOOM_OFF, ZOOM_OUT = xrange(3)
 
-    def __init__(self, comix, callback=None, denoise_jpeg=True, ignore_small_rows=True):
+    def __init__(self, comix):
         assert gm_wrap!=None, "GraphicsMagick not loaded"
         pygame.font.init()
         try:
@@ -112,14 +112,11 @@ class DisplayerApp:
         self.disable_animations = True
         self.border_width = 16
         self.comix = comix
-        self.denoise_jpeg = denoise_jpeg
-        self.ignore_small_rows = ignore_small_rows
         self.comic_id = 0
         self.next_comic_id = 0
         self.state = "entering_page"
         self.load_page(0)
         self.running = True
-        self.callback = callback
 
     def load_page(self, page_id, row_id=None):
         self.comic_id = page_id 
@@ -573,9 +570,7 @@ class DisplayerApp:
         while self.running: 
             self.loop(pygame.event.get())
         pygame.quit()
-        if self.callback!=None:
-            self.callback()
-        
+
 if __name__=="__main__":
     try:
         import debug_scripts
