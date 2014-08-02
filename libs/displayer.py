@@ -111,6 +111,7 @@ class DisplayerApp:
         self.zoom_mode = self.ZOOM_OFF
         self.zoom_lock = self.ZOOM_OFF
         self.disable_animations = True
+        self.only_1_frame = False
         self.border_width = 16
         self.comix = comix
         self.comic_id = 0
@@ -212,7 +213,12 @@ class DisplayerApp:
         fn = 0
         while fn < len(self.scroller._frames):
             f = self.scroller._frames[fn]
-            if self.zoom_mode != self.ZOOM_IN:
+            if self.only_1_frame:
+                self.scroller._view_x = 0
+                self.scroller._view_y = 0
+                self.scroller._view_width = f.rect.w
+                self.scroller._view_height = f.rect.h
+            elif self.zoom_mode != self.ZOOM_IN:
                 self.scroller._view_x = 0
                 self.scroller._view_y = 0
                 self.scroller._view_width = max(f.rect.w, view_width)
@@ -223,7 +229,8 @@ class DisplayerApp:
             y -= self.border_width
             w += 2 * self.border_width
             h += 2 * self.border_width
-            if w > screen_width or \
+            if self.only_1_frame or \
+               w > screen_width or \
                h > screen_height:
                 next_fn = fn + 1
             else:
@@ -403,6 +410,7 @@ class DisplayerApp:
         'return'     : ('toggle_zoom', None),
         'f1'         : ('help', None),
         'f2'         : ('toggle_animations', None),
+        'f3'         : ('toggle_only_1_frame', None),
         'left'       : ('flip_page', -1),
         'shift+left' : ('flip_page', -5),
         'ctrl+left'  : ('flip_page', -20),
@@ -485,6 +493,9 @@ class DisplayerApp:
             self.force_redraw = True
         elif action == 'toggle_animations':
             self.disable_animations = not self.disable_animations
+        elif action == 'toggle_only_1_frame':
+            self.only_1_frame = not self.only_1_frame
+            self.reload_page()
         elif action == 'flip_page':
             if self.state not in ['leaving_page']:
                 self.flip_page(arg)

@@ -1,5 +1,6 @@
 help = """F1: this help
 F2: toggle animations
+F3: toggle "1 frame at a time" mode
 f: toggle fullscreen
 w: fit page to screen width
 a: load page at native resolution on screen
