@@ -123,27 +123,6 @@ class Renderer:
         self.show_texts()
         pygame.display.flip()
 
-    def zoom(self):
-        page = self.page
-        scrdim = self.scrdim
-        cw, ch = page.get_width(), page.get_height()
-        sw, sh = scrdim
-        page, shift = self.zoomed_comic((0,0,cw,ch))
-        wid, hei = page.get_width(), page.get_height()
-        marg_x = (scrdim[0]-wid)//2
-        marg_y = (scrdim[1]-hei)//2
-        page.set_alpha(255)
-        self.screen.fill(self.bg)
-        self.screen.blit(page, (marg_x, marg_y))
-        self.show_texts()
-        pygame.display.flip()
-
-    def center(rect):
-        return [(rect[0]+rect[2])//2, (rect[1]+rect[3])//2]
-
-    def range2d(x, y):
-        return math.sqrt((y[0]-x[0])**2 + (y[1]-x[1])**2)
-    
     def show_texts(self):
         bottom = self.scrdim[1]
         for ti in reversed(self.textimages):
@@ -154,7 +133,7 @@ class Renderer:
             rect.bottom = bottom
             bottom -= 16
             self.screen.blit(image, rect)
-        
+
     def write(self, text, x, y):
         image = self.font.render(text, True, (160,255,128))
         self.screen.blit(image, (x,y))
@@ -168,3 +147,4 @@ class Renderer:
             self.write(desc, self.scrdim[0]/2, top)
             top += 20
         pygame.display.flip()
+
