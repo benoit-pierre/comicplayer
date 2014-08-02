@@ -32,6 +32,7 @@ from libs.comic_book import ComicBook
 import libs.displayer
 
 import sys, os
+import traceback
 
 from mcomix import log
 
@@ -53,7 +54,10 @@ else:
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
         sys.exit(1)
+    debug = False
     if '-d' == sys.argv[1]:
+        import pdb
+        debug = True
         log.setLevel(log.DEBUG)
         sys.argv.pop(0)
     for n, path in enumerate(sys.argv[1:]):
@@ -64,6 +68,10 @@ if __name__ == "__main__":
         try:
             dapp = libs.displayer.DisplayerApp(comic)
             dapp.run()
+        except:
+            print >>sys.stderr, traceback.format_exc()
+            if debug:
+                pdb.post_mortem()
         finally:
             comic.close()
 
