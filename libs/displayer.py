@@ -38,6 +38,7 @@ import math
 import sys, os, ctypes
 
 from mcomix import image_tools, smart_scroller
+from mcomix import log
 
 from PIL import Image
 
@@ -115,6 +116,7 @@ class DisplayerApp:
         self.comic_id = 0
         self.next_comic_id = 0
         self.state = "entering_page"
+        self.previous_state = None
         self.load_page(0)
         self.running = True
 
@@ -521,6 +523,9 @@ class DisplayerApp:
             self.process_action(action, arg)
 
     def update_screen(self, msec):
+        if self.previous_state != self.state:
+            log.debug('update_screen: %s -> %s', self.previous_state, self.state)
+            self.previous_state = self.state
         if self.state=='help':
             return
         motion = self.states[self.state]["motion"]
