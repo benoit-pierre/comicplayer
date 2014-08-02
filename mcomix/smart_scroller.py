@@ -18,7 +18,10 @@ except ImportError:
         _using_fastcore = False
 
 Rect = namedtuple('Rect', 'x y w h')
+Rect.__repr__ = lambda r: '%+d%+d:%ux%u' % (r.x, r.y, r.w, r.h)
+
 Frame = namedtuple('Frame', 'rect number split')
+Frame.__repr__ = lambda f: '%u%s:%s' % (f.number, '' if f.split is None else '.%u' % f.split, f.rect)
 
 class SmartScroller(object):
 
