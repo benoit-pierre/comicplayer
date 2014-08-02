@@ -63,7 +63,7 @@ class WorkerThread:
             try:
                 self._process_order(order)
             except Exception, e:
-                log.error(_('! Worker thread processing %(function)r failed: %(error)s'),
+                log.error('! Worker thread processing %(function)r failed: %(error)s',
                           { 'function' : self._process_order, 'error' : e })
                 log.debug('Traceback:\n%s', traceback.format_exc())
 
