@@ -120,7 +120,7 @@ class DisplayerApp:
         self.load_page(0)
         self.running = True
 
-    def load_page(self, page_id, row_id=None):
+    def load_page(self, page_id, frame_number=None):
         self.comic_id = page_id 
         name = self.comix.get_filename(page_id)
         fil = self.comix.get_file(page_id)
@@ -179,17 +179,15 @@ class DisplayerApp:
 
         self.renderer.set_background_color(self.scroller._bg)
 
-        self.find_rows()
+        self.find_rows(frame_number=frame_number)
 
-        if row_id is None:
-            self.row_id = 0
-        else:
-            self.row_id = row_id
         self.progress = 0.0
-        self.pos = self.oid2pos(self.row_id)
-        self.src_pos = self.oid2pos(self.row_id)
+        self.src_pos = self.pos = self.oid2pos(self.row_id)
 
-    def find_rows(self, frame_number=0):
+    def find_rows(self, frame_number=None):
+
+        self.row_id = 0
+        self.scroller._frames = self.original_frames
 
         screen_width, screen_height = self.renderer.scrdim
 
@@ -208,19 +206,15 @@ class DisplayerApp:
         view_height = screen_height - 2 * self.border_width
         if self.zoom_mode == self.ZOOM_IN:
             self.scroller.setup_view(0, 0, view_width, view_height)
-        else:
-            self.scroller._frames = self.original_frames
-            self.scroller._view_x = 0
-            self.scroller._view_y = 0
 
+        row_frame_number = []
         rows = []
         fn = 0
         while fn < len(self.scroller._frames):
             f = self.scroller._frames[fn]
-            if frame_number == f.number:
-                self.row_id = len(rows)
-                frame_number = None
             if self.zoom_mode != self.ZOOM_IN:
+                self.scroller._view_x = 0
+                self.scroller._view_y = 0
                 self.scroller._view_width = max(f.rect.w, view_width)
                 self.scroller._view_height = max(f.rect.h, view_height)
             pos = self.scroller.scroll(to_frame=fn)
@@ -229,17 +223,29 @@ class DisplayerApp:
             y -= self.border_width
             w += 2 * self.border_width
             h += 2 * self.border_width
-            rows.append((x, y, x + w - 1, y + h - 1))
             if w > screen_width or \
                h > screen_height:
-                fn += 1
+                next_fn = fn + 1
             else:
-                fn = self.scroller._current_frames[1] + 1
-        
+                next_fn = self.scroller._current_frames[1] + 1
+            frames = self.scroller._frames[fn:next_fn]
+            if frame_number in [f.number for f in frames]:
+                self.row_id = len(rows)
+                frame_number = None
+            row_frame_number.append(frames[0].number)
+            rows.append((x, y, x + w - 1, y + h - 1))
+            fn = next_fn
+
+        self.row_frame_number = row_frame_number
         self.rows = rows
 
+    def reload_rows(self):
+        fn = self.row_frame_number[self.row_id]
+        self.find_rows(frame_number=fn)
+
     def reload_page(self):
-        self.load_page(self.comic_id, row_id=self.row_id)
+        fn = self.row_frame_number[self.row_id]
+        self.load_page(self.comic_id, frame_number=fn)
         self.force_redraw = True
         
     def oid2pos(self, oid):
@@ -256,16 +262,14 @@ class DisplayerApp:
         
     def zoom_in(self):
         self.zoom_mode = self.ZOOM_IN
-        f = self.scroller._frames[self.row_id]
-        self.find_rows(frame_number=f.number)
+        self.reload_rows()
         self.state = 'zooming'
         self.progress = 0.0
         self.src_pos = self.pos
 
     def unzoom(self):
         self.zoom_mode = self.ZOOM_OFF
-        f = self.scroller._frames[self.row_id]
-        self.find_rows(frame_number=f.number)
+        self.reload_rows()
         self.src_pos = self.pos
         self.state = 'change_row'
         self.progress = 0.0
