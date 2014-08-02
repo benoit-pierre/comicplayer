@@ -684,7 +684,7 @@ struct__IO_FILE._fields_ = [
     ('_unused2', c_char * (((15 * sizeof(c_int)) - (4 * sizeof(POINTER(None)))) - sizeof(c_size_t))),
 ]
 
-Quantum = c_ubyte # gm_headers/magick/magick_config.h: 38
+Quantum = c_uint16 # gm_headers/magick/magick_config.h: 38
 
 # /tmp/tmpu80Elu/image.h: 649
 class struct__Image(Structure):
