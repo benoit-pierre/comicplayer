@@ -192,17 +192,6 @@ class DisplayerApp:
 
         screen_width, screen_height = self.renderer.scrdim
 
-        if False:
-            rows = []
-            for f in self.scroller._frames:
-                pos = (row.rect.x,
-                       row.rect.y,
-                       row.rect.x + row.rect.w - 1,
-                       row.rect.y + row.rect.h - 1)
-                rows.append(pos)
-            self.rows = rows
-            return
-
         view_width = screen_width - 2 * self.border_width
         view_height = screen_height - 2 * self.border_width
         if self.zoom_mode == self.ZOOM_IN:
