@@ -37,7 +37,8 @@ except ImportError:
 import math
 import sys, os, ctypes
 
-from mcomix import image_tools, smart_scroller
+from mcomix.smart_scroller import Frame, Rect, SmartScroller
+from mcomix import image_tools
 from mcomix import log
 
 from PIL import Image
@@ -97,7 +98,7 @@ class DisplayerApp:
         except IOError:
             font = pygame.font.Font('freesansbold.ttf', 18)
         pygame.display.init()
-        self.scroller = smart_scroller.SmartScroller()
+        self.scroller = SmartScroller()
         self.renderer = Renderer(pygame.display.get_surface(), font)
         disp_info = pygame.display.Info()
         self.display_width = disp_info.current_w
@@ -176,11 +177,31 @@ class DisplayerApp:
         self.renderer.page = page
         self.renderer.zoom_cache = {}
 
-        bgcolor = image_tools.get_most_common_edge_colour(image)
+        bgcolor = self.comix.get_bgcolor(page_id)
+        if bgcolor is None:
+            log.info('detecting background color')
+            bgcolor = image_tools.get_most_common_edge_colour(image)
+        else:
+            log.info('using comic background color')
         self.renderer.set_background_color(bgcolor)
 
-        self.scroller.setup_image(image, bgcolor)
-        self.original_frames = self.scroller._frames
+        frames = self.comix.get_frames(page_id)
+        if frames is None:
+            log.info('detecting frames')
+            self.scroller.setup_image(image, bgcolor)
+            self.original_frames = self.scroller._frames
+        else:
+            log.info('using comic frames')
+            self.original_frames = []
+            for x, y, w, h in frames:
+                x = int(x * width2)
+                y = int(y * height2)
+                w = int(w * width2)
+                h = int(h * height2)
+                f = Frame(Rect(x, y, w, h),
+                          len(self.original_frames),
+                          None)
+                self.original_frames.append(f)
         self.find_rows(frame_number=frame_number)
 
         self.progress = 0.0
