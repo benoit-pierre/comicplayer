@@ -293,5 +293,7 @@ class SmartScroller(object):
 
         self._current_frames = (first_visible_frame, last_visible_frame)
 
+        self._view_x, self._view_y = bbox.x, bbox.y
+
         return bbox
 
