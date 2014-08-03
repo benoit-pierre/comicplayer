@@ -101,6 +101,6 @@ def get_most_common_edge_colour(image, edge=2):
     # Sum up colors from all edges
     ungrouped_colors.sort(key=operator.itemgetter(1))
     most_used = group_colors(ungrouped_colors)
-    return [color * 257 for color in most_used]
+    return most_used
 
 # vim: expandtab:sw=4:ts=4

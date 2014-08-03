@@ -179,13 +179,11 @@ class SmartScroller(object):
             y += split_height
         return splits
 
-    def setup_image(self, im):
+    def setup_image(self, im, bg):
 
         if self._debug:
             self._debug_images = [im]
 
-        bg = image_tools.get_most_common_edge_colour(im)
-        bg = tuple([c * 255 / 65535 for c in bg[0:3]])
         bg_luminance = (bg[0] * 299 + bg[1] * 587 + bg[2] * 114) / 1000
         self._bg = bg
 

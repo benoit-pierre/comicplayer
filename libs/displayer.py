@@ -175,12 +175,12 @@ class DisplayerApp:
         page = pygame.image.fromstring(image.tostring(), (width2, height2), "RGB")
         self.renderer.page = page
         self.renderer.zoom_cache = {}
-        
-        self.scroller.setup_image(image)
+
+        bgcolor = image_tools.get_most_common_edge_colour(image)
+        self.renderer.set_background_color(bgcolor)
+
+        self.scroller.setup_image(image, bgcolor)
         self.original_frames = self.scroller._frames
-
-        self.renderer.set_background_color(self.scroller._bg)
-
         self.find_rows(frame_number=frame_number)
 
         self.progress = 0.0

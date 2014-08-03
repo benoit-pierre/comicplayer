@@ -117,7 +117,9 @@ class Scroller(object):
             image = image.convert('RGB')
 
         start = time.time()
-        self.scroller.setup_image(image)
+        bgcolor = image_tools.get_most_common_edge_colour(image)
+        print 'background color:', bgcolor
+        self.scroller.setup_image(image, bgcolor)
         elapsed = time.time() - start
         print 'found %u frame(s) in %f seconds' % (len(self.scroller._frames), elapsed)
 
