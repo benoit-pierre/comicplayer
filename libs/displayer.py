@@ -246,7 +246,8 @@ class DisplayerApp:
         
     def oid2pos(self, oid):
         if self.zoom_mode == self.ZOOM_OUT:
-            return (0, 0, self.renderer.page.get_width(), self.renderer.page.get_height())
+            x, y, w, h = 0, 0, self.renderer.page.get_width(), self.renderer.page.get_height()
+            return (x, y, w - 1, h - 1)
         return self.rows[oid]
         
         
