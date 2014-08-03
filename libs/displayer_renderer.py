@@ -101,7 +101,10 @@ class Renderer:
                 self.zoom_cache[rect] = resized
         return resized, shift
 
-    def render(self, pos, motion=False):
+    def render(self, params, motion=False):
+        pos = params[0:4]
+        bl, bt, br, bb = params[4:8]
+        self.scrdim = self.scrdim[0] - bl - br, self.scrdim[1] - bt - bb
         sw, sh = self.scrdim
 
         wid, hei = pos[2]-pos[0]+1, pos[3]-pos[1]+1
@@ -119,7 +122,8 @@ class Renderer:
             shift = marg_x-pos[0], marg_y-pos[1]
         self.screen.fill(self.bg)
         if page!=None:
-            self.screen.blit(page, shift)
+            self.screen.blit(page, (shift[0] + bl, shift[1] + bt))
+        self.scrdim = self.scrdim[0] + bl + br, self.scrdim[1] + bt + bb
         self.show_texts()
         pygame.display.flip()
 

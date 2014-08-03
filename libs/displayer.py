@@ -212,12 +212,21 @@ class DisplayerApp:
                 self.scroller._view_y = 0
                 self.scroller._view_width = max(f.rect.w, view_width)
                 self.scroller._view_height = max(f.rect.h, view_height)
-            pos = self.scroller.scroll(to_frame=fn)
-            x, y, w, h = pos
-            x -= self.border_width
-            y -= self.border_width
-            w += 2 * self.border_width
-            h += 2 * self.border_width
+            x, y, w, h = self.scroller.scroll(to_frame=fn)
+            bl = self.border_width
+            br = self.border_width
+            bt = self.border_width
+            bb = self.border_width
+            if f.split is not None:
+                ff = self.original_frames[f.number]
+                if f.rect.x > ff.rect.x:
+                    bl = 0
+                if f.rect.y > ff.rect.y:
+                    bt = 0
+                if f.rect.x + f.rect.w < ff.rect.x + ff.rect.w:
+                    br = 0
+                if f.rect.y + f.rect.h < ff.rect.y + ff.rect.h:
+                    bb = 0
             if self.only_1_frame or \
                w > screen_width or \
                h > screen_height:
@@ -229,7 +238,8 @@ class DisplayerApp:
                 self.row_id = len(rows)
                 frame_number = None
             row_frame_number.append(frames[0].number)
-            rows.append((x, y, x + w - 1, y + h - 1))
+            rows.append((x, y, x + w - 1, y + h - 1,
+                         bl, bt, br, bb))
             fn = next_fn
 
         self.row_frame_number = row_frame_number
@@ -246,8 +256,9 @@ class DisplayerApp:
         
     def oid2pos(self, oid):
         if self.zoom_mode == self.ZOOM_OUT:
-            x, y, w, h = 0, 0, self.renderer.page.get_width(), self.renderer.page.get_height()
-            return (x, y, w - 1, h - 1)
+            w = self.renderer.page.get_width()
+            h = self.renderer.page.get_height()
+            return (0, 0, w - 1, h - 1) + 4 * (self.border_width,)
         return self.rows[oid]
         
         
@@ -308,15 +319,17 @@ class DisplayerApp:
     def shifted_page(self, forward = False):
         if self.disable_animations:
             return self.pos
-        x0,y0,x1,y1 = self.pos
+        x0,y0,x1,y1 = self.pos[0:4]
         w,h = self.renderer.scrdim
         ch = self.renderer.page.get_height()
         
         if forward: 
-            shift=-h
+            shift = -h
         else:
             shift = ch
-        return (x0,y0+shift,x1,y1+shift)
+        y0 += shift
+        y1 += shift
+        return (x0,y0,x1,y1)+tuple(self.pos[4:8])
 
     def adjust_brightness(self, back = False):
             self.renderer.brightness = 55+int(200*self.progress)
@@ -555,9 +568,9 @@ class DisplayerApp:
                 else:
                     if "onprogress" in self.states[self.state]:
                         self.states[self.state]["onprogress"](self)
-                    pos = [0]*4
+                    pos = [0]*len(target_pos)
                     p2 = (1-math.cos(math.pi*self.progress))/2
-                    for i in xrange(4):
+                    for i in xrange(len(target_pos)):
                         pos[i] = int(self.src_pos[i]*(1.0-p2) + target_pos[i]*p2)
                     self.pos = pos
             for ti in self.renderer.textimages:
