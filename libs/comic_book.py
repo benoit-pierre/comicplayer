@@ -31,6 +31,9 @@ import tempfile
 import zipfile
 import shutil
 import glob
+import re
+
+from xml.etree import ElementTree
 
 import StringIO
 
@@ -41,6 +44,7 @@ from PIL import Image
 from mcomix.archive_tools import get_recursive_archive_handler, archive_mime_type
 from mcomix.worker_thread import WorkerThread
 from mcomix.tools import alphanumeric_sort
+from mcomix import log
 
 img_extensions = ['jpeg', 'jpg', 'gif', 'png']
 
@@ -105,7 +109,13 @@ class BaseComicBook:
 
     def get_file(self, page):
         return self.get_file_by_name(self.filenames[page])
-        
+
+    def get_frames(self, page):
+        return None
+
+    def get_bgcolor(self, page):
+        return None
+
     def get_panel_file(self):
         return self.get_file_by_name('panels.ini')
 
@@ -265,8 +275,14 @@ class MComixBook(BaseComicBook):
         self.writable = False
         self._tmpdir = tempfile.mkdtemp(prefix=u'comicplayer.')
         self._archive = get_recursive_archive_handler(path, self._tmpdir)
+        self._comic_bgcolor = None
+        self._page_bgcolor = {}
+        self._page_frames = {}
         self.filenames = []
         for f in self._archive.list_contents():
+            if f == 'acv.xml':
+                self._parse_acv(f)
+                continue
             ext = os.path.splitext(f)[1].lower()[1:]
             if ext in img_extensions:
                 self.filenames.append(f)
@@ -286,6 +302,75 @@ class MComixBook(BaseComicBook):
         self._extract_thread.stop()
         self._archive.close()
         shutil.rmtree(self._tmpdir, True)
+
+    def get_frames(self, page):
+        return self._page_frames.get(page)
+
+    def get_bgcolor(self, page):
+        return self._page_bgcolor.get(page, self._comic_bgcolor)
+
+    def _parse_bgcolor(self, color):
+        if not re.match('^#[0-9a-fA-F]{6}$', color):
+            return None
+        bgcolor = (int(color[1:3], 16),
+                   int(color[3:5], 16),
+                   int(color[5:7], 16))
+        return bgcolor
+
+    def _parse_acv(self, name):
+        log.info('parsing ACV: %s', name)
+        self._archive.extract(name, self._tmpdir)
+        tree = ElementTree.parse(os.path.join(self._tmpdir, name))
+        comic = tree.getroot()
+        if 'comic' != comic.tag:
+            log.error('ACV parser: root element is not comic: %s', comic.tag)
+            return
+        comic_bgcolor = None
+        if 'bgcolor' in comic.attrib:
+            bgcolor = self._parse_bgcolor(comic.attrib['bgcolor'])
+            if bgcolor is None:
+                log.error('invalid comic bgcolor: %s', comic.attrib['bgcolor'])
+                return
+            comic_bgcolor = bgcolor
+        page_frames = {}
+        page_bgcolor = {}
+        for screen in comic:
+            if 'screen' != screen.tag:
+                continue
+            if not 'index' in screen.attrib:
+                log.error('screen has no index attribute')
+                return
+            page_number = int(screen.attrib['index'])
+            if page_number in page_frames:
+                log.error('duplicate screen %u', page_number)
+                return
+            if 'bgcolor' in screen.attrib:
+                bgcolor = self._parse_bgcolor(screen.attrib['bgcolor'])
+                if bgcolor is None:
+                    log.error('invalid screen bgcolor: %s', screen.attrib['bgcolor'])
+                    return
+                page_bgcolor[page_number] = bgcolor
+            frame_list = []
+            for frame in screen:
+                if 'frame' != frame.tag:
+                    continue
+                if not 'relativeArea' in frame.attrib:
+                    log.error('frame has no relativeArea attribute')
+                    return
+                area = frame.attrib['relativeArea'].split()
+                if 4 != len(area):
+                    log.error('invalid frame relativeArea: %s', frame.attrib['relativeArea'])
+                    return
+                area = [float(f) for f in area]
+                for f in area:
+                    if f < 0.0 or f > 1.0:
+                        log.error('invalid frame relativeArea: %s', frame.attrib['relativeArea'])
+                        return
+                frame_list.append(area)
+            page_frames[page_number] = frame_list
+        self._comic_bgcolor = comic_bgcolor
+        self._page_bgcolor = page_bgcolor
+        self._page_frames = page_frames
 
     def _extract_all(self, priority_index):
         self._extract_thread.clear_orders()
