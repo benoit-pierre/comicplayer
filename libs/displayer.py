@@ -113,6 +113,7 @@ class DisplayerApp:
         self.disable_animations = True
         self.only_1_frame = False
         self.border_width = 16
+        self.clipping = True
         self.comix = comix
         self.comic_id = 0
         self.next_comic_id = 0
@@ -217,8 +218,11 @@ class DisplayerApp:
             br = self.border_width
             bt = self.border_width
             bb = self.border_width
-            if f.split is not None:
+            if f.split is None:
+                cx, cy, cw, ch = x, y, w, h
+            else:
                 ff = self.original_frames[f.number]
+                cx, cy, cw, ch = ff.rect
                 if f.rect.x > ff.rect.x:
                     bl = 0
                 if f.rect.y > ff.rect.y:
@@ -239,6 +243,7 @@ class DisplayerApp:
                 frame_number = None
             row_frame_number.append(frames[0].number)
             rows.append((x, y, x + w - 1, y + h - 1,
+                         cx, cy, cx + cw - 1, cy + ch - 1,
                          bl, bt, br, bb))
             fn = next_fn
 
@@ -258,7 +263,7 @@ class DisplayerApp:
         if self.zoom_mode == self.ZOOM_OUT:
             w = self.renderer.page.get_width()
             h = self.renderer.page.get_height()
-            return (0, 0, w - 1, h - 1) + 4 * (self.border_width,)
+            return 2 * (0, 0, w - 1, h - 1) + 4 * (self.border_width,)
         return self.rows[oid]
         
         
@@ -320,6 +325,7 @@ class DisplayerApp:
         if self.disable_animations:
             return self.pos
         x0,y0,x1,y1 = self.pos[0:4]
+        cx0,cy0,cx1,cy1 = self.pos[4:8]
         w,h = self.renderer.scrdim
         ch = self.renderer.page.get_height()
         
@@ -329,7 +335,9 @@ class DisplayerApp:
             shift = ch
         y0 += shift
         y1 += shift
-        return (x0,y0,x1,y1)+tuple(self.pos[4:8])
+        cy0 += shift
+        cy1 += shift
+        return (x0,y0,x1,y1,cx0,cy0,cx1,cy1)+tuple(self.pos[8:12])
 
     def adjust_brightness(self, back = False):
             self.renderer.brightness = 55+int(200*self.progress)
@@ -414,6 +422,7 @@ class DisplayerApp:
         'f1'         : ('help', None),
         'f2'         : ('toggle_animations', None),
         'f3'         : ('toggle_only_1_frame', None),
+        'f4'         : ('toggle_clipping', None),
         'left'       : ('flip_page', -1),
         'shift+left' : ('flip_page', -5),
         'ctrl+left'  : ('flip_page', -20),
@@ -499,6 +508,9 @@ class DisplayerApp:
         elif action == 'toggle_only_1_frame':
             self.only_1_frame = not self.only_1_frame
             self.reload_page()
+        elif action == 'toggle_clipping':
+            self.clipping = not self.clipping
+            self.force_redraw = True
         elif action == 'flip_page':
             if self.state not in ['leaving_page']:
                 self.flip_page(arg)
@@ -579,7 +591,7 @@ class DisplayerApp:
                     ti[1] = 255+255*2*ti[2]
             self.renderer.textimages = [ti for ti in self.renderer.textimages if ti[1]>0]
             
-            self.renderer.render(self.pos, motion)
+            self.renderer.render(self.pos, motion, clipping=self.clipping)
     
     def loop(self, events): 
         msec = self.clock.tick(50)

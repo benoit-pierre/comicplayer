@@ -51,7 +51,7 @@ class Renderer:
     def set_background_color(self, rgb):
         self.bg = rgb
         
-    def zoomed_comic(self, spotlight, fast=False):
+    def zoomed_comic(self, spotlight, clip, fast=False):
         pageW, pageH = self.page.get_width(), self.page.get_height()
         centerX, centerY = (spotlight[2]+spotlight[0])/2, (spotlight[3]+spotlight[1])/2
         spotW, spotH = spotlight[2]-spotlight[0]+1, spotlight[3]-spotlight[1]+1
@@ -85,8 +85,14 @@ class Renderer:
         ww, wh = wxe-wx+1, wye-wy+1
         rect = (wx, wy, ww, wh)
         dims = (int(round(ww*a)), int(round(wh*a)))
-        
-        
+
+        clip = (
+            int(round(a * (clip[0] - rect[0]) + shift[0])),
+            int(round(a * (clip[1] - rect[1]) + shift[1])),
+            int(round(a * (clip[2] - clip[0] + 1))),
+            int(round(a * (clip[3] - clip[1] + 1)))
+        )
+
         if rect in self.zoom_cache:
             resized = self.zoom_cache[rect]
         else:
@@ -99,11 +105,12 @@ class Renderer:
             else:
                 resized = pygame.transform.smoothscale(source, dims)
                 self.zoom_cache[rect] = resized
-        return resized, shift
+        return resized, shift, clip
 
-    def render(self, params, motion=False):
+    def render(self, params, motion=False, clipping=False):
         pos = params[0:4]
-        bl, bt, br, bb = params[4:8]
+        clip = params[4:8]
+        bl, bt, br, bb = params[8:12]
         self.scrdim = self.scrdim[0] - bl - br, self.scrdim[1] - bt - bb
         sw, sh = self.scrdim
 
@@ -114,15 +121,20 @@ class Renderer:
             if pos[0]>cw or pos[1]>ch or pos[2]<0 or pos[3]<0:
                 page = None
             else:
-                page, shift = self.zoomed_comic(pos, motion)
+                page, shift, clip = self.zoomed_comic(pos, clip, motion)
         else:
             page = self.page
             marg_x = (self.scrdim[0]-wid)//2
             marg_y = (self.scrdim[1]-hei)//2
             shift = marg_x-pos[0], marg_y-pos[1]
+            clip = (clip[0] + shift[0], clip[1] + shift[1],
+                    clip[2] - clip[0] + 1, clip[3] - clip[1] + 1)
         self.screen.fill(self.bg)
         if page!=None:
+            if clipping:
+                self.screen.set_clip((clip[0] + bl, clip[1] + bt, clip[2], clip[3]))
             self.screen.blit(page, (shift[0] + bl, shift[1] + bt))
+            self.screen.set_clip(None)
         self.scrdim = self.scrdim[0] + bl + br, self.scrdim[1] + bt + bb
         self.show_texts()
         pygame.display.flip()

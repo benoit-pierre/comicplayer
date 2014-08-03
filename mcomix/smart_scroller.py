@@ -228,8 +228,8 @@ class SmartScroller(object):
         self._view_width = width
         self._view_height = height
 
-        max_width = max(self._min_frame_width, width * 3 / 4)
-        max_height = max(self._min_frame_height, height * 3 / 4)
+        max_width = max(self._min_frame_width, width)
+        max_height = max(self._min_frame_height, height)
 
         frames = []
         for f in self._frames:
