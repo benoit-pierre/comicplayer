@@ -72,7 +72,7 @@ class SmartScroller(object):
                 return None
         return rect
 
-    def _find_frames(self, rect, split_horz=True, split_vert=True, level=''):
+    def _find_frames(self, rect, split_horz=True, split_vert=True):
         rect = self._crop(rect)
         if rect is None:
             # Empty.
