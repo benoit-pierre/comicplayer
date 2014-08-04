@@ -172,26 +172,32 @@ class DisplayerApp:
         gm_wrap.DispatchImage(image, 0, 0, width2, height2, "RGB", gm_wrap.CharPixel, buffer, exception)
         gm_wrap.DestroyImage(image)
         image = Image.frombuffer('RGB', (width2, height2), buffer.raw, 'raw', 'RGB', 0, 1)
-        
+
         page = pygame.image.fromstring(image.tostring(), (width2, height2), "RGB")
         self.renderer.page = page
         self.renderer.zoom_cache = {}
 
         bgcolor = self.comix.get_bgcolor(page_id)
         if bgcolor is None:
-            log.info('detecting background color')
+            log.info('detecting page %u background color', page_id)
             bgcolor = image_tools.get_most_common_edge_colour(image)
-        else:
-            log.info('using comic background color')
+            self.comix.set_bgcolor(page_id, bgcolor)
         self.renderer.set_background_color(bgcolor)
 
         frames = self.comix.get_frames(page_id)
         if frames is None:
-            log.info('detecting frames')
+            log.info('detecting page %u frames', page_id)
             self.scroller.setup_image(image, bgcolor)
             self.original_frames = self.scroller._frames
+            frames = []
+            for f in self.original_frames:
+                x = float(f.rect.x) / width2
+                y = float(f.rect.y) / height2
+                w = float(f.rect.w) / width2
+                h = float(f.rect.h) / height2
+                frames.append((x, y, w, h))
+            self.comix.set_frames(page_id, frames)
         else:
-            log.info('using comic frames')
             self.original_frames = []
             for x, y, w, h in frames:
                 x = int(x * width2)
@@ -202,9 +208,9 @@ class DisplayerApp:
                           len(self.original_frames),
                           None)
                 self.original_frames.append(f)
-        self.find_rows(frame_number=frame_number)
 
         self.progress = 0.0
+        self.find_rows(frame_number=frame_number)
         self.src_pos = self.pos = self.oid2pos(self.row_id)
 
     def find_rows(self, frame_number=None):
