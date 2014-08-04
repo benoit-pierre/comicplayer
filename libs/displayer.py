@@ -445,14 +445,12 @@ class DisplayerApp:
             "target": lambda self: self.shifted_page(not self.flip_dir),
             "changeto": "entering_page",
             "onfinish": start_load_page,
-            #~ "onprogress": lambda self:self.adjust_brightness()
         },
         "entering_page": {
             "motion": True,
             "target": lambda self: self.oid2pos(self.row_id),
             "changeto": "static",
             "onfinish": end_changing_page,
-            #~ "onprogress": lambda self:self.adjust_brightness(True)
         },
         "static": {
             "motion": False
@@ -638,8 +636,6 @@ class DisplayerApp:
                     self.progress = 0
                     motion = False
                 else:
-                    if "onprogress" in self.states[self.state]:
-                        self.states[self.state]["onprogress"](self)
                     pos = [0]*len(target_pos)
                     p2 = (1-math.cos(math.pi*self.progress))/2
                     for i in xrange(len(target_pos)):
