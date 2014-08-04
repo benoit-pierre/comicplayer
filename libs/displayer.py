@@ -120,11 +120,21 @@ class DisplayerApp:
         self.next_comic_id = 0
         self.state = "entering_page"
         self.previous_state = None
+        self.flip_dir = True
+        self.pages = {}
         self.load_page(0)
         self.running = True
 
-    def load_page(self, page_id, frame_number=None):
-        self.comic_id = page_id 
+    def prepare_page(self, page_id):
+
+        if page_id in self.pages:
+            view_mode, page, bgcolor, frames = self.pages.get(page_id)
+            if view_mode == self.view_mode:
+                return
+            del self.pages[page_id]
+
+        log.info('preparing page %u', page_id)
+
         name = self.comix.get_filename(page_id)
         fil = self.comix.get_file(page_id)
         fil_data = fil.read()
@@ -174,23 +184,20 @@ class DisplayerApp:
         image = Image.frombuffer('RGB', (width2, height2), buffer.raw, 'raw', 'RGB', 0, 1)
 
         page = pygame.image.fromstring(image.tostring(), (width2, height2), "RGB")
-        self.renderer.page = page
-        self.renderer.zoom_cache = {}
 
-        bgcolor = self.comix.get_bgcolor(page_id)
-        if bgcolor is None:
+        page_bgcolor = self.comix.get_bgcolor(page_id)
+        if page_bgcolor is None:
             log.info('detecting page %u background color', page_id)
-            bgcolor = image_tools.get_most_common_edge_colour(image)
-            self.comix.set_bgcolor(page_id, bgcolor)
-        self.renderer.set_background_color(bgcolor)
+            page_bgcolor = image_tools.get_most_common_edge_colour(image)
+            self.comix.set_bgcolor(page_id, page_bgcolor)
 
         frames = self.comix.get_frames(page_id)
         if frames is None:
             log.info('detecting page %u frames', page_id)
-            self.scroller.setup_image(image, bgcolor)
-            self.original_frames = self.scroller._frames
+            self.scroller.setup_image(image, page_bgcolor)
+            page_frames = self.scroller._frames
             frames = []
-            for f in self.original_frames:
+            for f in page_frames:
                 x = float(f.rect.x) / width2
                 y = float(f.rect.y) / height2
                 w = float(f.rect.w) / width2
@@ -198,18 +205,26 @@ class DisplayerApp:
                 frames.append((x, y, w, h))
             self.comix.set_frames(page_id, frames)
         else:
-            self.original_frames = []
+            page_frames = []
             for x, y, w, h in frames:
                 x = int(x * width2)
                 y = int(y * height2)
                 w = int(w * width2)
                 h = int(h * height2)
-                f = Frame(Rect(x, y, w, h),
-                          len(self.original_frames),
-                          None)
-                self.original_frames.append(f)
+                f = Frame(Rect(x, y, w, h), len(page_frames), None)
+                page_frames.append(f)
 
+        self.pages[page_id] = (self.view_mode, page, page_bgcolor, page_frames)
+
+    def load_page(self, page_id, frame_number=None):
+        self.prepare_page(page_id)
+        view_mode, page, bgcolor, frames = self.pages[page_id]
+        self.comic_id = page_id
+        self.renderer.page = page
+        self.renderer.zoom_cache = {}
         self.progress = 0.0
+        self.original_frames = frames
+        self.renderer.set_background_color(bgcolor)
         self.find_rows(frame_number=frame_number)
         self.src_pos = self.pos = self.oid2pos(self.row_id)
 
@@ -383,8 +398,15 @@ class DisplayerApp:
         self.pos = self.src_pos
 
     def end_changing_page(self):
-        self.renderer.brightness = 255
-        self.renderer.render(self.pos)
+        for page_id in self.pages.keys():
+            if abs(page_id - self.comic_id) > 1:
+                del self.pages[page_id]
+        step = +1 if self.flip_dir else -1
+        page_id = self.comic_id + step
+        if 0 <= page_id and page_id < len(self.comix):
+            self.prepare_page(page_id)
+        log.info('page cache: %s', [page_id for page_id in self.pages])
+        assert len(self.pages) <= 3
 
     def add_msg(self, text, ttl=1.5):
         color = pygame.color.Color(*self.renderer.bg)
@@ -419,7 +441,7 @@ class DisplayerApp:
             "motion": True,
             "target": lambda self: self.oid2pos(self.row_id),
             "changeto": "static",
-            #~ "onfinish": end_changing_page,
+            "onfinish": end_changing_page,
             #~ "onprogress": lambda self:self.adjust_brightness(True)
         },
         "static": {
@@ -581,7 +603,7 @@ class DisplayerApp:
 
     def update_screen(self, msec):
         if self.previous_state != self.state:
-            log.debug('update_screen: %s -> %s', self.previous_state, self.state)
+            log.info('update_screen: %s -> %s', self.previous_state, self.state)
             self.previous_state = self.state
         if self.state=='help':
             return
