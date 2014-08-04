@@ -93,6 +93,9 @@ def ComicBook(path):
 class BaseComicBook:
     def __init__(self, path):
         self.path = path
+        self._comic_bgcolor = None
+        self._page_bgcolor = {}
+        self._page_frames = {}
 
     def close(self):
         pass
@@ -111,10 +114,16 @@ class BaseComicBook:
         return self.get_file_by_name(self.filenames[page])
 
     def get_frames(self, page):
-        return None
+        return self._page_frames.get(page)
 
     def get_bgcolor(self, page):
-        return None
+        return self._page_bgcolor.get(page, self._comic_bgcolor)
+
+    def set_frames(self, page, frames):
+        self._page_frames[page] = frames
+
+    def set_bgcolor(self, page, bgcolor):
+        self._page_bgcolor[page] = bgcolor
 
     def get_panel_file(self):
         return self.get_file_by_name('panels.ini')
@@ -275,9 +284,6 @@ class MComixBook(BaseComicBook):
         self.writable = False
         self._tmpdir = tempfile.mkdtemp(prefix=u'comicplayer.')
         self._archive = get_recursive_archive_handler(path, self._tmpdir)
-        self._comic_bgcolor = None
-        self._page_bgcolor = {}
-        self._page_frames = {}
         self.filenames = []
         for f in self._archive.list_contents():
             if f == 'acv.xml':
@@ -302,12 +308,6 @@ class MComixBook(BaseComicBook):
         self._extract_thread.stop()
         self._archive.close()
         shutil.rmtree(self._tmpdir, True)
-
-    def get_frames(self, page):
-        return self._page_frames.get(page)
-
-    def get_bgcolor(self, page):
-        return self._page_bgcolor.get(page, self._comic_bgcolor)
 
     def _parse_bgcolor(self, color):
         if not re.match('^#[0-9a-fA-F]{6}$', color):
