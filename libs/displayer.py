@@ -41,33 +41,6 @@ from image import Image
 
 from displayer_renderer import Renderer
 
-class FakeImage:
-    def __init__(self, strdata, size):
-        self.size = size
-        self.strdata = strdata
-    def tostring(self):
-        return self.strdata
-
-def rect_center(r):
-    return [(r[0]+r[2])/2, (r[1]+r[3])/2]
-
-def xy_range(xy1, xy2):
-    return (xy2[0]-xy1[0])**2 + (xy2[1]-xy1[1])**2
-
-def xy_rhombic_range(xy1, xy2):
-    return abs(xy2[0]-xy1[0]) + abs(xy2[1]-xy1[1])
-
-def row_merger(rows, scr_hei):
-    # helper function to merge small rows into comfortably-sized ones
-    old = rows[0]
-    for new in rows[1:]:
-        if new[1]-old[0]<scr_hei*0.8:
-            old = (old[0], new[1], old[2])
-        else:
-            yield old
-            old = new
-    yield old
-
 class DisplayerApp:
 
     CURSOR_HIDE, CACHE_NEXT_PAGE = xrange(pygame.USEREVENT, pygame.USEREVENT + 2)
@@ -334,7 +307,6 @@ class DisplayerApp:
         if force or self.row_id!=oid:
             self.row_id = oid
             self.progress = 0.0
-            self.renderer.brightness = 255
             self.src_pos = self.pos
             self.state = "change_row"
 
@@ -355,11 +327,6 @@ class DisplayerApp:
         cy0 += shift
         cy1 += shift
         return (x0,y0,x1,y1,cx0,cy0,cx1,cy1)+tuple(self.pos[8:12])
-
-    def adjust_brightness(self, back = False):
-            self.renderer.brightness = 55+int(200*self.progress)
-            if not back:
-                self.renderer.brightness = 255 - self.renderer.brightness
 
     def start_load_page(self):
         reload = self.next_comic_id == self.comic_id
