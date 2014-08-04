@@ -44,7 +44,6 @@ from mcomix import log
 from PIL import Image
 
 from displayer_renderer import Renderer
-import detect_rows
 
 gm_wrap = None # to be supplied from main script
 
