@@ -36,21 +36,6 @@ import traceback
 
 from mcomix import log
 
-if sys.platform=="win32":
-    running_from_source = True
-    os.environ["MAGICK_CODER_MODULE_PATH"]="."
-    try:
-        os.chdir("building_on_windows\\dlls")
-    except OSError:
-        running_from_source = False
-    import libs.gm_wrap_win as gm_wrap
-    libs.displayer.init_gm(gm_wrap)
-    if running_from_source:
-        os.chdir("..")
-else:
-    import libs.gm_wrap as gm_wrap
-    libs.displayer.init_gm(gm_wrap)
-
 if __name__ == "__main__":
     if len(sys.argv) <= 1:
         sys.exit(1)

@@ -29,30 +29,17 @@
 
 import pygame
 import pygame.locals as pyg
-try:
-    import pygame._view # required for cx_freeze to work
-except ImportError:
-    pass
 
 import math
-import sys, os, ctypes
+import sys, os
 
 from mcomix.smart_scroller import Frame, Rect, SmartScroller
 from mcomix import image_tools
 from mcomix import log
 
-from PIL import Image
+from image import Image
 
 from displayer_renderer import Renderer
-
-gm_wrap = None # to be supplied from main script
-
-def init_gm(gm_wrap_module):
-    global gm_wrap, exception
-    gm_wrap = gm_wrap_module
-    gm_wrap.InitializeMagick(sys.argv[0])
-    exception = ctypes.pointer(gm_wrap.ExceptionInfo())
-    gm_wrap.GetExceptionInfo(exception)
 
 class FakeImage:
     def __init__(self, strdata, size):
@@ -89,7 +76,6 @@ class DisplayerApp:
     ZOOM_IN, ZOOM_OFF, ZOOM_OUT = xrange(3)
 
     def __init__(self, comix):
-        assert gm_wrap!=None, "GraphicsMagick not loaded"
         pygame.font.init()
         try:
             font = pygame.font.Font('resources'+os.sep+'DejaVuSansCondensed-Bold.ttf', 18)
@@ -135,14 +121,11 @@ class DisplayerApp:
 
         name = self.comix.get_filename(page_id)
         fil = self.comix.get_file(page_id)
-        fil_data = fil.read()
+
+        image = Image.from_file(fil)
+        width, height = image.size
 
         screen_width, screen_height = self.renderer.scrdim
-
-        image_info = gm_wrap.CloneImageInfo(None)
-        image_info.contents.filename = name
-        image = gm_wrap.BlobToImage(image_info, fil_data, len(fil_data), exception)
-        width, height = image.contents.columns, image.contents.rows
 
         page_ratio = float(width) / height
         if page_ratio > 1.0:
@@ -172,17 +155,11 @@ class DisplayerApp:
         if width2 > width or height2 > height:
             width2, height2 = width, height
         elif width2 != width or height2 != height:
-            resized_image = gm_wrap.ResizeImage(image, width2, height2, gm_wrap.LanczosFilter, 1, exception)
-            gm_wrap.DestroyImage(image)
-            image = resized_image
+            image = image.resize((width2, height2))
 
-        buffer = ctypes.create_string_buffer(width2 * height2 * 3)
-        gm_wrap.DispatchImage(image, 0, 0, width2, height2, "RGB", gm_wrap.CharPixel, buffer, exception)
-        gm_wrap.DestroyImage(image)
-        image = Image.frombuffer('RGB', (width2, height2), buffer.raw, 'raw', 'RGB', 0, 1)
+        page = pygame.image.fromstring(image.to_rgb(), (width2, height2), "RGB")
 
-        page = pygame.image.fromstring(image.tostring(), (width2, height2), "RGB")
-
+        image = image.to_pil()
         page_bgcolor = self.comix.get_bgcolor(page_id)
         if page_bgcolor is None:
             log.info('detecting page %u background color', page_id)
