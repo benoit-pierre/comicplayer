@@ -12,7 +12,7 @@
 #         and/or other materials provided with the distribution.
 #
 #       * The name of the author may not be used to endorse or promote products
-#         derived from this software without specific prior written permission. 
+#         derived from this software without specific prior written permission.
 #
 #   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 #   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -50,31 +50,9 @@ img_extensions = ['jpeg', 'jpg', 'gif', 'png']
 
 class UnsupportedFileTypeError:
     pass
-    
+
 class FilenameNotFoundError:
     pass
-
-class AZNamer:
-    def __init__(self, caps=True):
-        self.caps = caps
-        self.x = [self.a()]
-        
-    def a(self):
-        if self.caps: return "A"
-        return "a"
-    
-    def next(self):
-        res = ''.join(self.x)
-        i= len(self.x)-1
-        while i>0 and self.x[i].lower()=='z':
-            i-=1
-        if i==-1:
-            self.x = [self.a()] * (len(self.x)+1)
-        else:
-            self.x[i] = chr(ord(self.x[i])+1)
-            for j in range(i+1, len(self.x)):
-                self.x[i] = self.a()
-        return res
 
 def ComicBook(path):
     if not os.path.isfile(path):
@@ -88,9 +66,9 @@ def ComicBook(path):
             return SingleFileComicBook(path)
         else:
             raise UnsupportedFileTypeError
-            
 
 class BaseComicBook:
+
     def __init__(self, path):
         self.path = path
         self._comic_bgcolor = None
@@ -99,14 +77,14 @@ class BaseComicBook:
 
     def close(self):
         pass
-        
+
     @property
     def pretty_name(self):
         return self.path.split(os.sep)[-1]
 
     def __len__(self):
         return len(self.filenames)
-        
+
     def get_filename(self, page):
         return os.path.split(self.filenames[page])[1]
 
@@ -125,117 +103,18 @@ class BaseComicBook:
     def set_bgcolor(self, page, bgcolor):
         self._page_bgcolor[page] = bgcolor
 
-    def get_panel_file(self):
-        return self.get_file_by_name('panels.ini')
-
-    def load_panels(self, page_id):
-        name = self.get_filename(page_id)
-        config = RawConfigParser()
-        try:
-            config.readfp(self.get_panel_file())
-        except:
-            pass
-        opts = config.options(name)
-        opts.sort()
-        panels = []
-        if config.get(name, "format")=="rect":
-            for pn in opts:
-                if pn.startswith('panel'):
-                    line = config.get(name, pn)
-                    panels.append([int(x) for x in line.strip().split(',')])
-        elif config.get(name, "format")=="grid":
-            rows = {}
-            cols = {}
-            for n in opts:
-                if n.startswith('grid_h_'):
-                    rows[n[7:]] = int(config.get(name, n))
-                if n.startswith('grid_v_'):
-                    cols[n[7:]] = int(config.get(name, n))
-            for pn in opts:
-                if pn.startswith('panel'):
-                    line = config.get(name, pn)
-                    h,v = line.split(',')
-                    r0,r1 = h.split('-')
-                    y0,y1 = rows[r0.lower()],rows[r1.lower()]
-                    c0,c1 = v.split('-')
-                    x0,x1 = cols[c0],cols[c1]
-                    panels.append([x0,y0,x1,y1])
-        else:
-            raise NotImplementedError
-        if len(panels)==0:
-            fil = self.get_file(page_id)
-            image = Image.open(fil)
-            panels.append([0,0,image.size[0], image.size[1]])
-        return panels
-        
-    def save_panels(self, page_id, panels, mode = "rect"):
-        if not self.writable:
-            raise TypeError, 'not a writable comic archive'
-        fn = self.get_filename(page_id)
-        res = ""
-        config = RawConfigParser()
-        try:
-            config.readfp(self.get_panel_file())
-        except:
-            pass
-        config.remove_section(fn)
-        config.add_section(fn)
-        if mode=="rect":
-            config.set(fn, "format", "rect")
-            for i,p in enumerate(panels):
-                config.set(fn, "panel%02d" % i, "%s,%s,%s,%s" % tuple(p))
-        elif mode=="grid":
-            config.set(fn, "format", "grid")
-            rows = {}
-            cols = {}
-            for p in panels:
-                x0,y0,x1,y1 = p
-                cols[x0] = ''
-                cols[x1] = ''
-                rows[y0] = ''
-                rows[y1] = ''
-            az = AZNamer(True)
-            for r in sorted(rows.keys()):
-                rows[r] = az.next()
-                config.set(fn, "grid_h_"+rows[r], r)
-            az = AZNamer(False)
-            for c in sorted(cols.keys()):
-                cols[c] = az.next()
-                config.set(fn, "grid_v_"+cols[c], c)
-            for i,p in enumerate(panels):
-                x0,y0,x1,y1 = p
-                c0 = cols[x0]
-                c1 = cols[x1]
-                r0 = rows[y0]
-                r1 = rows[y1]
-                config.set(fn, "panel%02d" % i, "%s-%s,%s-%s" % (r0,r1,c0,c1))
-        else:
-            raise NotImplementedError
-        out = StringIO.StringIO()
-        config.write(out)
-        self.add_file('panels.ini', out.getvalue())
-        self.has_segmentation = True
-        return res
-
 class DirComicBook(BaseComicBook):
+
     def __init__(self, path):
         BaseComicBook.__init__(self, path)
-        try:
-            tmp = open(os.path.join(path, 'test__.tmp'), 'w')
-            tmp.close()
-            os.unlink(os.path.join(path, 'test__.tmp'))
-            self.writable = True
-        except IOError:
-            self.writable = False
         mask = os.path.join(os.path.normpath(path), '*')
         namelist = [fn[len(mask)-1:] for fn in glob.glob(mask)]
-        self.has_segmentation = "panels.ini" in namelist
         self.filenames = [fn for fn in namelist if os.path.splitext(fn)[1][1:].lower() in img_extensions]
         alphanumeric_sort(self.filenames)
 
     def get_file_by_name(self, name):
         return open(os.path.join(self.path, name), 'rb')
-        
+
     def add_file(self, name, bytez):
         open(os.path.join(self.path, name), 'wb').write(bytez)
 
@@ -251,20 +130,9 @@ class DirComicBook(BaseComicBook):
         return DirComicBook(path)
 
 class SingleFileComicBook(BaseComicBook):
+
     def __init__(self, path):
         BaseComicBook.__init__(self, path)
-        try:
-            tmp = open(path+"_test__.tmp", "wb")
-            tmp.close()
-            os.unlink(path+"_test__.tmp")
-            self.writable = True
-        except IOError:
-            self.writable = False
-        try:
-            self.get_file_by_name("panels.ini")
-            self.has_segmentation = True
-        except:
-            self.has_segmentation = False
         self.filenames = [path]
 
     def get_file_by_name(self, name):
@@ -273,7 +141,7 @@ class SingleFileComicBook(BaseComicBook):
             return open(self.filenames[0], 'rb')
         else:
             return open(self.filenames[0]+"_"+name, 'rb')
-        
+
     def add_file(self, name, bytez):
         open(self.filenames[0]+"_"+name, 'wb').write(bytez)
 
@@ -281,7 +149,6 @@ class MComixBook(BaseComicBook):
 
     def __init__(self, path):
         BaseComicBook.__init__(self, path)
-        self.writable = False
         self._tmpdir = tempfile.mkdtemp(prefix=u'comicplayer.')
         self._archive = get_recursive_archive_handler(path, self._tmpdir)
         self.filenames = []
@@ -416,3 +283,4 @@ if __name__=="__main__":
         debug_scripts = False
     if debug_scripts:
         debug_scripts.go()
+
