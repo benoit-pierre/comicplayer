@@ -53,7 +53,8 @@ class DisplayerApp:
         try:
             font = pygame.font.Font('resources'+os.sep+'DejaVuSansCondensed-Bold.ttf', 18)
         except IOError:
-            font = pygame.font.Font('freesansbold.ttf', 18)
+            font_name = pygame.font.get_default_font()
+            font = pygame.font.Font(font_name, 18)
         pygame.display.init()
         self.scroller = SmartScroller()
         self.renderer = Renderer(pygame.display.get_surface(), font)
