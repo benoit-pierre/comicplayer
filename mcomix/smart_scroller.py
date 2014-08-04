@@ -19,6 +19,12 @@ except ImportError:
 
 Rect = namedtuple('Rect', 'x y w h')
 Rect.__repr__ = lambda r: '%+d%+d:%ux%u' % (r.x, r.y, r.w, r.h)
+Rect.x0 = property(lambda r: r.x)
+Rect.y0 = property(lambda r: r.y)
+Rect.x1 = property(lambda r: r.x + r.w - 1)
+Rect.y1 = property(lambda r: r.y + r.h - 1)
+Rect.points = property(lambda r: (r.x0, r.y0, r.x1, r.y1))
+Rect.from_points = classmethod(lambda cls, x0, y0, x1, y1: cls(x0, y0, x1 - x0 + 1, y1 - y0 + 1))
 
 Frame = namedtuple('Frame', 'rect number split')
 Frame.__repr__ = lambda f: '%u%s:%s' % (f.number, '' if f.split is None else '.%u' % f.split, f.rect)
@@ -40,99 +46,82 @@ class SmartScroller(object):
         self._view_width = 0
         self._view_height = 0
 
-    def _is_bg_horz_line(self, x, y, w):
-        pos = x + y * self._image_width
-        end = pos + w
-        return is_bg_line(self._image, self._max_imperfection_size, pos, end, 1)
+    def _count_lines(self, bg, start_step, step_size, nb_steps, start_line, line_pitch, max_lines):
+        pos = start_step * step_size + start_line * line_pitch
+        return count_lines(self._image, self._max_imperfection_size, bg, pos,
+                           step_size, nb_steps, line_pitch, max_lines)
 
-    def _is_bg_vert_line(self, x, y, h):
-        pos = x + y * self._image_width
-        end = pos + h * self._image_width
-        return is_bg_line(self._image, self._max_imperfection_size, pos, end, self._image_width)
+    def _crop_side(self, rect, side):
+        x0, y0, x1, y1 = rect.points
+        if   'top' == side:
+            y0 += self._count_lines(True, x0, 1, rect.w, y0, +self._image_width, rect.h)
+        elif 'bottom' == side:
+            y1 -= self._count_lines(True, x0, 1, rect.w, -y1, -self._image_width, rect.h)
+        elif 'left' == side:
+            x0 += self._count_lines(True, y0, +self._image_width, rect.h, x0, +1, rect.w)
+        elif 'right' == side:
+            x1 -= self._count_lines(True, y0, +self._image_width, rect.h, -x1, -1, rect.w)
+        else:
+            raise ValueError('invalid side argument: %s' % side)
+        return Rect.from_points(x0, y0, x1, y1)
 
-    def _crop(self, bbox):
-        orig_bbox = bbox
-        empty = True
-        for y in xrange(bbox.h - self._min_frame_height):
-            y = bbox.y + y
-            if not self._is_bg_horz_line(bbox.x, y, bbox.w):
-                bbox = Rect(bbox.x, y, bbox.w, bbox.h - y + bbox.y)
-                empty = False
-                break
-        if empty:
-            return None
-        for y in xrange(bbox.h - self._min_frame_height):
-            y = bbox.y + bbox.h - 1 - y
-            if not self._is_bg_horz_line(bbox.x, y, bbox.w):
-                bbox = Rect(bbox.x, bbox.y, bbox.w, y - bbox.y + 1)
-                empty = False
-                break
-        if empty:
-            return None
-        for x in xrange(bbox.w - self._min_frame_width):
-            x = bbox.x + x
-            if not self._is_bg_vert_line(x, bbox.y, bbox.h):
-                bbox = Rect(x, bbox.y, bbox.w - x + bbox.x, bbox.h)
-                empty = False
-                break
-        if empty:
-            return None
-        for x in xrange(bbox.w - self._min_frame_width):
-            x = bbox.x + bbox.w - 1 - x
-            if not self._is_bg_vert_line(x, bbox.y, bbox.h):
-                bbox = Rect(bbox.x, bbox.y, x - bbox.x + 1, bbox.h)
-                empty = False
-                break
-        if empty:
-            return None
-        return bbox
+    def _crop(self, rect):
+        for side in ('top', 'bottom', 'left', 'right'):
+            rect = self._crop_side(rect, side)
+            if 0 == rect.w or 0 == rect.h:
+                return None
+        return rect
 
-    def _find_frames(self, bbox, split_horz=True, split_vert=True):
-        orig_bbox = bbox
-        bbox = self._crop(bbox)
-        if bbox is None:
-            # Empty/too small...
-            return False
-        if split_horz and bbox.h > self._min_frame_height * 2:
-            was_bg_line = False
-            for y in xrange(bbox.y + self._min_frame_height,
-                            bbox.y + bbox.h - 2 * self._min_frame_height):
-                is_bg_line = self._is_bg_horz_line(bbox.x, y, bbox.w)
-                if is_bg_line == was_bg_line:
-                    # Not a transition, ignore.
+    def _find_frames(self, rect, split_horz=True, split_vert=True, level=''):
+        rect = self._crop(rect)
+        if rect is None:
+            # Empty.
+            return None
+        if rect.w < self._min_frame_width or rect.h < self._min_frame_height:
+            # Too small.
+            return None
+        for split, horizontal in ((split_horz, True), (split_vert, False)):
+            if not split:
+                continue
+            if horizontal:
+                min_nb_lines = self._min_frame_height
+                start_step, step_size, nb_steps = rect.x, 1, rect.w
+                start_line, line_pitch, nb_lines = rect.y, self._image_width, rect.h
+                first_split = lambda: (rect.x, rect.y, rect.w, split_size)
+                second_split = lambda: (rect.x, split.y + split.h, rect.w, rect.h - split.h)
+            else:
+                min_nb_lines = self._min_frame_width
+                start_step, step_size, nb_steps = rect.y, self._image_width, rect.h
+                start_line, line_pitch, nb_lines = rect.x, 1, rect.w
+                first_split = lambda: (rect.x, rect.y, split_size, rect.h)
+                second_split = lambda: (split.x + split.w, rect.y, rect.w - split.w, rect.h)
+            if nb_lines <= min_nb_lines * 2:
+                return None
+            cur_line = start_line + min_nb_lines
+            end_line = cur_line + nb_lines - 2 * min_nb_lines
+            while cur_line < end_line:
+                nb_fg_lines = self._count_lines(False, start_step, step_size, nb_steps,
+                                                cur_line, line_pitch, end_line - cur_line)
+                split_size = cur_line + nb_fg_lines - start_line + 1
+                split = Rect(*first_split())
+                first_frames = self._find_frames(split,
+                                                 split_horz=not horizontal,
+                                                 split_vert=horizontal)
+                if first_frames is None:
+                    cur_line += nb_fg_lines
+                    if cur_line >= end_line:
+                        break
+                    # Skip blank.
+                    nb_bg_lines = self._count_lines(True, start_step, step_size, nb_steps,
+                                                    cur_line, line_pitch, end_line - cur_line)
+                    cur_line += nb_bg_lines
                     continue
-                was_bg_line = is_bg_line
-                if not is_bg_line:
-                    # We found some content, ignore.
-                    continue
-                split = Rect(bbox.x, bbox.y, bbox.w, y - bbox.y)
-                if not self._find_frames(split, split_horz=False):
+                split = Rect(*second_split())
+                second_frames = self._find_frames(split)
+                if second_frames is None:
                     break
-                split = Rect(bbox.x, y + 1, bbox.w, bbox.h - split.h - 1)
-                if not self._find_frames(split):
-                    break
-                return True
-        if split_vert and bbox.w > self._min_frame_width * 2:
-            was_bg_line = False
-            for x in xrange(bbox.x + self._min_frame_width,
-                            bbox.x + bbox.w - 2 * self._min_frame_width):
-                is_bg_line = self._is_bg_vert_line(x, bbox.y, bbox.h)
-                if is_bg_line == was_bg_line:
-                    # Not a transition, ignore.
-                    continue
-                was_bg_line = is_bg_line
-                if not is_bg_line:
-                    # We found some content, ignore.
-                    continue
-                split = Rect(bbox.x, bbox.y, x - bbox.x, bbox.h)
-                if not self._find_frames(split, split_vert=False):
-                    break
-                split = Rect(x + 1, bbox.y, bbox.w - split.w - 1, bbox.h)
-                if not self._find_frames(split):
-                    break
-                return True
-        self._frames.append(Frame(bbox, len(self._frames), None))
-        return True
+                return first_frames + second_frames
+        return [rect]
 
     def _is_rect_inside(self, rect, bbox):
         if rect.x < bbox.x:
@@ -213,11 +202,12 @@ class SmartScroller(object):
         else:
             self._image = im.getdata()
 
-        bbox = Rect(0, 0, self._image_width, self._image_height)
-        self._frames = []
-        self._find_frames(bbox)
-        if 0 == len(self._frames):
-            self._frames = [Frame(bbox, 0, None)]
+        rect = Rect(0, 0, self._image_width, self._image_height)
+        frames = self._find_frames(rect)
+        if frames is None:
+            self._frames = [Frame(rect, 0, None)]
+        else:
+            self._frames = [Frame(rect, n, None) for n, rect in enumerate(frames)]
         self._current_frames = (0, 0)
 
     def setup_view(self, x, y, width, height):
@@ -226,12 +216,9 @@ class SmartScroller(object):
         self._view_width = width
         self._view_height = height
 
-        max_width = max(self._min_frame_width, width)
-        max_height = max(self._min_frame_height, height)
-
         frames = []
         for f in self._frames:
-            frames.extend(self._split_frame(f, max_width, max_height))
+            frames.extend(self._split_frame(f, width, height))
         self._frames = frames
 
     def _walk_frames_no_split(self, start, step):
@@ -248,11 +235,6 @@ class SmartScroller(object):
             yield next_frame, nf
 
     def scroll(self, to_frame=None, backward=False):
-        """ Scroll view, starting from <start>.
-        <start> can be a frame number (e.g. 0 for first frame, -1 for last,
-        ...) or a tuple (x, y) indicating the current viewport position.
-        """
-
         if backward:
             step = -1
         else:
