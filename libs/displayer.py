@@ -216,6 +216,8 @@ class DisplayerApp:
         self.pages[page_id] = (self.view_mode, page, page_bgcolor, page_frames)
 
     def load_page(self, page_id, frame_number=None):
+        log.info('loading page %u%s', page_id,
+                 '' if frame_number is None else ' (frame %u)' % frame_number)
         self.prepare_page(page_id)
         view_mode, page, bgcolor, frames = self.pages[page_id]
         self.comic_id = page_id
@@ -296,10 +298,9 @@ class DisplayerApp:
         self.find_rows(frame_number=fn)
 
     def reload_page(self):
-        fn = self.row_frame_number[self.row_id]
-        self.load_page(self.comic_id, frame_number=fn)
-        self.force_redraw = True
-        
+        self.src_pos = self.pos
+        self.state = 'leaving_page'
+
     def oid2pos(self, oid):
         if self.zoom_mode == self.ZOOM_OUT:
             w = self.renderer.page.get_width()
@@ -384,19 +385,26 @@ class DisplayerApp:
             self.renderer.brightness = 55+int(200*self.progress)
             if not back:
                 self.renderer.brightness = 255 - self.renderer.brightness
-                
+
     def start_load_page(self):
-        self.load_page(self.next_comic_id)
-        if not self.flip_dir and self.flip_to_last:
-            self.row_id = len(self.rows)-1
+        reload = self.next_comic_id == self.comic_id
+        log.info('start loading page %u (reload? %s)', self.next_comic_id,
+                 'yes' if reload else 'no')
+        if reload:
+            fn = self.row_frame_number[self.row_id]
+            self.load_page(self.next_comic_id, frame_number=fn)
         else:
-            self.row_id = 0
+            self.load_page(self.next_comic_id)
+            if not self.flip_dir and self.flip_to_last:
+                self.row_id = len(self.rows)-1
+            else:
+                self.row_id = 0
         self.target_pos = self.oid2pos(self.row_id)
         self.pos = self.target_pos
         self.src_pos = self.shifted_page(self.flip_dir)
         self.pos = self.src_pos
 
-    def end_changing_page(self):
+    def cache_next_page(self):
         for page_id in self.pages.keys():
             if abs(page_id - self.comic_id) > 1:
                 del self.pages[page_id]
@@ -406,6 +414,9 @@ class DisplayerApp:
             self.prepare_page(page_id)
         log.info('page cache: %s', [page_id for page_id in self.pages])
         assert len(self.pages) <= 3
+
+    def end_changing_page(self):
+        self.cache_next_page()
 
     def add_msg(self, text, ttl=1.5):
         color = pygame.color.Color(*self.renderer.bg)
@@ -543,8 +554,9 @@ class DisplayerApp:
             self.toggle_fullscreen()
             self.reload_page()
         elif action == 'set_view':
-            self.view_mode = arg
-            self.reload_page()
+            if arg != self.view_mode:
+                self.view_mode = arg
+                self.reload_page()
         elif action == 'redraw':
             self.force_redraw = True
         elif action == 'toggle_animations':
