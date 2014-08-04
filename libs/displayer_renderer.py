@@ -110,23 +110,24 @@ class Renderer:
         self.scrdim = self.scrdim[0] - bl - br, self.scrdim[1] - bt - bb
         sw, sh = self.scrdim
 
-        wid, hei = pos[2]-pos[0]+1, pos[3]-pos[1]+1
-        k = min(1.0*sw/wid, 1.0*sh/hei)
-        if k<1:
-            cw, ch = self.page.get_width(), self.page.get_height()
-            if pos[0]>cw or pos[1]>ch or pos[2]<0 or pos[3]<0:
-                page = None
-            else:
-                page, shift, clip = self.zoomed_comic(pos, clip, motion)
-        else:
-            page = self.page
-            marg_x = (self.scrdim[0]-wid)//2
-            marg_y = (self.scrdim[1]-hei)//2
-            shift = marg_x-pos[0], marg_y-pos[1]
-            clip = (clip[0] + shift[0], clip[1] + shift[1],
-                    clip[2] - clip[0] + 1, clip[3] - clip[1] + 1)
         self.screen.fill(self.bg)
-        if page!=None:
+
+        page = self.page
+        if page is not None:
+            wid, hei = pos[2]-pos[0]+1, pos[3]-pos[1]+1
+            k = min(1.0*sw/wid, 1.0*sh/hei)
+            if k<1:
+                cw, ch = page.get_width(), page.get_height()
+                if pos[0]>cw or pos[1]>ch or pos[2]<0 or pos[3]<0:
+                    page = None
+                else:
+                    page, shift, clip = self.zoomed_comic(pos, clip, motion)
+            else:
+                marg_x = (self.scrdim[0]-wid)//2
+                marg_y = (self.scrdim[1]-hei)//2
+                shift = marg_x-pos[0], marg_y-pos[1]
+                clip = (clip[0] + shift[0], clip[1] + shift[1],
+                        clip[2] - clip[0] + 1, clip[3] - clip[1] + 1)
             if clipping:
                 self.screen.set_clip((clip[0] + bl, clip[1] + bt, clip[2], clip[3]))
             self.screen.blit(page, (shift[0] + bl, shift[1] + bt))

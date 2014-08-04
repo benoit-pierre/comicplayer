@@ -32,6 +32,7 @@ import pygame.locals as pyg
 
 import math
 import sys, os
+import traceback
 
 from mcomix.smart_scroller import Frame, Rect, SmartScroller
 from mcomix import image_tools
@@ -39,6 +40,7 @@ from mcomix import log
 
 from image import Image
 
+from comic_book import BaseComicBook, ComicBook
 from displayer_renderer import Renderer
 
 class DisplayerApp:
@@ -48,7 +50,7 @@ class DisplayerApp:
     VIEW_1_1, VIEW_WIDTH, VIEW_WIDEN_5_4 = xrange(3)
     ZOOM_IN, ZOOM_OFF, ZOOM_OUT = xrange(3)
 
-    def __init__(self, comix):
+    def __init__(self, comics):
         pygame.font.init()
         try:
             font = pygame.font.Font('resources'+os.sep+'DejaVuSansCondensed-Bold.ttf', 18)
@@ -73,15 +75,51 @@ class DisplayerApp:
         self.only_1_frame = False
         self.border_width = 16
         self.clipping = True
-        self.comix = comix
+        self.previous_state = None
+        self.state = "entering_page"
+        self.flip_dir = True
+        self.running = True
+        self.progress = 0.0
+        self.row_id = 0
+        self.rows = []
+        self.page_id = 0
+        self.next_page_id = 0
         self.comic_id = 0
         self.next_comic_id = 0
-        self.state = "entering_page"
-        self.previous_state = None
-        self.flip_dir = True
+        self.comics = comics
+        self.comix = None
+        self.load_comic(0)
+
+    def load_comic(self, comic_id):
+        log.info('loading comic %u', comic_id)
+        if self.comix is not None:
+            self.comix.close()
+            self.comix = None
+        try:
+            comix = ComicBook(self.comics[comic_id])
+        except Exception, e:
+            msg = 'could not load comic %s: %s' % (self.comics[comic_id], e)
+            log.debug('%s:\n%s', msg, traceback.format_exc())
+            self.add_msg(msg, ttl=5)
+            comix = None
+        if comix is None:
+            self.comix = BaseComicBook(self.comics[comic_id])
+            self.pos = ((0,0,) + self.renderer.scrdim) * 3
+            self.state = 'static'
+            self.force_redraw = True
+        else:
+            self.comix = comix
+        self.renderer.page = None
+        self.comic_id = comic_id
         self.pages = {}
-        self.load_page(0)
-        self.running = True
+        if len(self.comix) > 0:
+            if self.flip_dir:
+                page_id = 0
+            else:
+                page_id = len(self.comix) - 1
+            self.load_page(page_id)
+        else:
+            self.next_page_id = self.page_id = 0
 
     def prepare_page(self, page_id):
 
@@ -170,7 +208,7 @@ class DisplayerApp:
                  '' if frame_number is None else ' (frame %u)' % frame_number)
         self.prepare_page(page_id)
         view_mode, page, bgcolor, frames = self.pages[page_id]
-        self.comic_id = page_id
+        self.page_id = page_id
         self.renderer.page = page
         self.renderer.zoom_cache = {}
         self.progress = 0.0
@@ -280,15 +318,32 @@ class DisplayerApp:
 
     def flip_page(self, delta, rowwise = False):
         self.zoom_mode = self.zoom_lock
-        nci = self.comic_id
+        next_comic_id = self.comic_id
+        nci = self.page_id
         nci += delta
         if nci<0:
-            nci = 0
-        if nci>=len(self.comix):
-            nci = len(self.comix)-1
-        if nci!=self.comic_id:
-            self.next_comic_id = nci
-            self.flip_dir = nci>self.comic_id
+            if abs(delta) == 1:
+                next_comic_id = self.comic_id - 1
+                if next_comic_id < 0:
+                    next_comic_id = self.comic_id
+                    nci = self.page_id
+            else:
+                nci = 0
+        elif nci>=len(self.comix):
+            if abs(delta) == 1:
+                next_comic_id = self.comic_id + 1
+                if next_comic_id >= len(self.comics):
+                    next_comic_id = self.comic_id
+                    nci = self.page_id
+            else:
+                nci = len(self.comix)-1
+                if nci < 0:
+                    nci = 0
+
+        if next_comic_id != self.comic_id or nci != self.page_id:
+            self.next_comic_id = next_comic_id
+            self.next_page_id = nci
+            self.flip_dir = next_comic_id > self.comic_id or nci > self.page_id
             self.flip_to_last = rowwise
             self.src_pos = self.pos
             self.state = "leaving_page"
@@ -330,14 +385,17 @@ class DisplayerApp:
         return (x0,y0,x1,y1,cx0,cy0,cx1,cy1)+tuple(self.pos[8:12])
 
     def start_load_page(self):
-        reload = self.next_comic_id == self.comic_id
-        log.info('start loading page %u (reload? %s)', self.next_comic_id,
+        reload = self.next_comic_id == self.comic_id and self.next_page_id == self.page_id
+        log.info('start loading page %u (reload? %s)', self.next_page_id,
                  'yes' if reload else 'no')
         if reload:
             fn = self.row_frame_number[self.row_id]
-            self.load_page(self.next_comic_id, frame_number=fn)
+            self.load_page(self.next_page_id, frame_number=fn)
         else:
-            self.load_page(self.next_comic_id)
+            if self.next_comic_id != self.comic_id:
+                self.load_comic(self.next_comic_id)
+            else:
+                self.load_page(self.next_page_id)
             if not self.flip_dir and self.flip_to_last:
                 self.row_id = len(self.rows)-1
             else:
@@ -349,10 +407,10 @@ class DisplayerApp:
 
     def cache_next_page(self):
         for page_id in self.pages.keys():
-            if abs(page_id - self.comic_id) > 1:
+            if abs(page_id - self.page_id) > 1:
                 del self.pages[page_id]
         step = +1 if self.flip_dir else -1
-        page_id = self.comic_id + step
+        page_id = self.page_id + step
         if 0 <= page_id and page_id < len(self.comix):
             self.prepare_page(page_id)
         log.info('page cache: %s', [page_id for page_id in self.pages])
@@ -370,6 +428,20 @@ class DisplayerApp:
     def show_help(self):
         self.state = 'help'
         self.renderer.show_help()
+
+    def show_info(self):
+        if 0 == len(self.comix):
+            msg = '%s' % self.comix.path
+        else:
+            msg = '%s - %u/%u - %s - %ux%u' % (
+                self.comix.pretty_name,
+                self.page_id + 1,
+                len(self.comix),
+                self.comix.get_filename(self.page_id),
+                self.renderer.page.get_width(),
+                self.renderer.page.get_height(),
+            )
+        self.add_msg(msg, ttl=2)
 
     states = {
         "change_row": {
@@ -395,7 +467,8 @@ class DisplayerApp:
             "onfinish": end_changing_page,
         },
         "static": {
-            "motion": False
+            "motion": False,
+            "changeto": "static",
         },
         "zoomed": {
             "motion": False
@@ -440,7 +513,6 @@ class DisplayerApp:
 
     def quit(self):
         self.running = False
-        return
 
     def toggle_fullscreen(self):
         self.fullscreen = not self.fullscreen
@@ -509,15 +581,7 @@ class DisplayerApp:
             if self.state not in ['leaving_page']:
                 self.flip_page(arg)
         elif action == 'show_info':
-            msg = '%s - %u/%u - %s - %ux%u' % (
-                self.comix.pretty_name,
-                self.comic_id,
-                len(self.comix),
-                self.comix.get_filename(self.comic_id),
-                self.renderer.page.get_width(),
-                self.renderer.page.get_height(),
-            )
-            self.add_msg(msg, ttl=2)
+            self.show_info()
 
     def process_event(self, event):
         action, arg = None, None
@@ -595,9 +659,14 @@ class DisplayerApp:
         self.update_screen(msec)
 
     def run(self):
-        while self.running:
-            self.loop(pygame.event.get())
-        pygame.quit()
+        try:
+            while self.running:
+                self.loop(pygame.event.get())
+        finally:
+            if self.comix is not None:
+                self.comix.close()
+                self.comix = None
+            pygame.quit()
 
 if __name__=="__main__":
     try:

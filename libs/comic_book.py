@@ -58,6 +58,7 @@ def ComicBook(path):
     if not os.path.isfile(path):
         if os.path.isdir(path):
             return DirComicBook(path)
+        raise ValueError('invalid file path')
     else:
         if archive_mime_type(path) is not None:
             return MComixBook(unicode(path))
@@ -65,12 +66,13 @@ def ComicBook(path):
         if ext in img_extensions:
             return SingleFileComicBook(path)
         else:
-            raise UnsupportedFileTypeError
+            raise UnsupportedFileTypeError('unsupported file type')
 
 class BaseComicBook:
 
     def __init__(self, path):
         self.path = path
+        self.filenames = []
         self._comic_bgcolor = None
         self._page_bgcolor = {}
         self._page_frames = {}

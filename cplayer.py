@@ -31,32 +31,31 @@
 from libs.comic_book import ComicBook
 import libs.displayer
 
+import argparse
 import sys, os
 import traceback
 
 from mcomix import log
 
 if __name__ == "__main__":
-    if len(sys.argv) <= 1:
-        sys.exit(1)
-    debug = False
-    if '-d' == sys.argv[1]:
-        import pdb
-        debug = True
-        log.setLevel(log.DEBUG)
-        sys.argv.pop(0)
-    for n, path in enumerate(sys.argv[1:]):
-        comic = ComicBook(path)
-        if comic is None:
-            print >>sys.stderr, 'could not load %s' % path
-            continue
-        try:
-            dapp = libs.displayer.DisplayerApp(comic)
-            dapp.run()
-        except:
-            print >>sys.stderr, traceback.format_exc()
-            if debug:
-                pdb.post_mortem()
-        finally:
-            comic.close()
+
+    parser = argparse.ArgumentParser(prog='comicplayer')
+    parser.add_argument('-l', '--log-level', choices=['debug', 'info', 'warning', 'error'],
+                        default='warning', help='set log level')
+    parser.add_argument('-d', '--debug', action='store_const', const='debug',
+                        dest='log_level', help='shortcut for -l debug')
+    parser.add_argument('comics', nargs='+')
+
+    options = parser.parse_args(sys.argv[1:])
+
+    log.setLevel(options.log_level.upper())
+
+    try:
+        dapp = libs.displayer.DisplayerApp(options.comics)
+        dapp.run()
+    except:
+        print >>sys.stderr, traceback.format_exc()
+        if options.log_level == 'debug':
+            import pdb
+            pdb.post_mortem()
 
