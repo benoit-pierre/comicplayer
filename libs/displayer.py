@@ -84,7 +84,7 @@ def row_merger(rows, scr_hei):
 
 class DisplayerApp:
 
-    CURSOR_HIDE = pygame.USEREVENT
+    CURSOR_HIDE, CACHE_NEXT_PAGE = xrange(pygame.USEREVENT, pygame.USEREVENT + 2)
 
     VIEW_1_1, VIEW_WIDTH, VIEW_WIDEN_5_4 = xrange(3)
     ZOOM_IN, ZOOM_OFF, ZOOM_OUT = xrange(3)
@@ -416,7 +416,7 @@ class DisplayerApp:
         assert len(self.pages) <= 3
 
     def end_changing_page(self):
-        self.cache_next_page()
+        pygame.event.post(pygame.event.Event(self.CACHE_NEXT_PAGE))
 
     def add_msg(self, text, ttl=1.5):
         color = pygame.color.Color(*self.renderer.bg)
@@ -530,6 +530,8 @@ class DisplayerApp:
         elif action == 'show_cursor':
             pygame.mouse.set_visible(True)
             pygame.time.set_timer(self.CURSOR_HIDE, 2000)
+        elif action == 'cache_next_page':
+            self.cache_next_page()
         elif action == 'toggle_zoom':
             if self.zoom_mode == self.ZOOM_OFF:
                 self.zoom_out()
@@ -591,6 +593,8 @@ class DisplayerApp:
             action = 'show_cursor'
         elif event.type == pyg.VIDEOEXPOSE:
             action = 'redraw'
+        elif event.type == self.CACHE_NEXT_PAGE:
+            action = 'cache_next_page'
         elif event.type == pyg.KEYDOWN:
             input = pygame.key.name(event.key)
             if event.mod & pyg.KMOD_SHIFT:
