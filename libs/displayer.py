@@ -589,7 +589,7 @@ class DisplayerApp:
         motion = self.states[self.state]["motion"]
         if motion or self.force_redraw or len(self.renderer.textimages)>0:
             if motion:
-                self.progress += 0.0035*msec
+                self.progress += 0.0050*msec
                 if self.disable_animations:
                     self.progress = 1
                     motion = False
