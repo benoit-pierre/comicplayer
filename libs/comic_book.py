@@ -115,20 +115,6 @@ class DirComicBook(BaseComicBook):
     def get_file_by_name(self, name):
         return open(os.path.join(self.path, name), 'rb')
 
-    def add_file(self, name, bytez):
-        open(os.path.join(self.path, name), 'wb').write(bytez)
-
-    @staticmethod
-    def create_copy(path, comix2):
-        path = os.path.normpath(path)
-        try:
-            os.makedirs(path)
-        except Exception:
-            pass
-        for i in range(len(comix2)):
-            open(os.path.join(path, comix2.get_filename(i)), 'wb').write(comix2.get_file(i).read())
-        return DirComicBook(path)
-
 class SingleFileComicBook(BaseComicBook):
 
     def __init__(self, path):
@@ -141,9 +127,6 @@ class SingleFileComicBook(BaseComicBook):
             return open(self.filenames[0], 'rb')
         else:
             return open(self.filenames[0]+"_"+name, 'rb')
-
-    def add_file(self, name, bytez):
-        open(self.filenames[0]+"_"+name, 'wb').write(bytez)
 
 class MComixBook(BaseComicBook):
 
