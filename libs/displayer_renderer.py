@@ -36,9 +36,7 @@ from displayer_help import help
 class Renderer:
 
     def __init__(self, screen, font):
-        self.fade = 6
         self.zoom_cache = {}
-        self.brightness = 255
         self.font = font
         self.textimages = []
         self.bg = (0, 0, 0)
@@ -70,7 +68,6 @@ class Renderer:
 
         wx, wy = centerX-spotW/2, centerY-spotH/2
         wxe, wye = centerX+spotW/2, centerY+spotH/2
-
 
         if wx<0:
             wx = 0
