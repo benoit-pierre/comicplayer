@@ -527,11 +527,7 @@ class DisplayerApp:
             elif self.zoom_mode == self.ZOOM_IN:
                 self.unzoom()
         elif action == 'lock_zoom':
-            if self.zoom_lock == self.ZOOM_OFF:
-                self.zoom_lock = self.zoom_mode
-            else:
-                self.zoom_lock = self.ZOOM_OFF
-                self.unzoom()
+            self.zoom_lock = self.zoom_mode
         elif action == 'set_zoom':
             if self.zoom_mode == self.ZOOM_OFF:
                 if arg == 'in':
