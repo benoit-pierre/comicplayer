@@ -29,13 +29,12 @@
 
 
 import pygame
-import math
 
 from displayer_help import help
 
 
 class Renderer:
-    
+
     def __init__(self, screen, font):
         self.fade = 6
         self.zoom_cache = {}
@@ -50,38 +49,38 @@ class Renderer:
 
     def set_background_color(self, rgb):
         self.bg = rgb
-        
+
     def zoomed_comic(self, spotlight, clip, fast=False):
         pageW, pageH = self.page.get_width(), self.page.get_height()
         centerX, centerY = (spotlight[2]+spotlight[0])/2, (spotlight[3]+spotlight[1])/2
         spotW, spotH = spotlight[2]-spotlight[0]+1, spotlight[3]-spotlight[1]+1
         spotAR = 1.0*spotW/spotH
         screenAR = 1.0*self.scrdim[0]/self.scrdim[1]
-        
+
         if screenAR>spotAR:
             spotW = int(round(spotH*screenAR))
         else:
             spotH = int(round(spotW/screenAR))
-            
+
         # comic-to-screen conversion is: scrX = a*comX  + bX , scrY = a*comY  + bY
-        
+
         a = 1.0*self.scrdim[1]/spotH
         bX = (self.scrdim[0]//2) - int(round(a*centerX))
         bY = (self.scrdim[1]//2) - int(round(a*centerY))
-            
+
         wx, wy = centerX-spotW/2, centerY-spotH/2
         wxe, wye = centerX+spotW/2, centerY+spotH/2
-        
 
-        if wx<0: 
+
+        if wx<0:
             wx = 0
         if wxe>=pageW: wxe = pageW-1
-        if wy<0: 
+        if wy<0:
             wy = 0
         if wye>=pageH: wye = pageH-1
-     
+
         shift = (a*wx+bX, a*wy+bY)
-        
+
         ww, wh = wxe-wx+1, wye-wy+1
         rect = (wx, wy, ww, wh)
         dims = (int(round(ww*a)), int(round(wh*a)))
@@ -153,7 +152,7 @@ class Renderer:
     def write(self, text, x, y):
         image = self.font.render(text, True, (160,255,128))
         self.screen.blit(image, (x,y))
-        
+
     def show_help(self):
         self.screen.fill((0,0,0))
         top = 20
