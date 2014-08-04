@@ -14,7 +14,7 @@
 #         and/or other materials provided with the distribution.
 #
 #       * The name of the author may not be used to endorse or promote products
-#         derived from this software without specific prior written permission. 
+#         derived from this software without specific prior written permission.
 #
 #   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 #   ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
@@ -53,7 +53,6 @@ def init_gm(gm_wrap_module):
     gm_wrap.InitializeMagick(sys.argv[0])
     exception = ctypes.pointer(gm_wrap.ExceptionInfo())
     gm_wrap.GetExceptionInfo(exception)
-    
 
 class FakeImage:
     def __init__(self, strdata, size):
@@ -137,7 +136,7 @@ class DisplayerApp:
         name = self.comix.get_filename(page_id)
         fil = self.comix.get_file(page_id)
         fil_data = fil.read()
-        
+
         screen_width, screen_height = self.renderer.scrdim
 
         image_info = gm_wrap.CloneImageInfo(None)
@@ -307,14 +306,13 @@ class DisplayerApp:
             h = self.renderer.page.get_height()
             return 2 * (0, 0, w - 1, h - 1) + 4 * (self.border_width,)
         return self.rows[oid]
-        
-        
+
     def zoom_out(self):
         self.zoom_mode = self.ZOOM_OUT
         self.src_pos = self.pos
         self.state = 'zooming'
         self.progress = 0.0
-        
+
     def zoom_in(self):
         self.zoom_mode = self.ZOOM_IN
         self.reload_rows()
@@ -328,7 +326,7 @@ class DisplayerApp:
         self.src_pos = self.pos
         self.state = 'change_row'
         self.progress = 0.0
-       
+
     def flip_page(self, delta, rowwise = False):
         self.zoom_mode = self.zoom_lock
         nci = self.comic_id
@@ -370,8 +368,8 @@ class DisplayerApp:
         cx0,cy0,cx1,cy1 = self.pos[4:8]
         w,h = self.renderer.scrdim
         ch = self.renderer.page.get_height()
-        
-        if forward: 
+
+        if forward:
             shift = -h
         else:
             shift = ch
@@ -423,11 +421,10 @@ class DisplayerApp:
         color.hsla = (color.hsla[0], color.hsla[1], 100 - color.hsla[2], color.hsla[3])
         text = self.renderer.font.render(text, True, color, self.renderer.bg)
         self.renderer.textimages.append([text,255,ttl])
-        
+
     def show_help(self):
         self.state = 'help'
         self.renderer.show_help()
-        
 
     states = {
         "change_row": {
@@ -495,14 +492,10 @@ class DisplayerApp:
         'space'      : ('navigate', +1),
         'tab'        : ('show_info', None),
     }
-    
+
     def quit(self):
         self.running = False
-        return        
-        
-    def show_mode(self):
-        pass
-        # TODO: remove
+        return
 
     def toggle_fullscreen(self):
         self.fullscreen = not self.fullscreen
@@ -580,7 +573,7 @@ class DisplayerApp:
                 self.renderer.page.get_height(),
             )
             self.add_msg(msg, ttl=2)
-    
+
     def process_event(self, event):
         action, arg = None, None
         if event.type == pyg.QUIT:
@@ -623,7 +616,7 @@ class DisplayerApp:
                 if self.disable_animations:
                     self.progress = 1
                     motion = False
-                
+
                 target_pos = self.states[self.state]["target"](self)
                 if self.progress>=1:
                     self.progress = 1
@@ -646,19 +639,18 @@ class DisplayerApp:
                 if ti[2]<0:
                     ti[1] = 255+255*2*ti[2]
             self.renderer.textimages = [ti for ti in self.renderer.textimages if ti[1]>0]
-            
+
             self.renderer.render(self.pos, motion, clipping=self.clipping)
-    
-    def loop(self, events): 
+
+    def loop(self, events):
         msec = self.clock.tick(50)
         self.force_redraw = False
         for event in events:
             self.process_event(event)
         self.update_screen(msec)
-            
-            
+
     def run(self):
-        while self.running: 
+        while self.running:
             self.loop(pygame.event.get())
         pygame.quit()
 
@@ -669,5 +661,4 @@ if __name__=="__main__":
         debug_scripts = False
     if debug_scripts:
         debug_scripts.go()
-
 
