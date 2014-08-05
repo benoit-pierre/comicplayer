@@ -17,8 +17,6 @@ from mcomix.smart_scroller import SmartScroller
 from libs.comic_book import MComixBook
 from libs.image import Image
 
-print Image
-
 def display(value):
     m = re.match('^(\d+)x(\d+)$', value)
     if not m:
