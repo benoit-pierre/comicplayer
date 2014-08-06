@@ -79,6 +79,7 @@ class DisplayerApp:
         self.clipping = True
         self.previous_state = None
         self.state = "entering_page"
+        self.flip_to_last = False
         self.flip_dir = True
         self.running = True
         self.progress = 0.0
@@ -125,10 +126,10 @@ class DisplayerApp:
         self.comic_id = comic_id
         self.pages = {}
         if len(self.comix) > 0:
-            if self.flip_dir:
-                page_id = 0
-            else:
+            if self.flip_to_last:
                 page_id = len(self.comix) - 1
+            else:
+                page_id = 0
             self.load_page(page_id)
         else:
             self.next_page_id = self.page_id = 0
@@ -349,11 +350,11 @@ class DisplayerApp:
         nci += delta
         if nci<0:
             if -1 == delta:
-                return self.flip_comic(-1, rowwise=rowwise)
+                return self.flip_comic(-1, rowwise=True)
             nci = 0
         elif nci>=len(self.comix):
             if 1 == delta:
-                return self.flip_comic(+1, rowwise=rowwise)
+                return self.flip_comic(+1)
             nci = len(self.comix)-1
             if nci < 0:
                 nci = 0
