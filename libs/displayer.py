@@ -316,37 +316,43 @@ class DisplayerApp:
         self.state = 'change_row'
         self.progress = 0.0
 
-    def flip_page(self, delta, rowwise = False):
+    def flip_comic(self, delta, rowwise=False):
+        next_comic_id = self.comic_id + delta
+        if next_comic_id < 0:
+            next_comic_id = 0
+        if next_comic_id >= len(self.comics):
+            next_comic_id = len(self.comics) - 1
+        if next_comic_id == self.comic_id:
+            return
+        self.next_comic_id = next_comic_id
+        self.flip_dir = next_comic_id > self.comic_id
+        self.flip_to_last = rowwise
+        self.src_pos = self.pos
+        self.state = "leaving_page"
+
+    def flip_page(self, delta, rowwise=False):
         self.zoom_mode = self.zoom_lock
         next_comic_id = self.comic_id
         nci = self.page_id
         nci += delta
         if nci<0:
-            if abs(delta) == 1:
-                next_comic_id = self.comic_id - 1
-                if next_comic_id < 0:
-                    next_comic_id = self.comic_id
-                    nci = self.page_id
-            else:
-                nci = 0
+            if -1 == delta:
+                return self.flip_comic(-1, rowwise=rowwise)
+            nci = 0
         elif nci>=len(self.comix):
-            if abs(delta) == 1:
-                next_comic_id = self.comic_id + 1
-                if next_comic_id >= len(self.comics):
-                    next_comic_id = self.comic_id
-                    nci = self.page_id
-            else:
-                nci = len(self.comix)-1
-                if nci < 0:
-                    nci = 0
+            if 1 == delta:
+                return self.flip_comic(+1, rowwise=rowwise)
+            nci = len(self.comix)-1
+            if nci < 0:
+                nci = 0
 
-        if next_comic_id != self.comic_id or nci != self.page_id:
-            self.next_comic_id = next_comic_id
-            self.next_page_id = nci
-            self.flip_dir = next_comic_id > self.comic_id or nci > self.page_id
-            self.flip_to_last = rowwise
-            self.src_pos = self.pos
-            self.state = "leaving_page"
+        if nci == self.page_id:
+            return
+        self.next_page_id = nci
+        self.flip_dir = nci > self.page_id
+        self.flip_to_last = rowwise
+        self.src_pos = self.pos
+        self.state = "leaving_page"
 
     def navigate_row(self, delta, force=False):
         if self.zoom_mode == self.ZOOM_OUT:
@@ -479,36 +485,38 @@ class DisplayerApp:
     }
 
     input_bindings = {
-        'mouse1'     : ('navigate', +1),
-        'mouse3'     : ('navigate', -1),
-        'mouse2'     : ('lock_zoom', None),
-        'mouse4'     : ('set_zoom', 'in'),
-        'mouse5'     : ('set_zoom', 'out'),
-        'f'          : ('toggle_fullscreen', None),
-        'w'          : ('set_view', VIEW_WIDTH),
-        'a'          : ('set_view', VIEW_1_1),
-        's'          : ('set_view', VIEW_WIDEN_5_4),
-        'escape'     : ('quit', None),
-        'q'          : ('quit', None),
-        'return'     : ('toggle_zoom', None),
-        'f1'         : ('help', None),
-        'f2'         : ('toggle_animations', None),
-        'f3'         : ('toggle_only_1_frame', None),
-        'f4'         : ('toggle_clipping', None),
-        'left'       : ('flip_page', -1),
-        'shift+left' : ('flip_page', -5),
-        'ctrl+left'  : ('flip_page', -20),
-        'right'      : ('flip_page', +1),
-        'shift+right': ('flip_page', +5),
-        'ctrl+right' : ('flip_page', +20),
-        'page up'    : ('set_zoom', 'in'),
-        'page down'  : ('set_zoom', 'out'),
-        'end'        : ('lock_zoom', None),
-        'up'         : ('navigate', -1),
-        'down'       : ('navigate', +1),
-        'backspace'  : ('navigate', -1),
-        'space'      : ('navigate', +1),
-        'tab'        : ('show_info', None),
+        'mouse1'         : ('navigate', +1),
+        'mouse3'         : ('navigate', -1),
+        'mouse2'         : ('lock_zoom', None),
+        'mouse4'         : ('set_zoom', 'in'),
+        'mouse5'         : ('set_zoom', 'out'),
+        'f'              : ('toggle_fullscreen', None),
+        'w'              : ('set_view', VIEW_WIDTH),
+        'a'              : ('set_view', VIEW_1_1),
+        's'              : ('set_view', VIEW_WIDEN_5_4),
+        'escape'         : ('quit', None),
+        'q'              : ('quit', None),
+        'return'         : ('toggle_zoom', None),
+        'f1'             : ('help', None),
+        'f2'             : ('toggle_animations', None),
+        'f3'             : ('toggle_only_1_frame', None),
+        'f4'             : ('toggle_clipping', None),
+        'left'           : ('flip_page', -1),
+        'shift+left'     : ('flip_page', -5),
+        'ctrl+left'      : ('flip_page', -20),
+        'right'          : ('flip_page', +1),
+        'shift+right'    : ('flip_page', +5),
+        'ctrl+right'     : ('flip_page', +20),
+        'page up'        : ('set_zoom', 'in'),
+        'page down'      : ('set_zoom', 'out'),
+        'shift+page up'  : ('flip_comic', -1),
+        'shift+page down': ('flip_comic', +1),
+        'end'            : ('lock_zoom', None),
+        'up'             : ('navigate', -1),
+        'down'           : ('navigate', +1),
+        'backspace'      : ('navigate', -1),
+        'space'          : ('navigate', +1),
+        'tab'            : ('show_info', None),
     }
 
     def quit(self):
@@ -580,8 +588,13 @@ class DisplayerApp:
         elif action == 'flip_page':
             if self.state not in ['leaving_page']:
                 self.flip_page(arg)
+        elif action == 'flip_comic':
+            if self.state not in ['leaving_comic']:
+                self.flip_comic(arg)
         elif action == 'show_info':
             self.show_info()
+        else:
+            log.error('invalid action: %s(%s)', action, arg)
 
     def process_event(self, event):
         action, arg = None, None
