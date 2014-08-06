@@ -28,18 +28,11 @@
 import os, os.path
 import threading
 import tempfile
-import zipfile
 import shutil
 import glob
 import re
 
 from xml.etree import ElementTree
-
-import StringIO
-
-from ConfigParser import RawConfigParser
-
-from PIL import Image
 
 from mcomix.archive_tools import get_recursive_archive_handler, archive_mime_type
 from mcomix.worker_thread import WorkerThread
@@ -49,9 +42,6 @@ from mcomix import log
 img_extensions = ['jpeg', 'jpg', 'gif', 'png']
 
 class UnsupportedFileTypeError:
-    pass
-
-class FilenameNotFoundError:
     pass
 
 def ComicBook(path):
@@ -260,12 +250,4 @@ class MComixBook(BaseComicBook):
             while not name in self._extracted:
                 self._condition.wait()
         return open(os.path.join(self._tmpdir, name), 'rb')
-
-if __name__=="__main__":
-    try:
-        import debug_scripts
-    except ImportError:
-        debug_scripts = False
-    if debug_scripts:
-        debug_scripts.go()
 
