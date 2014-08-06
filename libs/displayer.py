@@ -75,6 +75,7 @@ class DisplayerApp:
         self.zoom_lock = self.ZOOM_OFF
         self.disable_animations = True
         self.only_1_frame = False
+        self.left_to_right = True
         self.border_width = 16
         self.clipping = True
         self.previous_state = None
@@ -230,10 +231,42 @@ class DisplayerApp:
         self.find_rows(frame_number=frame_number)
         self.src_pos = self.pos = self.oid2pos(self.row_id)
 
+    def sort_frames(self, frames, left_to_right, split_horz=True, split_vert=True):
+        if split_horz:
+            y = 0
+            for n in range(0, len(frames) - 1):
+                f = frames[n]
+                y = max(y, f.rect.y1)
+                do_split = True
+                for f in frames[n+1:]:
+                    if f.rect.y0 < y:
+                        do_split = False
+                        break
+                if do_split:
+                    split1 = self.sort_frames(frames[0:n+1], left_to_right, split_horz=False)
+                    split2 = self.sort_frames(frames[n+1:], left_to_right)
+                    return split1 + split2
+        if split_vert:
+            x = 0
+            for n in range(0, len(frames) - 1):
+                f = frames[n]
+                x = max(x, f.rect.x1)
+                do_split = True
+                for f in frames[n+1:]:
+                    if f.rect.x0 < x:
+                        do_split = False
+                        break
+                if do_split:
+                    split1 = self.sort_frames(frames[0:n+1], left_to_right, split_vert=False)
+                    split2 = self.sort_frames(frames[n+1:], left_to_right)
+                    return split1 + split2 if left_to_right else split2 + split1
+        return frames
+
     def find_rows(self, frame_number=None):
 
         self.row_id = 0
-        self.scroller._frames = self.original_frames
+        self.scroller._frames = self.sort_frames(self.original_frames, self.left_to_right)
+        self.scroller._left_to_right = self.left_to_right
 
         screen_width, screen_height = self.renderer.scrdim
 
@@ -514,6 +547,7 @@ class DisplayerApp:
         'f2'             : ('toggle_animations', None),
         'f3'             : ('toggle_only_1_frame', None),
         'f4'             : ('toggle_clipping', None),
+        'f5'             : ('toggle_left_to_right', None),
         'left'           : ('flip_page', -1),
         'shift+left'     : ('flip_page', -5),
         'ctrl+left'      : ('flip_page', -20),
@@ -598,6 +632,9 @@ class DisplayerApp:
         elif action == 'toggle_clipping':
             self.clipping = not self.clipping
             self.force_redraw = True
+        elif action == 'toggle_left_to_right':
+            self.left_to_right = not self.left_to_right
+            self.reload_rows()
         elif action == 'flip_page':
             if self.state not in ['leaving_page']:
                 self.flip_page(arg)
