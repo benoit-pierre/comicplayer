@@ -220,7 +220,8 @@ class MComixBook(BaseComicBook):
         for r in (
             (priority_index, 2),
             (priority_index - 1, 1),
-            (priority_index + 2, len(self.filenames))
+            (priority_index + 2, len(self.filenames)),
+            (0, priority_index - 1),
         ):
           s, l = r
           if s >= len(self.filenames):
@@ -232,7 +233,7 @@ class MComixBook(BaseComicBook):
               l = len(self.filenames) - s
           if l <= 0:
               continue
-          for name in self.filenames:
+          for name in self.filenames[s:s+l]:
               if not name in self._extracted:
                   priority_files.append(name)
         self._extract_thread.extend_orders(priority_files)
