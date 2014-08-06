@@ -34,9 +34,10 @@ import math
 import os
 import traceback
 
-from mcomix.smart_scroller import Frame, Rect, SmartScroller
 from mcomix import image_tools
 from mcomix import log
+from mcomix.smart_scroller import Frame, Rect, SmartScroller
+from mcomix.worker_thread import WorkerThread
 
 from image import Image
 
@@ -68,6 +69,7 @@ class DisplayerApp:
         self.clock = pygame.time.Clock()
         pygame.time.set_timer(self.CURSOR_HIDE, 2000)
 
+        self.cleaner_thread = WorkerThread(self.clean, max_threads=2)
         self.view_mode = self.VIEW_WIDEN_5_4
         self.zoom_mode = self.ZOOM_OFF
         self.zoom_lock = self.ZOOM_OFF
@@ -90,11 +92,21 @@ class DisplayerApp:
         self.comix = None
         self.load_comic(0)
 
+    def clean(self, mess):
+        comic, = mess
+        log.debug('closing %s', comic.pretty_name)
+        comic.close()
+
+    def close_comic(self):
+        comic = self.comix
+        if comic is None:
+            return
+        self.comix = None
+        self.cleaner_thread.append_order((comic,))
+
     def load_comic(self, comic_id):
         log.info('loading comic %u', comic_id)
-        if self.comix is not None:
-            self.comix.close()
-            self.comix = None
+        self.close_comic()
         try:
             comix = ComicBook(self.comics[comic_id])
         except Exception, e:
@@ -676,9 +688,8 @@ class DisplayerApp:
             while self.running:
                 self.loop(pygame.event.get())
         finally:
-            if self.comix is not None:
-                self.comix.close()
-                self.comix = None
+            self.close_comic()
+            self.cleaner_thread.stop(finish=True)
             pygame.quit()
 
 if __name__=="__main__":
