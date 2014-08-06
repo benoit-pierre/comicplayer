@@ -1,20 +1,12 @@
 """ i18n.py - Encoding and translation handler."""
 
 import sys
-import os
 import locale
 
 try:
     import chardet
 except ImportError:
     chardet = None
-
-from mcomix import portability
-from mcomix import constants
-
-# Translation instance to enable other modules to use
-# functions other than the global _() if necessary
-_translation = None
 
 def to_unicode(string):
     """Convert <string> to unicode. First try the default filesystem
