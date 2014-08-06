@@ -23,7 +23,10 @@ class WorkerThread:
         self._max_threads = max_threads
         self._sort_orders = sort_orders
         self._unique_orders = unique_orders
-        self._stop = False
+        # If True, worker threads must stop immediately.
+        self._stop_immediately = False
+        # If True, worker threads must stop when queue is empty.
+        self._stop_if_no_orders = False
         self._threads = []
         # List of orders waiting for processing.
         self._waiting_orders = []
@@ -54,9 +57,11 @@ class WorkerThread:
             with self._condition:
                 if order is not None:
                     self._processing_orders.remove(order)
-                while not self._stop and 0 == len(self._waiting_orders):
+                while not self._stop_immediately and 0 == len(self._waiting_orders):
+                    if self._stop_if_no_orders:
+                        return
                     self._condition.wait()
-                if self._stop:
+                if self._stop_immediately:
                     return
                 order = self._waiting_orders.pop(0)
                 self._processing_orders.append(order)
@@ -72,7 +77,7 @@ class WorkerThread:
 
         Can be used by the processing function to check if it must abort early.
         """
-        return self._stop
+        return self._stop_immediately
 
     def clear_orders(self):
         """Clear the current orders queue."""
@@ -111,15 +116,21 @@ class WorkerThread:
             self._condition.notifyAll()
             self._start(nb_threads=nb_added)
 
-    def stop(self):
-        """Stop the worker threads and flush the orders queue."""
-        self._stop = True
+    def stop(self, finish=False):
+        """Stop the worker threads.
+        If <finish> is True, wait for queue to be empty, if False flush the orders queue.
+        """
+        if finish:
+            self._stop_if_no_orders = True
+        else:
+            self._stop_immediately = True
         with self._condition:
             self._condition.notifyAll()
         for thread in self._threads:
             thread.join()
         self._threads = []
-        self._stop = False
+        self._stop_immediately = False
+        self._stop_if_no_orders = False
         self._waiting_orders = []
         self._processing_orders = []
 
