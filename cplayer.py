@@ -34,6 +34,7 @@ import argparse
 import sys
 import traceback
 
+from mcomix.tools import alphanumeric_sort
 from mcomix import log, portability
 
 if __name__ == "__main__":
@@ -46,6 +47,7 @@ if __name__ == "__main__":
     parser.add_argument('comics', nargs='+')
 
     options = parser.parse_args(portability.get_commandline_args())
+    alphanumeric_sort(options.comics)
 
     log.setLevel(options.log_level.upper())
 
