@@ -28,11 +28,10 @@
 #   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 #   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from libs.comic_book import ComicBook
 import libs.displayer
 
 import argparse
-import sys, os
+import sys
 import traceback
 
 from mcomix import log

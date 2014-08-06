@@ -13,7 +13,6 @@ import time
 import pdb
 import gtk
 import sys
-import os
 
 
 def pil_to_pixbuf(image):

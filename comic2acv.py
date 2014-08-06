@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 
 import argparse
-import copy
 import os
 import pdb
 import re

@@ -31,7 +31,7 @@ import pygame
 import pygame.locals as pyg
 
 import math
-import sys, os
+import os
 import traceback
 
 from mcomix.smart_scroller import Frame, Rect, SmartScroller
