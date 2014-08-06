@@ -31,8 +31,9 @@ Frame.__repr__ = lambda f: '%u%s:%s' % (f.number, '' if f.split is None else '.%
 
 class SmartScroller(object):
 
-    def __init__(self, debug=False):
+    def __init__(self, left_to_right=True, debug=False):
         self._debug = debug
+        self._left_to_right = left_to_right
         self._max_imperfection_size = 3
         self._luminance_threshold = 16
         self._frames = []
@@ -120,6 +121,8 @@ class SmartScroller(object):
                 second_frames = self._find_frames(split)
                 if second_frames is None:
                     break
+                if not horizontal and not self._left_to_right:
+                    return second_frames + first_frames
                 return first_frames + second_frames
         return [rect]
 
@@ -161,10 +164,15 @@ class SmartScroller(object):
         y = frame.rect.y
         for _ in range(nb_horz_splits):
             x = frame.rect.x
+            if self._left_to_right:
+                x_step = split_width
+            else:
+                x_step = -split_width
+                x += nb_vert_splits * split_width - split_width
             for _ in range(nb_vert_splits):
                 rect = Rect(x, y, split_width, split_height)
                 splits.append(Frame(rect, frame.number, len(splits)))
-                x += split_width
+                x += x_step
             y += split_height
         return splits
 
