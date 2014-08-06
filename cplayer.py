@@ -34,7 +34,7 @@ import argparse
 import sys
 import traceback
 
-from mcomix import log
+from mcomix import log, portability
 
 if __name__ == "__main__":
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
                         dest='log_level', help='shortcut for -l debug')
     parser.add_argument('comics', nargs='+')
 
-    options = parser.parse_args(sys.argv[1:])
+    options = parser.parse_args(portability.get_commandline_args())
 
     log.setLevel(options.log_level.upper())
 

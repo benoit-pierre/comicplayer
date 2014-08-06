@@ -51,7 +51,7 @@ def ComicBook(path):
         raise ValueError('invalid file path')
     else:
         if archive_mime_type(path) is not None:
-            return MComixBook(unicode(path))
+            return MComixBook(path)
         ext = os.path.splitext(path)[1].lower()[1:]
         if ext in img_extensions:
             return SingleFileComicBook(path)
