@@ -67,7 +67,9 @@ class Scroller(object):
             (1920 * 2, 1200 * 2),
             (4000, 1200 * 2),
         )
+        self.flip = False
         self.current_zoom = 4
+        self.left_to_right = True
         self.scroller = SmartScroller(debug=self.debug)
 
     def draw_rect(self, draw, rect, color):
@@ -115,9 +117,13 @@ class Scroller(object):
         if image.mode != 'RGB':
             image = image.convert('RGB')
 
+        if self.flip:
+            image = image.transpose(Image.FLIP_LEFT_RIGHT)
+
         start = time.time()
         bgcolor = image_tools.get_most_common_edge_colour(image)
         print 'background color:', bgcolor
+        self.scroller._left_to_right = self.left_to_right
         self.scroller.setup_image(image, bgcolor)
         elapsed = time.time() - start
         print 'found %u frame(s) in %f seconds' % (len(self.scroller._frames), elapsed)
@@ -198,6 +204,14 @@ class Scroller(object):
                     self.scroller._debug = self.debug
                     if self.debug:
                         k = 'r'
+
+                if 'f' == k:
+                    self.flip = not self.flip
+                    k = 'r'
+
+                if 'l' == k:
+                    self.left_to_right = not self.left_to_right
+                    k = 'r'
 
                 if 'r' == k:
                     for im in self.update_page():
